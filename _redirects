@@ -1,0 +1,10 @@
+# Cloudflare Pages optional clean redirects
+/roadmap        /pages/roadmap.html        200
+/curriculum     /pages/curriculum.html     200
+/playground     /pages/playground.html     200
+/datasets       /pages/datasets.html       200
+/upload         /pages/upload.html         200
+/projects       /pages/projects.html       200
+/training       /pages/training.html       200
+/enterprise     /pages/enterprise.html     200
+/progress       /pages/progress.html       200

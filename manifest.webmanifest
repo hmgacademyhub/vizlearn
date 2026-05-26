@@ -1,0 +1,13 @@
+{
+  "name": "VizLearn — Python Data Visualization",
+  "short_name": "VizLearn",
+  "description": "Free browser-based Python data visualization learning platform.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0f1a",
+  "theme_color": "#00e5a0",
+  "icons": [
+    {"src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}

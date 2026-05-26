@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VizLearn — Data Visualization Learning Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.webmanifest"/>
+  <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-icon">⬡</span>
+        <span class="brand-text">Viz<span class="accent">Learn</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="pages/roadmap.html">Roadmap</a>
+            <a href="pages/curriculum.html">Curriculum</a></li>
+        <li><a href="pages/curriculum.html">Curriculum</a></li>
+        <li><a href="pages/lessons.html">Lessons</a></li>
+        <li><a href="pages/playground.html">Playground</a></li>
+        <li><a href="pages/datasets.html">Data Lab</a></li>
+        <li><a href="pages/upload.html">CSV Lab</a></li>
+        <li><a href="pages/projects.html">Projects</a></li>
+        <li><a href="pages/storytelling.html">Story</a></li>
+        <li><a href="pages/instructor.html">Instructor</a></li>
+        <li><a href="pages/training.html">Training Pack</a></li>
+        <li><a href="pages/tools.html">Tools</a></li>
+        <li><a href="pages/enterprise.html">Enterprise</a></li>
+        <li><a href="pages/cheatsheet.html">Cheat Sheet</a></li>
+        <li><a href="pages/compare.html">Comparator</a></li>
+        <li><a href="pages/params.html">Params</a></li>
+        <li><a href="pages/quiz.html">Quiz</a></li>
+        <li><a href="pages/glossary.html">Glossary</a></li>
+        <li><a href="pages/errors.html">Errors</a></li>
+        <li><a href="pages/gallery.html">Gallery</a></li>
+        <li><a href="pages/progress.html">Progress</a></li>
+        <li><a href="pages/quickref.html">Quick Ref</a></li>
+        <li><a href="pages/about.html">About</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">🎓 Free · Open Source · Browser-Based</div>
+      <h1 class="hero-title">
+        Master Data<br/>
+        <span class="hero-title-accent">Visualization</span><br/>
+        in Python
+      </h1>
+      <p class="hero-sub">
+        A hands-on interactive learning platform for Data Scientists to learn, write, 
+        run, and understand Matplotlib, Seaborn, Plotly &amp; Pandas Plotting — 
+        directly in your browser. No installation. No server. No cost.
+      </p>
+      <div class="hero-cta">
+        <a href="pages/lessons.html" class="btn btn-primary">Start Learning →</a>
+        <a href="pages/roadmap.html" class="btn btn-primary">Follow Roadmap →</a>
+        <a href="pages/playground.html" class="btn btn-ghost">Open Playground</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">4</span><span class="stat-label">Libraries</span></div>
+        <div class="stat-sep">·</div>
+        <div class="stat"><span class="stat-num">42</span><span class="stat-label">Lessons</span></div>
+        <div class="stat-sep">·</div>
+        <div class="stat"><span class="stat-num">17</span><span class="stat-label">Pages</span></div>
+        <div class="stat-sep">·</div>
+        <div class="stat"><span class="stat-num">100+</span><span class="stat-label">Examples</span></div>
+        <div class="stat-sep">·</div>
+        <div class="stat"><span class="stat-num">Free</span><span class="stat-label">Always</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="code-mockup">
+        <div class="mockup-bar">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="mockup-title">playground.py</span>
+        </div>
+        <pre class="mockup-code"><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> seaborn <span class="kw">as</span> sns
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="cm"># Load sample data</span>
+df = sns.load_dataset(<span class="str">'iris'</span>)
+
+<span class="cm"># Create scatter plot</span>
+sns.scatterplot(
+  data=df,
+  x=<span class="str">'sepal_length'</span>,
+  y=<span class="str">'petal_length'</span>,
+  hue=<span class="str">'species'</span>,
+  palette=<span class="str">'Set2'</span>
+)
+plt.title(<span class="str">'Iris Dataset'</span>)
+plt.show()</pre>
+        <div class="mockup-run">▶ Run Code</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES GRID -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-label">WHAT'S INSIDE</div>
+      <h2 class="section-title">Everything You Need to Visualize with Confidence</h2>
+      <div class="features-grid">
+
+        <div class="feature-card feature-card--large">
+          <div class="feature-icon">📚</div>
+          <h3>Structured Lessons</h3>
+          <p>Step-by-step lessons organized by library and difficulty. Each lesson contains the concept, annotated code, explanation of every parameter, and a "Why it matters" section linking to real data science workflows.</p>
+          <a href="pages/lessons.html" class="feature-link">Browse Lessons →</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Live Code Playground</h3>
+          <p>Write and run Python visualization code directly in your browser using Pyodide (WebAssembly). Zero setup required. See your charts instantly.</p>
+          <a href="pages/playground.html" class="feature-link">Open Playground →</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Cheat Sheets</h3>
+          <p>Quick-reference syntax cards for every major chart type across all four libraries. Bookmark, search, and copy snippets in one tap.</p>
+          <a href="pages/cheatsheet.html" class="feature-link">View Cheat Sheet →</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3>Knowledge Quiz</h3>
+          <p>Test what you've learned with code-reading quizzes. Identify chart types, fix broken code, predict outputs — all based on real examples.</p>
+          <a href="pages/quiz.html" class="feature-link">Take a Quiz →</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🖼️</div>
+          <h3>Chart Gallery</h3>
+          <p>Browse 50+ ready-to-use chart examples with full code. Filter by chart type, library, or dataset. Click any chart to open it in the playground.</p>
+          <a href="pages/gallery.html" class="feature-link">View Gallery →</a>
+        </div>
+
+        <div class="feature-card feature-card--large">
+          <div class="feature-icon">🔍</div>
+          <h3>Code Annotator</h3>
+          <p>Paste any matplotlib/seaborn code into the annotator and get a line-by-line breakdown explaining what each parameter does, why it's used, and what happens if you change it. Perfect for learning from existing code in tutorials, Kaggle notebooks, or Stack Overflow.</p>
+          <a href="pages/playground.html#annotator" class="feature-link">Try Annotator →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ENHANCED FREE FEATURES -->
+  <section class="section section--dark" id="enhanced">
+    <div class="container">
+      <div class="section-label">NEW FREE ENHANCEMENTS</div>
+      <h2 class="section-title">More Guidance, More Practice, No Paid API</h2>
+      <div class="features-grid">
+        <div class="feature-card feature-card--large">
+          <div class="feature-icon">🧭</div>
+          <h3>Simple-to-Complex Learning Roadmap</h3>
+          <p>A guided sequence that starts with chart recognition and gradually moves into parameter control, debugging, storytelling, and capstone work. Learners tick milestones and track completion locally in their browser.</p>
+          <a href="pages/roadmap.html" class="feature-link">Open Roadmap →</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧪</div>
+          <h3>Dataset Lab</h3>
+          <p>Embedded synthetic datasets with analysis questions, recommended chart types, CSV downloads, and one-click starter code for the Playground.</p>
+          <a href="pages/datasets.html" class="feature-link">Practice with Data →</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Project Studio</h3>
+          <p>Six portfolio-style projects from beginner score reports to advanced operations diagnostics. Each includes a problem brief, required outputs, rubric, and starter code.</p>
+          <a href="pages/projects.html" class="feature-link">Build Projects →</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🗣️</div>
+          <h3>Chart Advisor & Story Builder</h3>
+          <p>A transparent rule-based assistant that recommends chart types and helps learners produce insight, evidence, action, and limitation notes — without using any AI API.</p>
+          <a href="pages/storytelling.html" class="feature-link">Tell the Data Story →</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📁</div>
+          <h3>CSV Upload Lab</h3>
+          <p>Upload a small CSV privately in the browser, inspect inferred column types, receive rule-based chart suggestions, and generate Python code that opens in the Playground.</p>
+          <a href="pages/upload.html" class="feature-link">Upload CSV →</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👩🏾‍🏫</div>
+          <h3>Instructor Mode</h3>
+          <p>Generate classroom-ready lesson plans, activity timing, assessment prompts, and rubrics using transparent templates — useful for HMG Academy, bootcamps, YouTube classes, and school workshops.</p>
+          <a href="pages/instructor.html" class="feature-link">Plan a Class →</a>
+        </div>
+        <div class="feature-card feature-card--large">
+          <div class="feature-icon">🧰</div>
+          <h3>Learning Tools Hub</h3>
+          <p>Search the full platform, save personal notes, review flashcards, check visualization quality, and generate printable learning certificates — all locally in the browser with no account and no backend.</p>
+          <a href="pages/tools.html" class="feature-link">Open Learning Tools →</a>
+        </div>
+        <div class="feature-card feature-card--large">
+          <div class="feature-icon">🎓</div>
+          <h3>Data Science Mastery Curriculum</h3>
+          <p>A complete beginner-to-expert visualization curriculum with modules, outcomes, concepts, activities, assessments, projects, study plan generator, local progress tracking, and syllabus export for cohorts or self-paced learning.</p>
+          <a href="pages/curriculum.html" class="feature-link">Open Curriculum →</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <h3>Enterprise Training Pack</h3>
+          <p>Generate training proposals, weekly schemes of work, facilitator checklists, attendance CSV, completion register, and assessment score templates using only free browser tools.</p>
+          <a href="pages/training.html" class="feature-link">Generate Training Pack →</a>
+        </div>
+        <div class="feature-card feature-card--large">
+          <div class="feature-icon">🏢</div>
+          <h3>Enterprise Console</h3>
+          <p>A local-first administration layer for schools, academies, NGOs and bootcamps: organisation profile, cohort manager, learner CSV import/export, aggregate progress analytics, assignment builder, issue register, audit log and governance guidance.</p>
+          <a href="pages/enterprise.html" class="feature-link">Open Enterprise Console →</a>
+        </div>
+        <div class="feature-card feature-card--large">
+          <div class="feature-icon">📲</div>
+          <h3>Offline-Ready Static App</h3>
+          <p>A service worker and web manifest make the static pages installable and cacheable on supported browsers. The platform remains free because it uses GitHub Pages/Cloudflare Pages, localStorage, and browser execution.</p>
+          <a href="pages/progress.html" class="feature-link">Track & Export Progress →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIBRARY PATHS -->
+  <section class="section section--dark">
+    <div class="container">
+      <div class="section-label">LEARNING PATHS</div>
+      <h2 class="section-title">Choose Your Library</h2>
+      <div class="paths-grid">
+
+        <a href="pages/lessons.html?lib=matplotlib" class="path-card">
+          <div class="path-header" style="background: linear-gradient(135deg, #1a5276, #2e86c1);">
+            <span class="path-logo">MPL</span>
+          </div>
+          <div class="path-body">
+            <h3>Matplotlib</h3>
+            <p>The foundation of Python visualization. Learn figures, axes, subplots, plot types, styling, and full customization control.</p>
+            <ul class="path-topics">
+              <li>Figure &amp; Axes anatomy</li>
+              <li>Line, bar, scatter, pie</li>
+              <li>Subplots &amp; layouts</li>
+              <li>Colormaps &amp; styling</li>
+              <li>Saving &amp; exporting</li>
+            </ul>
+            <span class="path-badge">12 Lessons</span>
+          </div>
+        </a>
+
+        <a href="pages/lessons.html?lib=seaborn" class="path-card">
+          <div class="path-header" style="background: linear-gradient(135deg, #145a32, #1e8449);">
+            <span class="path-logo">SNS</span>
+          </div>
+          <div class="path-body">
+            <h3>Seaborn</h3>
+            <p>Statistical visualization made elegant. Understand distributions, relationships, and categorical data with beautiful defaults.</p>
+            <ul class="path-topics">
+              <li>Seaborn vs Matplotlib</li>
+              <li>Distribution plots</li>
+              <li>Categorical plots</li>
+              <li>Relational plots</li>
+              <li>Heatmaps &amp; clustermap</li>
+            </ul>
+            <span class="path-badge">12 Lessons</span>
+          </div>
+        </a>
+
+        <a href="pages/lessons.html?lib=plotly" class="path-card">
+          <div class="path-header" style="background: linear-gradient(135deg, #6c3483, #9b59b6);">
+            <span class="path-logo">PLY</span>
+          </div>
+          <div class="path-body">
+            <h3>Plotly</h3>
+            <p>Interactive charts for the modern data scientist. Hover, zoom, filter — all in the browser with expressive Python code.</p>
+            <ul class="path-topics">
+              <li>Plotly Express basics</li>
+              <li>Interactive scatter &amp; bar</li>
+              <li>3D plots</li>
+              <li>Animations</li>
+              <li>Dash integration intro</li>
+            </ul>
+            <span class="path-badge">10 Lessons</span>
+          </div>
+        </a>
+
+        <a href="pages/lessons.html?lib=pandas" class="path-card">
+          <div class="path-header" style="background: linear-gradient(135deg, #784212, #d35400);">
+            <span class="path-logo">PD</span>
+          </div>
+          <div class="path-body">
+            <h3>Pandas Plotting</h3>
+            <p>Quick exploratory visualization built right into Pandas DataFrames. Fast EDA without switching contexts.</p>
+            <ul class="path-topics">
+              <li>df.plot() basics</li>
+              <li>Histograms &amp; box plots</li>
+              <li>Area &amp; density plots</li>
+              <li>Combining with Matplotlib</li>
+              <li>EDA workflows</li>
+            </ul>
+            <span class="path-badge">8 Lessons</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label">HOW IT WORKS</div>
+      <h2 class="section-title">Learn → Practice → Understand</h2>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Read the Lesson</h3>
+          <p>Each lesson explains a chart type with the concept, when to use it in data science, common pitfalls, and full annotated code with every parameter explained.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Run It Live</h3>
+          <p>Every lesson has a "Run in Playground" button. Execute the code in your browser and see the actual chart output — no Jupyter, no Colab, no installation needed.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Modify &amp; Experiment</h3>
+          <p>Change parameters, swap datasets, try different palettes. The playground gives instant feedback so you build intuition through experimentation.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h3>Test Your Knowledge</h3>
+          <p>After each lesson, a short quiz challenges you to read code, identify chart types, spot errors, and explain outputs — just like you would in a real project.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+    <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="brand-icon">⬡</span>
+          <span class="brand-text">Viz<span class="accent">Learn</span></span>
+          <p>A free, open-source, browser-based Python data visualization learning platform. No installation. No account. No cost.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Learn</h4>
+            <a href="pages/roadmap.html">Roadmap</a>
+            <a href="pages/lessons.html">Lessons</a>
+            <a href="pages/cheatsheet.html">Cheat Sheet</a>
+            <a href="pages/quickref.html">Quick Ref</a>
+            <a href="pages/glossary.html">Glossary</a>
+            <a href="pages/errors.html">Error Guide</a>
+          </div>
+          <div class="footer-col">
+            <h4>Practice</h4>
+            <a href="pages/playground.html">Playground</a>
+            <a href="pages/datasets.html">Dataset Lab</a>
+            <a href="pages/upload.html">CSV Upload Lab</a>
+            <a href="pages/projects.html">Project Studio</a>
+            <a href="pages/storytelling.html">Story Builder</a>
+            <a href="pages/params.html">Param Explorer</a>
+            <a href="pages/compare.html">Comparator</a>
+            <a href="pages/gallery.html">Gallery</a>
+            <a href="pages/quiz.html">Quiz</a>
+          </div>
+          <div class="footer-col">
+            <h4>Track</h4>
+            <a href="pages/tools.html">Learning Tools</a>
+            <a href="pages/training.html">Training Pack</a>
+            <a href="pages/enterprise.html">Enterprise Console</a>
+            <a href="pages/progress.html">My Progress</a>
+            <a href="pages/about.html">About Creator</a>
+            <a href="https://github.com/cssadewale/vizlearn" target="_blank">GitHub Repo</a>
+            <a href="https://cssadewale.pages.dev" target="_blank">Creator Portfolio</a>
+            <a href="https://linkedin.com/in/adewalesamsonadeagbo" target="_blank">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>Built by <strong>Adewale Samson Adeagbo</strong> &nbsp;·&nbsp; Data Scientist · EdTech Builder · Lagos, Nigeria 🇳🇬</p>
+        <p>Open source on <a href="https://github.com/cssadewale/vizlearn" target="_blank">GitHub</a> &nbsp;·&nbsp; Powered by Pyodide &amp; GitHub Pages &nbsp;·&nbsp; <a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
