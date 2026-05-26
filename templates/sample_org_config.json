@@ -1,0 +1,10 @@
+{
+  "name": "HMG Academy",
+  "program": "Python Data Visualization Mastery",
+  "lead": "Adewale Samson Adeagbo",
+  "email": "hmgconcepts@gmail.com",
+  "color": "#00e5a0",
+  "defaultCohort": "coh_sample",
+  "policy": "Learners export progress weekly. Facilitators aggregate learner backups in the Enterprise Console. No learner data is sent to AI APIs.",
+  "updatedAt": "2026-05-26T00:00:00.000Z"
+}

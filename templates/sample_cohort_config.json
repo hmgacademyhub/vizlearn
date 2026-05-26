@@ -1,0 +1,21 @@
+{
+  "cohorts": [
+    {
+      "id": "coh_sample",
+      "name": "HMG Viz Cohort 1",
+      "start": "2026-06-01",
+      "end": "2026-07-31",
+      "mode": "Virtual",
+      "createdAt": "2026-05-26T00:00:00.000Z"
+    }
+  ],
+  "learners": [
+    {
+      "id": "HMG-VIZ-001",
+      "name": "Sample Learner One",
+      "contact": "sample1@example.com",
+      "cohortId": "coh_sample",
+      "createdAt": "2026-05-26T00:00:00.000Z"
+    }
+  ]
+}
