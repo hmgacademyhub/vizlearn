@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="../index.html" class="brand"><span class="brand-icon">⬡</span><span class="brand-text">Viz<span class="accent">Learn</span></span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="lessons.html">Lessons</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="datasets.html">Data Lab</a></li>
+        <li><a href="upload.html">CSV Lab</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li>
+        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+        <li><a href="compare.html">Comparator</a></li>
+        <li><a href="params.html">Params</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="errors.html">Errors</a></li>
+        <li><a href="gallery.html" class="active">Gallery</a></li>
+        <li><a href="progress.html">Progress</a></li>
+        <li><a href="quickref.html">Quick Ref</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="gallery-wrapper">
+    <div class="gallery-hero">
+      <div class="container">
+        <div class="section-label">CHART EXAMPLES</div>
+        <h1>Chart Gallery</h1>
+        <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:20px;">Browse ready-to-use chart examples. Click any card to open the full code in the Playground and run it instantly.</p>
+
+        <div class="quiz-filters">
+          <button class="filter-btn active" data-filter="all">All Charts</button>
+          <button class="filter-btn" data-filter="matplotlib">Matplotlib</button>
+          <button class="filter-btn" data-filter="seaborn">Seaborn</button>
+          <button class="filter-btn" data-filter="plotly">Plotly</button>
+          <button class="filter-btn" data-filter="pandas">Pandas</button>
+          <button class="filter-btn" data-filter="distribution">Distribution</button>
+          <button class="filter-btn" data-filter="comparison">Comparison</button>
+          <button class="filter-btn" data-filter="relationship">Relationship</button>
+          <button class="filter-btn" data-filter="composition">Composition</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="gallery-grid" id="gallery-grid" style="padding:40px 0 80px;">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/snippets.js"></script>
+  <script>
+  const GALLERY = [
+    { lib:'matplotlib', type:'comparison',   emoji:'📊', title:'Grouped Bar Chart',       desc:'Compare two data series across categories. Uses figsize, edgecolor, value labels on bars.', snippet:'mpl_bar' },
+    { lib:'matplotlib', type:'relationship', emoji:'🔵', title:'Scatter Plot (Clusters)', desc:'Three-cluster scatter with color-coded groups. Shows use of alpha, edgecolors, legend.', snippet:'mpl_scatter' },
+    { lib:'matplotlib', type:'distribution', emoji:'📈', title:'Line Chart (Multi-Series)', desc:'Two overlapping sine curves with a dark theme. Demonstrates linewidth, linestyle, labels.', snippet:'mpl_line' },
+    { lib:'matplotlib', type:'distribution', emoji:'🔔', title:'Histogram with KDE',       desc:'Two overlapping distributions with matching KDE density curves. Uses norm.pdf overlay.', snippet:'mpl_hist' },
+    { lib:'matplotlib', type:'composition',  emoji:'🥧', title:'Pie Chart',                desc:'6-slice pie with explode, autopct, custom colors and dark background.', snippet:'mpl_pie' },
+    { lib:'matplotlib', type:'comparison',   emoji:'⊞',  title:'2×2 Subplot Grid',        desc:'Four different chart types in one figure. Demonstrates plt.subplots(2,2) and tight_layout.', snippet:'mpl_subplot' },
+    { lib:'matplotlib', type:'relationship', emoji:'🌡️', title:'Heatmap (imshow)',         desc:'8×8 correlation matrix using imshow. Annotated cells with colorbar and tick labels.', snippet:'mpl_heatmap' },
+    { lib:'matplotlib', type:'comparison',   emoji:'🎨', title:'Custom Styled Line Chart', desc:'Area fills above/below target, peak annotation, custom spines, ₦ currency formatter.', snippet:'mpl_style' },
+    { lib:'seaborn',    type:'relationship', emoji:'⭐', title:'Scatter with Hue & Size',  desc:'Iris scatter colored by species, sized by petal_width. Uses palette, sizes, alpha.', snippet:'sns_scatter' },
+    { lib:'seaborn',    type:'distribution', emoji:'🔔', title:'Distribution (3 Subjects)', desc:'Three overlapping histplots with KDE and mean lines. Shows 1×3 subplot layout.', snippet:'sns_dist' },
+    { lib:'seaborn',    type:'distribution', emoji:'📦', title:'Box + Strip Plot',          desc:'Box plots overlaid with individual data points. Two subplots: hue and bare version.', snippet:'sns_box' },
+    { lib:'seaborn',    type:'distribution', emoji:'🎻', title:'Violin Plot (Split)',       desc:'Side-by-side violin with split=True comparing two groups. Shows inner="quartile".', snippet:'sns_violin' },
+    { lib:'seaborn',    type:'relationship', emoji:'🌡️', title:'Correlation Heatmap',      desc:'Annotated correlation matrix with coolwarm colormap, center=0, and linewidths.', snippet:'sns_heatmap' },
+    { lib:'seaborn',    type:'relationship', emoji:'🔷', title:'Pair Plot (Iris)',          desc:'Full pairplot with hue by species, KDE diagonal, alpha scatter points.', snippet:'sns_pairplot' },
+    { lib:'seaborn',    type:'comparison',   emoji:'📊', title:'Bar Plot with CI',         desc:'Mean bars with standard deviation error bars. countplot in second subplot.', snippet:'sns_bar' },
+    { lib:'seaborn',    type:'comparison',   emoji:'📉', title:'Line Plot (Time Series)',  desc:'Multi-line cumulative enrollment trend. Uses date_range, confidence band.', snippet:'sns_line' },
+    { lib:'plotly',     type:'relationship', emoji:'✨', title:'Interactive Scatter',       desc:'Plotly Express scatter with hover, size encoding, dark theme. Click and zoom.', snippet:'plotly_scatter' },
+    { lib:'plotly',     type:'comparison',   emoji:'📊', title:'Interactive Grouped Bar',  desc:'Two-year revenue comparison with text labels. barmode="group", dark template.', snippet:'plotly_bar' },
+    { lib:'plotly',     type:'comparison',   emoji:'📉', title:'Interactive Line + Slider',desc:'3-class score trends with range slider for zooming. Fully interactive.', snippet:'plotly_line' },
+    { lib:'plotly',     type:'composition',  emoji:'🍩', title:'Interactive Donut Chart',  desc:'Plotly donut with pull effect, hover data (pass rate), dark theme.', snippet:'plotly_pie' },
+    { lib:'pandas',     type:'comparison',   emoji:'📉', title:'df.plot() Multi-Line',     desc:'Monthly academy metrics via Pandas .plot(kind="line"). Minimal matplotlib styling.', snippet:'pd_line' },
+    { lib:'pandas',     type:'comparison',   emoji:'📊', title:'df.plot.bar() Grouped',    desc:'Pass rates per subject per term. Grouped bars directly from DataFrame.', snippet:'pd_bar' },
+    { lib:'pandas',     type:'distribution', emoji:'🔔', title:'df.plot.hist() Overlay',   desc:'4-column histograms overlaid. alpha=0.6 shows overlap. All from a single DataFrame.', snippet:'pd_hist' },
+    { lib:'pandas',     type:'distribution', emoji:'📦', title:'df.plot.box() Custom Style',desc:'5-column boxplot with patch_artist, custom median/whisker/flier colors.', snippet:'pd_box' },
+  ];
+
+  function buildGallery(data) {
+    const grid = document.getElementById('gallery-grid');
+    grid.innerHTML = '';
+    const libColors = { matplotlib:'#2e86c1', seaborn:'#1e8449', plotly:'#9b59b6', pandas:'#d35400' };
+    const libBg = { matplotlib:'rgba(46,134,193,0.12)', seaborn:'rgba(30,132,73,0.12)', plotly:'rgba(155,89,182,0.12)', pandas:'rgba(211,84,0,0.12)' };
+
+    data.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'gallery-card';
+      card.setAttribute('data-lib', item.lib);
+      card.setAttribute('data-type', item.type);
+      card.innerHTML = `
+        <div class="gallery-preview" style="background:${libBg[item.lib]};flex-direction:column;gap:8px;">
+          <span style="font-size:2.8rem;">${item.emoji}</span>
+          <span style="font-size:0.65rem;font-family:var(--font-mono);color:${libColors[item.lib]};letter-spacing:2px;font-weight:700;text-transform:uppercase;">${item.lib}</span>
+        </div>
+        <div class="gallery-card-body">
+          <h3>${item.title}</h3>
+          <p>${item.desc}</p>
+          <div class="gallery-card-footer">
+            <span class="badge" style="background:rgba(0,0,0,0.3);color:${libColors[item.lib]};border:1px solid ${libColors[item.lib]}33;">${item.type}</span>
+            <button onclick="openInPlayground('${item.snippet}')" class="btn btn-primary btn-sm" style="margin-left:auto;">▶ Open &amp; Run</button>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function openInPlayground(snippetKey) {
+    if (window.SNIPPETS && SNIPPETS[snippetKey]) {
+      localStorage.setItem('vizlearn_playground_code', SNIPPETS[snippetKey]);
+      window.location.href = 'playground.html';
+    }
+  }
+
+  function applyFilter(f) {
+    document.querySelectorAll('.gallery-card').forEach(card => {
+      const lib = card.getAttribute('data-lib');
+      const type = card.getAttribute('data-type');
+      card.style.display = (f==='all' || lib===f || type===f) ? '' : 'none';
+    });
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      applyFilter(this.getAttribute('data-filter'));
+    });
+  });
+
+  buildGallery(GALLERY);
+  </script>
+</body>
+</html>

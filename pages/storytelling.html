@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Story Builder — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar"><div class="nav-inner"><a href="../index.html" class="brand"><span class="brand-icon">⬡</span><span class="brand-text">Viz<span class="accent">Learn</span></span></a><ul class="nav-links"><li><a href="../index.html">Home</a></li><li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li><li><a href="lessons.html">Lessons</a></li><li><a href="playground.html">Playground</a></li><li><a href="datasets.html">Data Lab</a></li><li><a href="upload.html">CSV Lab</a></li><li><a href="upload.html">CSV Lab</a></li><li><a href="projects.html">Projects</a></li><li><a href="storytelling.html" class="active">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li><li><a href="progress.html">Progress</a></li><li><a href="about.html">About</a></li></ul><button class="hamburger" id="hamburger"><span></span><span></span><span></span></button></div></nav>
+<main style="padding-top:64px;">
+<section class="page-hero"><div class="container"><div class="section-label">NO AI API · RULE-BASED GUIDANCE</div><h1>Chart Advisor & Data Story Builder</h1><p class="text-muted" style="max-width:850px;">A free decision helper that recommends chart types from your analysis question and variable types. It does not call OpenAI, Gemini, Claude, or any paid service. It uses transparent rules you can inspect and teach.</p></div></section>
+<section class="container" style="padding:34px 24px 90px;">
+  <div class="vl-split">
+    <section class="vl-panel">
+      <div class="vl-panel-head"><h2>1. Choose your analysis intent</h2><span class="badge badge-beginner">Advisor</span></div>
+      <label class="vl-label">What question are you answering?</label>
+      <select id="intent" class="vl-input" onchange="advise()"><option value="relationship">Relationship: how do two variables move together?</option><option value="comparison">Comparison: which group is bigger or smaller?</option><option value="distribution">Distribution: what shape/spread does one variable have?</option><option value="composition">Composition: what makes up the whole?</option><option value="trend">Trend: how does a metric change over time?</option><option value="ranking">Ranking: what are the top or bottom items?</option></select>
+      <label class="vl-label">X variable type</label><select id="xType" class="vl-input" onchange="advise()"><option>Numeric</option><option>Categorical</option><option>Date/Time</option></select>
+      <label class="vl-label">Y variable type</label><select id="yType" class="vl-input" onchange="advise()"><option>Numeric</option><option>Categorical</option><option>None</option></select>
+      <label class="vl-label">Do you have groups/segments?</label><select id="group" class="vl-input" onchange="advise()"><option>No</option><option>Yes</option></select>
+      <label class="vl-label">Primary audience</label><select id="audience" class="vl-input" onchange="advise()"><option>Teacher / Educator</option><option>Business stakeholder</option><option>Technical data team</option><option>General public</option></select>
+      <div class="vl-actions"><button class="btn btn-primary" onclick="advise()">Recommend Chart</button><button class="btn btn-secondary" onclick="sendTemplate()">Open Template in Playground</button></div>
+    </section>
+    <section class="vl-panel">
+      <div class="vl-panel-head"><h2>2. Recommendation</h2><span class="badge badge-sns">Explain why</span></div>
+      <div id="advice" class="vl-advice"></div>
+    </section>
+  </div>
+
+  <section class="vl-panel mt-24">
+    <div class="vl-panel-head"><h2>3. Data Story Brief</h2><span class="badge badge-plotly">Save locally</span></div>
+    <p class="text-muted">Fill this after building your chart. This forces the movement from “I plotted something” to “I found something and can explain it.”</p>
+    <div class="vl-form-grid">
+      <label>Chart title<input id="st-title" class="vl-input" placeholder="e.g., Attendance strongly predicts Mathematics performance"/></label>
+      <label>Audience<input id="st-audience" class="vl-input" placeholder="e.g., School leadership team"/></label>
+      <label>One-sentence insight<textarea id="st-insight" class="vl-input" rows="3" placeholder="What should the viewer notice immediately?"></textarea></label>
+      <label>Evidence<textarea id="st-evidence" class="vl-input" rows="3" placeholder="Which values, patterns, or comparisons support the insight?"></textarea></label>
+      <label>Recommended action<textarea id="st-action" class="vl-input" rows="3" placeholder="What should the audience do next?"></textarea></label>
+      <label>Limitations<textarea id="st-limit" class="vl-input" rows="3" placeholder="What should not be overclaimed from this chart?"></textarea></label>
+    </div>
+    <div class="vl-actions"><button class="btn btn-primary" onclick="saveStory()">Save Brief</button><button class="btn btn-secondary" onclick="exportStory()">Export Markdown</button><button class="btn btn-ghost" onclick="clearStory()">Clear</button></div>
+    <pre id="story-out" class="vl-pre mt-16" style="display:none"></pre>
+  </section>
+</section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>Story Builder · Clear charts, honest interpretation, practical action</p></div></div></footer>
+<script src="../assets/js/main.js"></script>
+<script>
+let currentTemplate='';
+function rule(){ const i=intent.value, x=xType.value, y=yType.value, g=group.value==='Yes';
+  if(i==='trend') return ['Line chart','Use a line chart because time order matters. Add markers when the audience needs to see individual observations.', 'px.line() / ax.plot()', 'Avoid sorting months alphabetically; preserve real chronological order.'];
+  if(i==='relationship' && x==='Numeric' && y==='Numeric') return ['Scatter plot','Use scatter because each point represents one observation with two numeric measurements. Add hue if groups matter.', 'sns.scatterplot()', 'Do not infer causation from correlation without study design.'];
+  if(i==='distribution') return ['Histogram + KDE or Box plot','Use histograms to show shape and spread; use box plots to compare spread across groups.', 'sns.histplot() / sns.boxplot()', 'Bin size changes the story; test multiple bin widths.'];
+  if(i==='composition') return ['Stacked bar or Donut chart','Use composition charts when part-to-whole is the main question. Prefer stacked bars when comparing multiple groups.', 'ax.bar(..., bottom=) / px.pie(hole=.4)', 'Avoid too many slices; group small categories as Other.'];
+  if(i==='ranking') return ['Sorted horizontal bar chart','Use horizontal bars for readable labels and clear top/bottom ranking.', 'sns.barplot()', 'Sort values before plotting; unsorted bars hide the ranking.'];
+  if(i==='comparison' && x==='Categorical' && y==='Numeric') return [g?'Grouped bar or box plot':'Bar chart / box plot','Use bars for summary values and box plots when spread matters. If groups exist, encode them with hue.', 'sns.barplot() / sns.boxplot()', 'Ask whether you are plotting raw values or aggregated summaries.'];
+  return ['Bar chart','This is the safest general-purpose chart for categorical comparison.', 'sns.barplot()', 'Label axes clearly and avoid 3D effects.']; }
+function advise(){ const r=rule(); const audience=document.getElementById('audience').value; currentTemplate = `import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Replace this sample data with your own DataFrame\ndf = pd.DataFrame({\n    'category': ['A','B','C','D'],\n    'value': [23, 45, 31, 52],\n    'group': ['G1','G1','G2','G2']\n})\n\nsns.set_theme(style='whitegrid')\nfig, ax = plt.subplots(figsize=(8,4))\n# Recommended: ${r[0]}\nsns.barplot(data=df, x='category', y='value', hue='group', ax=ax)\nax.set_title('Write a clear, insight-focused title')\nax.set_xlabel('Category')\nax.set_ylabel('Value')\nplt.tight_layout()\nplt.show()`;
+  advice.innerHTML = `<div class="vl-result-card"><h3>${r[0]}</h3><p>${r[1]}</p><div class="vl-chip-row"><span class="vl-chip">Best syntax: ${r[2]}</span><span class="vl-chip">Audience: ${audience}</span></div><div class="callout callout-warn"><span class="callout-label">Caution</span>${r[3]}</div><h4>Explanation pattern</h4><ol><li>Name the pattern: trend, gap, cluster, outlier, or distribution shape.</li><li>Quantify it with at least one number.</li><li>Connect it to a decision.</li><li>State one limitation honestly.</li></ol></div>`; }
+function sendTemplate(){ if(!currentTemplate) advise(); localStorage.setItem('vizlearn_playground_code', currentTemplate); location.href='playground.html'; }
+const SKEY='vizlearn_story_brief';
+function collect(){ return {title:stTitle.value,audience:stAudience.value,insight:stInsight.value,evidence:stEvidence.value,action:stAction.value,limit:stLimit.value,ts:new Date().toISOString()}; }
+const stTitle=document.getElementById('st-title'), stAudience=document.getElementById('st-audience'), stInsight=document.getElementById('st-insight'), stEvidence=document.getElementById('st-evidence'), stAction=document.getElementById('st-action'), stLimit=document.getElementById('st-limit');
+function saveStory(){ localStorage.setItem(SKEY, JSON.stringify(collect())); VizLearnToast&&VizLearnToast('Story brief saved locally'); }
+function md(){ const s=collect(); return `# ${s.title||'Data Story Brief'}\n\n**Audience:** ${s.audience||''}\n\n## Insight\n${s.insight||''}\n\n## Evidence\n${s.evidence||''}\n\n## Recommended Action\n${s.action||''}\n\n## Limitations\n${s.limit||''}\n\n_Generated from VizLearn Story Builder._`; }
+function exportStory(){ const out=document.getElementById('story-out'); out.style.display='block'; out.textContent=md(); navigator.clipboard.writeText(md()).then(()=>VizLearnToast&&VizLearnToast('Markdown copied')); }
+function clearStory(){ if(confirm('Clear story fields?')){ [stTitle,stAudience,stInsight,stEvidence,stAction,stLimit].forEach(x=>x.value=''); localStorage.removeItem(SKEY); }}
+(function load(){ try{ const s=JSON.parse(localStorage.getItem(SKEY)||'{}'); stTitle.value=s.title||''; stAudience.value=s.audience||''; stInsight.value=s.insight||''; stEvidence.value=s.evidence||''; stAction.value=s.action||''; stLimit.value=s.limit||''; }catch{} advise(); })();
+</script>
+</body>
+</html>

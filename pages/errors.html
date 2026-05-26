@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Error Guide — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css"/>
+  <style>
+    .eg-hero { padding:56px 0 36px; background:var(--bg2); border-bottom:1px solid var(--border); }
+    .eg-hero h1 { font-family:var(--font-head); font-size:2.2rem; font-weight:800; letter-spacing:-1px; margin-bottom:8px; }
+    .eg-search { max-width:480px; margin:20px 0 0; }
+    .eg-search input { width:100%; background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:11px 16px; color:var(--text); font-size:0.9rem; font-family:var(--font-body); transition:var(--transition); }
+    .eg-search input:focus { outline:none; border-color:var(--danger); }
+    .err-filters { display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 0; }
+    .err-btn { padding:5px 13px; border:1px solid var(--border); border-radius:999px; background:transparent; color:var(--text-muted); font-size:0.78rem; font-weight:600; cursor:pointer; transition:var(--transition); font-family:var(--font-body); }
+    .err-btn.active,.err-btn:hover { border-color:var(--danger); color:var(--danger); background:rgba(239,68,68,0.06); }
+    .err-grid { display:grid; grid-template-columns:1fr; gap:16px; padding:36px 0 80px; }
+    .err-card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; transition:var(--transition); }
+    .err-card:hover { border-color:rgba(239,68,68,0.4); }
+    .err-card-header { padding:14px 18px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; gap:12px; background:var(--bg3); }
+    .err-card-header:hover { background:var(--surface); }
+    .err-title { font-family:var(--font-mono); font-size:0.88rem; font-weight:700; color:var(--danger); }
+    .err-short { font-size:0.8rem; color:var(--text-muted); flex:1; margin-left:12px; }
+    .err-tags { display:flex; gap:5px; }
+    .err-tag { font-size:0.65rem; font-weight:700; padding:2px 7px; border-radius:4px; font-family:var(--font-mono); }
+    .err-chevron { color:var(--text-dim); font-size:0.8rem; transition:var(--transition); flex-shrink:0; }
+    .err-card.open .err-chevron { transform:rotate(90deg); }
+    .err-body { display:none; padding:0 18px 18px; border-top:1px solid var(--border); }
+    .err-card.open .err-body { display:block; }
+    .err-section { margin-top:16px; }
+    .err-section-title { font-size:0.72rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim); margin-bottom:8px; }
+    .err-cause { font-size:0.85rem; color:var(--text-muted); line-height:1.75; }
+    .err-cause code { font-family:var(--font-mono); font-size:0.8rem; background:var(--bg3); padding:1px 5px; border-radius:4px; color:var(--accent2); }
+    .code-bad { background:#1a0a0a; border:1px solid rgba(239,68,68,0.25); border-radius:8px; padding:12px 14px; font-family:var(--font-mono); font-size:0.78rem; line-height:1.75; color:#fca5a5; overflow-x:auto; white-space:pre; margin:8px 0; }
+    .code-good { background:#0a1a0e; border:1px solid rgba(16,185,129,0.25); border-radius:8px; padding:12px 14px; font-family:var(--font-mono); font-size:0.78rem; line-height:1.75; color:#6ee7b7; overflow-x:auto; white-space:pre; margin:8px 0; }
+    .fix-label { display:inline-block; font-size:0.68rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:2px 8px; border-radius:4px; margin-bottom:6px; }
+    .fix-bad { background:rgba(239,68,68,0.12); color:var(--danger); }
+    .fix-good { background:rgba(16,185,129,0.12); color:var(--success); }
+    .err-actions { display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
+    .no-results { text-align:center; padding:60px 20px; color:var(--text-dim); }
+    .no-results span { font-size:2.5rem; display:block; margin-bottom:12px; }
+  </style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="brand"><span class="brand-icon">⬡</span><span class="brand-text">Viz<span class="accent">Learn</span></span></a>
+    <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="lessons.html">Lessons</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="datasets.html">Data Lab</a></li>
+        <li><a href="upload.html">CSV Lab</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li>
+        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+        <li><a href="compare.html">Comparator</a></li>
+        <li><a href="params.html">Params</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="errors.html" class="active">Errors</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="progress.html">Progress</a></li>
+        <li><a href="quickref.html">Quick Ref</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div style="padding-top:64px;">
+  <div class="eg-hero">
+    <div class="container">
+      <div class="section-label">DEBUGGING GUIDE</div>
+      <h1>Common Visualization Errors</h1>
+      <p style="color:var(--text-muted);font-size:0.95rem;max-width:640px;">Every error you will hit in matplotlib, seaborn, and plotly — with the exact cause and the exact fix. Search by error message or symptom.</p>
+      <div class="eg-search"><input type="text" id="err-search" placeholder="Search: AttributeError, legend, heatmap, NaN …" autocomplete="off"/></div>
+      <div class="err-filters" id="err-filters">
+        <button class="err-btn active" data-f="all">All</button>
+        <button class="err-btn" data-f="matplotlib">Matplotlib</button>
+        <button class="err-btn" data-f="seaborn">Seaborn</button>
+        <button class="err-btn" data-f="plotly">Plotly</button>
+        <button class="err-btn" data-f="data">Data Issues</button>
+        <button class="err-btn" data-f="layout">Layout</button>
+        <button class="err-btn" data-f="style">Styling</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="err-grid" id="err-grid"></div>
+  </div>
+</div>
+
+<script src="../assets/js/main.js"></script>
+<script>
+const ERRORS = [
+  {
+    id:'e01', cats:['matplotlib'],
+    title:"AttributeError: 'Axes' object has no attribute 'title'",
+    short:'Called ax.title() instead of ax.set_title()',
+    cause:'In the OOP interface every setter uses the <code>set_</code> prefix. <code>ax.title</code> is a property (not callable), not a method. The same pattern applies to all axis labels and limits.',
+    bad:`ax.title('My Chart')       # ❌ Wrong — title is a property
+ax.xlabel('X Axis')        # ❌ Wrong — xlabel doesn't exist on ax
+ax.ylabel('Y Axis')        # ❌ Wrong`,
+    good:`ax.set_title('My Chart')   # ✅ Correct
+ax.set_xlabel('X Axis')    # ✅ Correct
+ax.set_ylabel('Y Axis')    # ✅ Correct`,
+    tags:['matplotlib','attributeerror']
+  },
+  {
+    id:'e02', cats:['matplotlib'],
+    title:'No legend appears even after calling ax.legend()',
+    short:'Missing label= argument on the plot calls',
+    cause:'<code>ax.legend()</code> only shows entries for plot calls that have a <code>label=</code> argument. If you forget to add <code>label=</code>, the legend box will appear empty or not at all.',
+    bad:`ax.plot(x, y1, color='green')   # ❌ no label
+ax.plot(x, y2, color='blue')    # ❌ no label
+ax.legend()                      # → empty legend`,
+    good:`ax.plot(x, y1, color='green', label='Class A')  # ✅
+ax.plot(x, y2, color='blue',  label='Class B')  # ✅
+ax.legend()                                      # → shows correctly`,
+    tags:['matplotlib','legend','layout']
+  },
+  {
+    id:'e03', cats:['matplotlib','layout'],
+    title:'Subplot titles and tick labels overlap each other',
+    short:'tight_layout() not called after creating subplots',
+    cause:'When you create a grid of subplots, matplotlib does not automatically adjust spacing between them. Axis labels, tick marks, and titles from adjacent plots overlap. The fix is one line: <code>fig.tight_layout()</code> called before <code>plt.show()</code>.',
+    bad:`fig, axes = plt.subplots(2, 2)
+# ... add charts ...
+plt.show()   # ❌ labels may overlap`,
+    good:`fig, axes = plt.subplots(2, 2)
+# ... add charts ...
+fig.tight_layout()   # ✅ fixes all spacing automatically
+plt.show()`,
+    tags:['matplotlib','layout','subplot','tight_layout']
+  },
+  {
+    id:'e04', cats:['matplotlib'],
+    title:"ValueError: could not convert string to float",
+    short:'Passing string data directly to ax.plot() or ax.scatter()',
+    cause:'Functions like <code>ax.plot()</code> and <code>ax.scatter()</code> expect numeric arrays. If your x or y values are strings (e.g., dates as strings, category names), you must either convert them to numbers first or use a function designed for categorical data like <code>ax.bar()</code>.',
+    bad:`dates = ['2024-01', '2024-02', '2024-03']
+values = [10, 20, 15]
+ax.plot(dates, values)  # ❌ ValueError — strings in x`,
+    good:`# Option 1: Use bar chart for string categories
+ax.bar(dates, values)   # ✅ works for string x-axis
+
+# Option 2: Convert dates properly
+import pandas as pd
+dates_dt = pd.to_datetime(dates)
+ax.plot(dates_dt, values)  # ✅ datetime objects`,
+    tags:['matplotlib','valueerror','data']
+  },
+  {
+    id:'e05', cats:['seaborn'],
+    title:'sns.heatmap shows raw data instead of correlations',
+    short:'Passed df directly instead of df.corr()',
+    cause:'<code>sns.heatmap()</code> accepts any 2D array or DataFrame. If you pass the raw DataFrame, it plots the actual data values — not correlations. For a correlation heatmap you must first compute <code>df.corr()</code>.',
+    bad:`sns.heatmap(df, annot=True, cmap='coolwarm')
+# ❌ Shows raw data values, not correlations`,
+    good:`corr = df.corr()                    # ✅ Step 1: compute correlations
+sns.heatmap(corr,                   # ✅ Step 2: plot correlations
+    annot=True, fmt='.2f',
+    cmap='coolwarm', center=0,
+    vmin=-1, vmax=1)`,
+    tags:['seaborn','heatmap','data']
+  },
+  {
+    id:'e06', cats:['seaborn'],
+    title:"TypeError: barplot() got unexpected keyword argument 'ci'",
+    short:"The 'ci' parameter was renamed to 'errorbar' in seaborn 0.12+",
+    cause:"Seaborn 0.12 (late 2022) renamed the <code>ci</code> parameter to <code>errorbar</code>. Old code using <code>ci=95</code> or <code>ci='sd'</code> will raise a TypeError on newer seaborn versions.",
+    bad:`sns.barplot(data=df, x='day', y='tip', ci=95)   # ❌ old API
+sns.barplot(data=df, x='day', y='tip', ci='sd')  # ❌ old API`,
+    good:`sns.barplot(data=df, x='day', y='tip', errorbar='ci')   # ✅ new API
+sns.barplot(data=df, x='day', y='tip', errorbar='sd')   # ✅ new API
+sns.barplot(data=df, x='day', y='tip', errorbar=None)   # ✅ no bars`,
+    tags:['seaborn','typeerror']
+  },
+  {
+    id:'e07', cats:['seaborn'],
+    title:'Seaborn pairplot produces blank diagonal cells',
+    short:'Dataset contains non-numeric columns that seaborn cannot plot',
+    cause:'<code>sns.pairplot()</code> tries to plot all columns by default. Non-numeric columns (strings, object dtype) cause the KDE or histogram on the diagonal to fail silently and show blank. Fix: select only numeric columns, or pass them explicitly via <code>vars=</code>.',
+    bad:`df = pd.read_csv('data.csv')
+sns.pairplot(df)  # ❌ fails if df has string columns`,
+    good:`# Option 1: select numeric only
+sns.pairplot(df.select_dtypes(include='number'))  # ✅
+
+# Option 2: specify which columns to use
+sns.pairplot(df, vars=['col1','col2','col3'])      # ✅
+
+# Option 3: use hue for the categorical column
+sns.pairplot(df, hue='species')  # ✅ hue stays as color`,
+    tags:['seaborn','pairplot','data']
+  },
+  {
+    id:'e08', cats:['matplotlib','data'],
+    title:'Heatmap shows NaN or blank cells',
+    short:'Missing values (NaN) in the data passed to heatmap',
+    cause:'Both <code>ax.imshow()</code> and <code>sns.heatmap()</code> cannot render NaN values — they show as blank white cells. You must handle missing values before plotting: either drop them, fill them, or mask them.',
+    bad:`corr = df.corr()
+sns.heatmap(corr)  # ❌ blank cells if corr has NaN`,
+    good:`# Fix 1: fill NaN with 0
+sns.heatmap(corr.fillna(0), ...)  # ✅
+
+# Fix 2: mask NaN cells (shows grey instead of blank)
+import numpy as np
+mask = np.isnan(corr)
+sns.heatmap(corr, mask=mask, ...)  # ✅
+
+# Fix 3: drop columns with all-NaN correlation
+corr_clean = corr.dropna(axis=0, how='all').dropna(axis=1, how='all')
+sns.heatmap(corr_clean, ...)  # ✅`,
+    tags:['matplotlib','seaborn','data','heatmap','nan']
+  },
+  {
+    id:'e09', cats:['matplotlib','style'],
+    title:'Dark background set but saved PNG has white background',
+    short:'facecolor set on ax but not on fig when saving',
+    cause:"When you use <code>ax.set_facecolor('#0d1117')</code> it colours only the plot area. The Figure background (outside the axes) defaults to white. You must also set <code>fig.patch.set_facecolor()</code> and pass <code>facecolor</code> to <code>savefig()</code>.",
+    bad:`ax.set_facecolor('#0d1117')
+fig.savefig('chart.png')  # ❌ white border around the dark chart`,
+    good:`ax.set_facecolor('#0d1117')             # ✅ plot area
+fig.patch.set_facecolor('#0d1117')      # ✅ figure background
+fig.savefig('chart.png',
+    facecolor=fig.get_facecolor())      # ✅ preserve on save
+# OR
+fig.savefig('chart.png', facecolor='#0d1117')  # ✅ explicit`,
+    tags:['matplotlib','style','savefig']
+  },
+  {
+    id:'e10', cats:['matplotlib','layout'],
+    title:'X-axis tick labels overlap and are unreadable',
+    short:'Long category names with no rotation applied',
+    cause:'When categories have long names (dates, product names, city names), the tick labels run into each other horizontally. The fix is to rotate them using <code>ax.tick_params(axis="x", rotation=45)</code> and optionally set <code>ha="right"</code> for alignment.',
+    bad:`ax.bar(long_category_names, values)
+plt.show()  # ❌ labels overlap`,
+    good:`ax.bar(long_category_names, values)
+
+# Fix 1: rotate via tick_params
+ax.tick_params(axis='x', rotation=45)  # ✅
+
+# Fix 2: set_xticklabels with ha for better alignment
+ax.set_xticklabels(long_category_names,
+    rotation=45, ha='right', fontsize=9)  # ✅
+
+# Fix 3: use horizontal bar chart (avoids overlap entirely)
+ax.barh(long_category_names, values)     # ✅`,
+    tags:['matplotlib','layout','ticks','style']
+  },
+  {
+    id:'e11', cats:['seaborn','data'],
+    title:'sns.barplot shows one bar per row instead of aggregated bars',
+    short:'Data is in wide format — seaborn expects long/tidy format',
+    cause:"Seaborn functions expect <strong>tidy (long) format</strong> data: one observation per row, with a column for the category and a column for the value. If your DataFrame is in wide format (one column per category), seaborn cannot aggregate correctly. Use <code>df.melt()</code> to convert.",
+    bad:`# Wide format (BAD for seaborn)
+df = pd.DataFrame({'Maths':[78,82],'English':[85,79]})
+sns.barplot(data=df)  # ❌ each row becomes a separate bar`,
+    good:`# Convert to long format first
+df_long = df.melt(var_name='Subject', value_name='Score')
+#   Subject  Score
+#   Maths    78
+#   Maths    82
+#   English  85  ...
+
+sns.barplot(data=df_long, x='Subject', y='Score')  # ✅`,
+    tags:['seaborn','data','barplot']
+  },
+  {
+    id:'e12', cats:['matplotlib'],
+    title:'Figure saved but image is cut off / content missing',
+    short:'bbox_inches="tight" not passed to savefig()',
+    cause:"By default, <code>fig.savefig()</code> uses the exact figure dimensions without accounting for elements that stick out (legends outside the plot area, tight labels, colorbars). Pass <code>bbox_inches='tight'</code> to include all figure elements.",
+    bad:`fig.savefig('chart.png')  # ❌ may cut off legend, labels`,
+    good:`fig.savefig('chart.png',
+    bbox_inches='tight',   # ✅ includes all elements
+    dpi=150,               # ✅ good resolution
+    facecolor='#0d1117')   # ✅ preserves dark background`,
+    tags:['matplotlib','savefig','layout']
+  },
+  {
+    id:'e13', cats:['plotly'],
+    title:'Plotly chart shows as blank white box',
+    short:'fig.show() called in a plain Python script — needs a browser',
+    cause:'In a plain .py script, <code>fig.show()</code> tries to open the chart in a browser via a local server. In some environments (servers, notebooks with wrong renderer) this produces a blank box. Set the renderer explicitly.',
+    bad:`import plotly.express as px
+fig = px.scatter(df, x='x', y='y')
+fig.show()  # ❌ may be blank in some environments`,
+    good:`# In Jupyter Notebook:
+fig.show(renderer='notebook')   # ✅
+
+# In Jupyter Lab:
+fig.show(renderer='jupyterlab') # ✅
+
+# Save as HTML (works everywhere):
+fig.write_html('chart.html')    # ✅ open in any browser
+
+# Save as PNG:
+fig.write_image('chart.png')    # ✅ needs kaleido installed`,
+    tags:['plotly','renderer']
+  },
+  {
+    id:'e14', cats:['matplotlib','data'],
+    title:'ValueError: x and y must have same first dimension',
+    short:'Shape mismatch between x and y arrays',
+    cause:'<code>ax.plot(x, y)</code> requires x and y to have the same length. This error occurs when you accidentally pass arrays of different sizes — e.g., an index array and a sliced data array, or a DataFrame column vs a numpy array of different length.',
+    bad:`x = [1, 2, 3, 4, 5]
+y = [10, 20, 30]       # ❌ length 3 vs length 5
+ax.plot(x, y)          # → ValueError`,
+    good:`# Always check shapes before plotting:
+print(len(x), len(y))  # must match
+
+x = df['date'].values
+y = df['value'].values  # ✅ both from same DataFrame
+
+# Or ensure alignment:
+ax.plot(df['date'], df['value'])  # ✅ safest approach`,
+    tags:['matplotlib','valueerror','data']
+  },
+  {
+    id:'e15', cats:['seaborn','style'],
+    title:'sns.set_theme() has no effect on the chart',
+    short:'set_theme() called AFTER creating the figure',
+    cause:"<code>sns.set_theme()</code> must be called <strong>before</strong> creating the Figure or making any plot call. Once a Figure is created, matplotlib has already applied default styling. The theme setting only affects charts created after the call.",
+    bad:`fig, ax = plt.subplots()     # ❌ figure created first
+sns.set_theme(style='darkgrid')  # ❌ too late — no effect`,
+    good:`sns.set_theme(style='darkgrid')   # ✅ call FIRST
+fig, ax = plt.subplots()          # ✅ figure created after`,
+    tags:['seaborn','style']
+  },
+];
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function buildErrors(data) {
+  const grid = document.getElementById('err-grid');
+  if (!data.length) {
+    grid.innerHTML = `<div class="no-results"><span>🔍</span><p>No errors match that search. Try a different term.</p></div>`;
+    return;
+  }
+  grid.innerHTML = data.map(e => {
+    const tags = (e.tags||[]).map(t =>
+      `<span class="err-tag" style="background:rgba(239,68,68,0.1);color:var(--danger);">${t}</span>`
+    ).join('');
+    const runEncoded = encodeURIComponent(e.good);
+    return `<div class="err-card" id="${e.id}">
+      <div class="err-card-header" onclick="this.closest('.err-card').classList.toggle('open')">
+        <span class="err-title">${e.title}</span>
+        <span class="err-short">${e.short}</span>
+        <div class="err-tags">${tags}</div>
+        <span class="err-chevron">▶</span>
+      </div>
+      <div class="err-body">
+        <div class="err-section">
+          <div class="err-section-title">Root Cause</div>
+          <p class="err-cause">${e.cause}</p>
+        </div>
+        <div class="err-section">
+          <div class="fix-label fix-bad">❌ Wrong Code</div>
+          <pre class="code-bad">${escHtml(e.bad)}</pre>
+          <div class="fix-label fix-good" style="margin-top:8px;">✅ Fixed Code</div>
+          <pre class="code-good">${escHtml(e.good)}</pre>
+        </div>
+        <div class="err-actions">
+          <button class="btn btn-secondary btn-sm"
+            onclick="copyFix('${runEncoded}',this)">Copy Fix</button>
+          <button class="btn btn-primary btn-sm"
+            onclick="runFix('${runEncoded}')">▶ Run Fix in Playground</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function copyFix(encoded, btn) {
+  const text = decodeURIComponent(encoded);
+  navigator.clipboard.writeText(text).catch(()=>{
+    const ta=document.createElement('textarea'); ta.value=text;
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  });
+  btn.textContent='Copied!';
+  setTimeout(()=>{ btn.textContent='Copy Fix'; },2000);
+}
+function runFix(encoded) {
+  localStorage.setItem('vizlearn_playground_code', decodeURIComponent(encoded));
+  window.location.href='playground.html';
+}
+
+let currentCat='all';
+function applyFilters(cat, search) {
+  const s = (search||'').toLowerCase();
+  const filtered = ERRORS.filter(e => {
+    const catOk = cat==='all' || e.cats.includes(cat) || (e.tags||[]).includes(cat);
+    const textOk = !s || e.title.toLowerCase().includes(s) ||
+      e.short.toLowerCase().includes(s) || (e.tags||[]).some(t=>t.includes(s)) ||
+      e.cause.toLowerCase().includes(s);
+    return catOk && textOk;
+  });
+  buildErrors(filtered);
+}
+
+document.querySelectorAll('.err-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.err-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    currentCat = this.getAttribute('data-f');
+    applyFilters(currentCat, document.getElementById('err-search').value);
+  });
+});
+document.getElementById('err-search').addEventListener('input', function() {
+  applyFilters(currentCat, this.value);
+});
+
+buildErrors(ERRORS);
+</script>
+</body>
+</html>

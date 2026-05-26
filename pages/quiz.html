@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    .score-banner {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 20px 28px;
+      display: flex; align-items: center; gap: 24px;
+      margin-bottom: 32px; flex-wrap: wrap;
+    }
+    .score-num { font-family: var(--font-head); font-size: 2.5rem; font-weight: 800; color: var(--accent); }
+    .score-label { font-size: 0.8rem; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+    .quiz-card-footer { padding: 10px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="../index.html" class="brand"><span class="brand-icon">⬡</span><span class="brand-text">Viz<span class="accent">Learn</span></span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="lessons.html">Lessons</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="datasets.html">Data Lab</a></li>
+        <li><a href="upload.html">CSV Lab</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li>
+        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+        <li><a href="compare.html">Comparator</a></li>
+        <li><a href="params.html">Params</a></li>
+        <li><a href="quiz.html" class="active">Quiz</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="errors.html">Errors</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="progress.html">Progress</a></li>
+        <li><a href="quickref.html">Quick Ref</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="quiz-wrapper">
+    <div class="quiz-hero">
+      <div class="container">
+        <div class="section-label">TEST YOUR KNOWLEDGE</div>
+        <h1>Visualization Quiz</h1>
+        <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:20px;">Read the code, identify the chart, spot the bug, predict the output. Real questions from real data science work.</p>
+
+        <!-- Score banner -->
+        <div class="score-banner">
+          <div><div class="score-num" id="score-correct">0</div><div class="score-label">Correct</div></div>
+          <div><div class="score-num" id="score-total" style="color:var(--text-muted);">0</div><div class="score-label">Answered</div></div>
+          <div style="flex:1;min-width:180px;">
+            <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:6px;">Accuracy</div>
+            <div class="progress-bar-wrap" style="margin:0;"><div class="progress-bar-fill" id="score-bar" style="width:0%"></div></div>
+            <div style="font-size:0.72rem;color:var(--text-dim);margin-top:4px;" id="score-pct">— %</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="resetQuiz()">↺ Reset All</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="quiz-filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="matplotlib">Matplotlib</button>
+          <button class="filter-btn" data-filter="seaborn">Seaborn</button>
+          <button class="filter-btn" data-filter="plotly">Plotly</button>
+          <button class="filter-btn" data-filter="pandas">Pandas</button>
+          <button class="filter-btn" data-filter="identify">Identify Chart</button>
+          <button class="filter-btn" data-filter="debug">Debug Code</button>
+          <button class="filter-btn" data-filter="output">Predict Output</button>
+          <button class="filter-btn" data-filter="params">Parameters</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="quiz-grid" id="quiz-grid" style="padding:40px 0 80px;"></div>
+    </div>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+  const QUIZZES = [
+    {
+      id:'q01', lib:'matplotlib', type:'identify',
+      title:'What chart type does this code produce?',
+      code:`import matplotlib.pyplot as plt
+import numpy as np
+
+data = np.random.normal(70, 15, 500)
+fig, ax = plt.subplots()
+ax.hist(data, bins=25, color='steelblue', edgecolor='none')
+ax.set_title('Score Distribution')
+plt.show()`,
+      options:['Line Chart','Scatter Plot','Histogram','Bar Chart'],
+      correct:2,
+      explanation:'<code>ax.hist()</code> draws a histogram — it divides continuous data into bins and counts how many values fall in each bin. The result shows the distribution (shape) of the data.'
+    },
+    {
+      id:'q02', lib:'matplotlib', type:'debug',
+      title:'This code has a bug. What is wrong?',
+      code:`import matplotlib.pyplot as plt
+
+x = [1, 2, 3, 4, 5]
+y = [10, 24, 18, 35, 29]
+
+fig, ax = plt.subplots()
+ax.plot(x, y)
+ax.title('Sales Over Time')    # ← bug on this line
+plt.show()`,
+      options:[
+        'ax.plot() should be plt.plot()',
+        'ax.title() is wrong — should be ax.set_title()',
+        'figsize is missing',
+        'plt.show() is not needed'
+      ],
+      correct:1,
+      explanation:'In the OOP interface, the method is <code>ax.set_title()</code>, not <code>ax.title()</code>. The <code>set_</code> prefix is used for all setters on an Axes object: <code>set_title()</code>, <code>set_xlabel()</code>, <code>set_ylabel()</code>, <code>set_xlim()</code>, etc.'
+    },
+    {
+      id:'q03', lib:'seaborn', type:'identify',
+      title:'What does this seaborn code create?',
+      code:`import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = sns.load_dataset('iris')
+sns.heatmap(df.corr(), annot=True, fmt='.2f',
+            cmap='coolwarm', center=0)
+plt.title('Feature Correlation')
+plt.show()`,
+      options:[
+        'A scatter matrix of all features',
+        'A color-coded matrix showing pairwise correlations',
+        'A bar chart of mean values',
+        'A distribution plot for each feature'
+      ],
+      correct:1,
+      explanation:'<code>df.corr()</code> computes the Pearson correlation matrix (values -1 to +1). <code>sns.heatmap()</code> then visualizes this as a color-coded grid. <code>annot=True</code> shows the exact values, <code>cmap="coolwarm"</code> uses blue for negative and red for positive correlations, and <code>center=0</code> centers the colormap at zero.'
+    },
+    {
+      id:'q04', lib:'matplotlib', type:'params',
+      title:'What does the alpha=0.5 parameter control?',
+      code:`ax.scatter(x, y,
+    c='#00e5a0',
+    s=60,
+    alpha=0.5,
+    edgecolors='none'
+)`,
+      options:[
+        'The color intensity (brightness)',
+        'The size of the points',
+        'The transparency (0 = invisible, 1 = opaque)',
+        'The number of points to show'
+      ],
+      correct:2,
+      explanation:'<code>alpha</code> controls transparency. 0 = completely invisible, 1 = fully opaque. Setting alpha=0.5 means each point is 50% transparent. This is especially useful in scatter plots where points overlap, because you can see the density of overlapping points through the transparency.'
+    },
+    {
+      id:'q05', lib:'seaborn', type:'identify',
+      title:'What is the key difference between sns.barplot() and ax.bar()?',
+      code:`# Code A: Matplotlib
+ax.bar(['Mon','Tue','Wed'], [45, 62, 55])
+
+# Code B: Seaborn
+sns.barplot(data=df, x='day', y='sales',
+            errorbar='ci')`,
+      options:[
+        'No difference — they are identical',
+        'Seaborn barplot automatically computes the mean and adds a confidence interval bar. Matplotlib bar() plots exact values.',
+        'Matplotlib bar() is faster and supports more colors',
+        'Seaborn barplot needs a DataFrame; matplotlib bar() accepts any data'
+      ],
+      correct:1,
+      explanation:'This is one of the most important seaborn concepts. <code>sns.barplot()</code> aggregates the data — it computes the <strong>mean</strong> of each group and adds error bars (95% CI by default). <code>ax.bar()</code> plots the exact values you pass in, with no aggregation. When your DataFrame has multiple rows per category, sns.barplot() is what you want for comparing group averages.'
+    },
+    {
+      id:'q06', lib:'matplotlib', type:'debug',
+      title:'The legend is not showing. Why?',
+      code:`import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots()
+ax.plot([1,2,3], [4,5,6], color='green')
+ax.plot([1,2,3], [6,4,7], color='blue')
+ax.set_title('Two Lines')
+# No legend appears
+plt.show()`,
+      options:[
+        'ax.legend() was never called',
+        'You must use plt.plot() instead of ax.plot()',
+        'The colors are wrong — legend only works with named colors',
+        'figsize is required for legends to appear'
+      ],
+      correct:0,
+      explanation:'Adding a <code>label</code> parameter to each plot call and then calling <code>ax.legend()</code> fixes this. The two missing pieces are:\n1. Add label to each line: <code>ax.plot(..., label="Series A")</code>\n2. Call <code>ax.legend()</code> to display the legend box.'
+    },
+    {
+      id:'q07', lib:'seaborn', type:'params',
+      title:'What does hue="species" do in sns.scatterplot()?',
+      code:`sns.scatterplot(
+    data=df,
+    x='sepal_length',
+    y='petal_length',
+    hue='species',
+    palette='Set2'
+)`,
+      options:[
+        'It filters the data to show only the "species" column',
+        'It colors each point according to the value in the species column, one color per unique value',
+        'It creates a separate subplot for each species',
+        'It adds a color bar on the right side'
+      ],
+      correct:1,
+      explanation:'<code>hue</code> is seaborn\'s way of adding a third dimension to a 2D chart using color. Each unique value in the hue column gets a distinct color from the palette. A legend is automatically added. For numeric columns, hue creates a continuous color gradient; for categorical columns (like species), it creates discrete distinct colors.'
+    },
+    {
+      id:'q08', lib:'matplotlib', type:'output',
+      title:'What does plt.subplots(2, 3) create?',
+      code:`fig, axes = plt.subplots(2, 3, figsize=(12, 6))
+
+# How do you access the top-right subplot?
+# axes[0, 2]
+# axes[2, 0]
+# axes[0, 3]
+# axes[1, 2]`,
+      options:[
+        'axes[0, 2] — row 0 (top), column 2 (rightmost of 3)',
+        'axes[2, 0] — the 3rd row, first column',
+        'axes[0, 3] — row 0, column 3',
+        'axes[1, 2] — row 1 (bottom), column 2'
+      ],
+      correct:0,
+      explanation:'<code>plt.subplots(2, 3)</code> creates a 2-row, 3-column grid of Axes. Indexing is zero-based: <code>axes[row, col]</code>. Top row = row 0. Columns are 0, 1, 2 (left to right). So the top-right subplot is <code>axes[0, 2]</code>. The bottom-left is <code>axes[1, 0]</code>.'
+    },
+    {
+      id:'q09', lib:'seaborn', type:'identify',
+      title:'Which seaborn function is best for seeing all pairwise relationships in a dataset?',
+      code:`# You have a DataFrame with 5 numeric columns.
+# You want to see all possible scatter plots
+# between every pair of columns, plus the
+# distribution of each column on the diagonal.
+#
+# Which function do you call?`,
+      options:[
+        'sns.heatmap(df.corr())',
+        'sns.scatterplot() in a loop',
+        'sns.pairplot(df)',
+        'sns.jointplot(df)'
+      ],
+      correct:2,
+      explanation:'<code>sns.pairplot(df)</code> automatically creates a grid of scatter plots for every pair of numeric columns. The diagonal shows the distribution of each column (histogram or KDE). It is the fastest EDA tool for exploring all variable relationships at once. Add <code>hue="category"</code> to color by a categorical column.'
+    },
+    {
+      id:'q10', lib:'matplotlib', type:'params',
+      title:'What is the purpose of fig.tight_layout()?',
+      code:`fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+# ... add charts to each axes ...
+fig.tight_layout()   # ← what does this do?
+plt.show()`,
+      options:[
+        'It makes the figure window always stay on top',
+        'It compresses all the data to fit in a smaller figure',
+        'It automatically adjusts the spacing between subplots to prevent titles, labels, and ticks from overlapping',
+        'It locks the figure size so it cannot be resized'
+      ],
+      correct:2,
+      explanation:'<code>fig.tight_layout()</code> is one of the most-used matplotlib utilities. When you have multiple subplots, the axis labels, tick labels, and titles can overlap between adjacent plots. tight_layout() automatically computes and applies padding to prevent this. Always call it before <code>plt.show()</code> or <code>fig.savefig()</code>.'
+    },
+    {
+      id:'q11', lib:'pandas', type:'identify',
+      title:'What does this pandas code produce?',
+      code:`import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.DataFrame({
+    'Maths': [78, 82, 75, 88],
+    'English': [85, 79, 83, 87]
+}, index=['T1','T2','T3','T4'])
+
+df.plot.bar(stacked=True, figsize=(8,5))
+plt.show()`,
+      options:[
+        'A grouped bar chart with side-by-side bars',
+        'A stacked bar chart where each bar shows both Maths and English stacked on top',
+        'Two separate bar charts in a grid',
+        'A line chart with two lines'
+      ],
+      correct:1,
+      explanation:'<code>stacked=True</code> in df.plot.bar() stacks all columns on top of each other within each bar. Each bar\'s total height represents the sum of all values for that index (T1, T2, etc.). Without stacked=True, bars would be placed side-by-side (grouped). Stacked charts are good for showing part-to-whole relationships over categories.'
+    },
+    {
+      id:'q12', lib:'matplotlib', type:'debug',
+      title:'Why does this heatmap look wrong?',
+      code:`import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+df = pd.DataFrame({'A':[1,2,3],'B':[4,5,6],'C':[7,8,9]})
+
+# Bug: trying to make a correlation heatmap
+sns.heatmap(df, annot=True, cmap='coolwarm')
+plt.show()`,
+      options:[
+        'sns.heatmap() cannot use annot=True',
+        'The colormap "coolwarm" is not valid',
+        'df should be df.corr() — we are plotting raw values instead of correlations',
+        'The DataFrame needs a datetime index'
+      ],
+      correct:2,
+      explanation:'A correlation heatmap requires <strong>correlation values</strong>, not the raw data. <code>df.corr()</code> computes the Pearson correlation matrix (all values between -1 and +1). Passing the raw DataFrame to sns.heatmap() will produce a chart, but it shows the raw data values, not correlations. Fix: <code>sns.heatmap(df.corr(), annot=True, cmap="coolwarm", center=0)</code>.'
+    },
+  ];
+
+  let correctCount = 0;
+  let answeredCount = 0;
+
+  function updateScore() {
+    document.getElementById('score-correct').textContent = correctCount;
+    document.getElementById('score-total').textContent = answeredCount;
+    const pct = answeredCount > 0 ? Math.round((correctCount/answeredCount)*100) : 0;
+    document.getElementById('score-pct').textContent = pct + '%';
+    document.getElementById('score-bar').style.width = pct + '%';
+  }
+
+  function buildQuiz(data) {
+    const grid = document.getElementById('quiz-grid');
+    grid.innerHTML = '';
+    data.forEach((q, idx) => {
+      const card = document.createElement('div');
+      card.className = 'quiz-card';
+      card.setAttribute('data-quiz-id', q.id);
+      card.setAttribute('data-lib', q.lib);
+      card.setAttribute('data-type', q.type);
+
+      const libColors = { matplotlib:'badge-mpl', seaborn:'badge-sns', plotly:'badge-plotly', pandas:'badge-pd' };
+      const typeLabels = { identify:'🔍 Identify', debug:'🐛 Debug', output:'🖥 Predict', params:'⚙ Parameters' };
+
+      const opts = q.options.map((o, i) =>
+        `<button class="quiz-opt" data-correct="${i===q.correct}" onclick="handleAnswer(this,'${q.id}')">
+          <strong style="color:var(--text-dim);margin-right:6px;">${String.fromCharCode(65+i)}.</strong> ${o}
+        </button>`
+      ).join('');
+
+      card.innerHTML = `
+        <div class="quiz-card-header">
+          <h3 class="quiz-card-title">Q${idx+1}. ${q.title}</h3>
+          <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
+            <span class="badge ${libColors[q.lib]}">${q.lib}</span>
+            <span class="badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted);border:1px solid var(--border);">${typeLabels[q.type]||q.type}</span>
+          </div>
+        </div>
+        <div class="quiz-card-body">
+          <pre>${escHtml(q.code)}</pre>
+          <div class="quiz-options">${opts}</div>
+          <div class="quiz-feedback" id="fb-${q.id}"></div>
+        </div>
+        <div class="quiz-card-footer">
+          <button class="btn btn-secondary btn-sm" onclick="sendToPlay('${encodeURIComponent(q.code)}')">▶ Run in Playground</button>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function handleAnswer(btn, qid) {
+    const card = btn.closest('.quiz-card');
+    const opts = card.querySelectorAll('.quiz-opt');
+    const fb = document.getElementById('fb-' + qid);
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+    const q = QUIZZES.find(x => x.id === qid);
+
+    opts.forEach(o => {
+      o.classList.add('disabled');
+      if (o.getAttribute('data-correct') === 'true') o.classList.add('correct');
+    });
+    if (!isCorrect) btn.classList.add('wrong');
+
+    answeredCount++;
+    if (isCorrect) correctCount++;
+    updateScore();
+    // Log to progress dashboard
+    if (window.VizLearnLogQuizAnswer) {
+      window.VizLearnLogQuizAnswer(q.id, q.type, isCorrect);
+    }
+
+    if (fb) {
+      fb.classList.add('show', isCorrect ? 'correct' : 'wrong');
+      fb.innerHTML = `<strong>${isCorrect ? '✅ Correct!' : '❌ Not quite.'}</strong><br/>${q.explanation}`;
+    }
+  }
+
+  function resetQuiz() {
+    correctCount = 0; answeredCount = 0;
+    updateScore();
+    buildQuiz(QUIZZES);
+    applyFilter(document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all');
+  }
+
+  function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function sendToPlay(encoded) {
+    localStorage.setItem('vizlearn_playground_code', decodeURIComponent(encoded));
+    window.location.href = 'playground.html';
+  }
+
+  function applyFilter(f) {
+    document.querySelectorAll('.quiz-card').forEach(card => {
+      const lib = card.getAttribute('data-lib');
+      const type = card.getAttribute('data-type');
+      const show = f==='all' || lib===f || type===f;
+      card.style.display = show ? '' : 'none';
+    });
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      applyFilter(this.getAttribute('data-filter'));
+    });
+  });
+
+  buildQuiz(QUIZZES);
+  </script>
+</body>
+</html>

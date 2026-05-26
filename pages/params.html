@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Parameter Explorer — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css"/>
+  <style>
+    .pe-hero {
+      padding:56px 0 36px;
+      background:var(--bg2);
+      border-bottom:1px solid var(--border);
+    }
+    .pe-hero h1 {
+      font-family:var(--font-head);
+      font-size:2.2rem; font-weight:800;
+      letter-spacing:-1px; margin-bottom:8px;
+    }
+    .pe-hero p { color:var(--text-muted); font-size:0.95rem; max-width:640px; }
+
+    /* Function picker */
+    .fn-picker {
+      display:flex; gap:8px; flex-wrap:wrap; margin:20px 0 0;
+    }
+    .fn-btn {
+      padding:7px 16px;
+      border:1px solid var(--border); border-radius:999px;
+      background:transparent; color:var(--text-muted);
+      font-size:0.82rem; font-weight:600; cursor:pointer;
+      transition:var(--transition); font-family:var(--font-mono);
+    }
+    .fn-btn.active, .fn-btn:hover {
+      border-color:var(--accent); color:var(--accent);
+      background:rgba(0,229,160,0.07);
+    }
+
+    /* Layout */
+    .pe-body {
+      display:grid;
+      grid-template-columns:320px 1fr;
+      gap:24px;
+      padding:32px 0 80px;
+      align-items:start;
+    }
+    @media(max-width:900px){ .pe-body{ grid-template-columns:1fr; } }
+
+    /* Left: param controls */
+    .param-controls {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      position:sticky; top:80px;
+    }
+    .param-controls-header {
+      padding:14px 18px;
+      background:var(--bg3);
+      border-bottom:1px solid var(--border);
+      font-family:var(--font-head);
+      font-size:0.85rem; font-weight:700;
+      display:flex; align-items:center;
+      justify-content:space-between;
+    }
+    .param-list {
+      padding:0;
+      max-height:calc(100vh - 240px);
+      overflow-y:auto;
+    }
+    .param-row {
+      padding:12px 18px;
+      border-bottom:1px solid var(--border);
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .param-row:last-child{ border-bottom:none; }
+    .param-label {
+      display:flex; align-items:center;
+      justify-content:space-between;
+    }
+    .param-name {
+      font-family:var(--font-mono);
+      font-size:0.8rem; font-weight:700;
+      color:var(--accent2);
+    }
+    .param-val {
+      font-family:var(--font-mono);
+      font-size:0.78rem; color:var(--accent);
+      background:rgba(0,229,160,0.08);
+      padding:1px 7px; border-radius:4px;
+    }
+    .param-desc {
+      font-size:0.76rem; color:var(--text-dim);
+      line-height:1.5;
+    }
+    /* Input types */
+    .pe-range {
+      width:100%; accent-color:var(--accent);
+      height:4px; cursor:pointer;
+    }
+    .pe-select {
+      width:100%;
+      background:var(--surface); border:1px solid var(--border);
+      color:var(--text); padding:5px 8px;
+      border-radius:7px; font-size:0.78rem;
+      font-family:var(--font-mono); cursor:pointer;
+    }
+    .pe-select:focus{ outline:none; border-color:var(--accent); }
+    .pe-color {
+      width:100%; height:30px;
+      border:1px solid var(--border); border-radius:7px;
+      cursor:pointer; background:transparent;
+      padding:1px 2px;
+    }
+    .pe-checkbox {
+      accent-color:var(--accent);
+      width:16px; height:16px; cursor:pointer;
+    }
+
+    /* Right: code + run */
+    .pe-right {}
+    .code-preview {
+      background:#0d1117;
+      border:1px solid var(--border);
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      margin-bottom:16px;
+    }
+    .code-preview-header {
+      padding:10px 16px;
+      background:var(--bg3);
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center;
+      justify-content:space-between;
+    }
+    .code-preview pre {
+      padding:16px;
+      font-family:var(--font-mono);
+      font-size:0.8rem; line-height:1.75;
+      color:#c9d1d9; overflow-x:auto;
+      white-space:pre; margin:0;
+    }
+
+    .run-panel {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+    }
+    .run-panel-header {
+      padding:10px 16px;
+      background:var(--bg3);
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center;
+      justify-content:space-between;
+      font-size:0.8rem; color:var(--text-muted);
+      font-family:var(--font-mono);
+    }
+    #pe-output {
+      min-height:320px;
+      padding:16px;
+      background:var(--bg);
+      display:flex; align-items:center; justify-content:center;
+    }
+    #pe-output img {
+      max-width:100%; border-radius:8px;
+      border:1px solid var(--border);
+    }
+    .pe-empty {
+      text-align:center; color:var(--text-dim); font-size:0.88rem;
+    }
+    .pe-empty span{ font-size:2rem; display:block; margin-bottom:8px; opacity:0.3; }
+
+    .pe-status {
+      padding:7px 16px;
+      background:var(--bg3); border-top:1px solid var(--border);
+      font-family:var(--font-mono); font-size:0.7rem;
+      color:var(--text-dim); display:flex;
+      align-items:center; gap:8px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="brand">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text">Viz<span class="accent">Learn</span></span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="lessons.html">Lessons</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="datasets.html">Data Lab</a></li>
+        <li><a href="upload.html">CSV Lab</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li>
+        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+        <li><a href="compare.html">Comparator</a></li>
+        <li><a href="params.html" class="active">Params</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="errors.html">Errors</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="progress.html">Progress</a></li>
+        <li><a href="quickref.html">Quick Ref</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div style="padding-top:64px;">
+
+  <div class="pe-hero">
+    <div class="container">
+      <div class="section-label">PARAMETER EXPLORER</div>
+      <h1>Tweak Parameters. See Results.</h1>
+      <p>
+        Select a chart function, adjust parameters using sliders and dropdowns on the left,
+        then click <strong style="color:var(--accent);">▶ Run</strong> to see exactly how each
+        parameter changes the chart. This is the fastest way to build intuition for
+        matplotlib and seaborn parameters.
+      </p>
+      <div class="fn-picker" id="fn-picker">
+        <button class="fn-btn active" data-fn="ax.plot">ax.plot()</button>
+        <button class="fn-btn" data-fn="ax.scatter">ax.scatter()</button>
+        <button class="fn-btn" data-fn="ax.bar">ax.bar()</button>
+        <button class="fn-btn" data-fn="ax.hist">ax.hist()</button>
+        <button class="fn-btn" data-fn="sns.scatterplot">sns.scatterplot()</button>
+        <button class="fn-btn" data-fn="sns.histplot">sns.histplot()</button>
+        <button class="fn-btn" data-fn="sns.boxplot">sns.boxplot()</button>
+        <button class="fn-btn" data-fn="sns.heatmap">sns.heatmap()</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="pe-body">
+
+      <!-- LEFT: param controls -->
+      <div class="param-controls">
+        <div class="param-controls-header">
+          <span id="fn-label" style="color:var(--accent2);">ax.plot()</span>
+          <button class="btn btn-primary btn-sm" id="run-btn" disabled>▶ Run</button>
+        </div>
+        <div class="param-list" id="param-list"></div>
+      </div>
+
+      <!-- RIGHT: code preview + output -->
+      <div class="pe-right">
+        <div class="code-preview">
+          <div class="code-preview-header">
+            <span style="color:var(--text);">Generated Code</span>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-secondary btn-sm" id="copy-btn">Copy</button>
+              <button class="btn btn-secondary btn-sm" id="open-playground-btn">Open in Playground</button>
+            </div>
+          </div>
+          <pre id="code-display">Select a function above to get started.</pre>
+        </div>
+
+        <div class="run-panel">
+          <div class="run-panel-header">
+            <span style="color:var(--text);">📊 Chart Output</span>
+            <span id="run-time"></span>
+          </div>
+          <div id="pe-output">
+            <div class="pe-empty">
+              <span>📈</span>
+              <p>Adjust parameters then click <strong>▶ Run</strong></p>
+            </div>
+          </div>
+          <div class="pe-status">
+            <div class="status-dot" id="pe-dot"></div>
+            <span id="pe-status-text">Loading Python environment…</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/main.js"></script>
+<script>
+/* ─────────────────────────────────────────────────────────────
+   FUNCTION DEFINITIONS
+   Each fn has params[] and a codeBuilder(vals) function.
+───────────────────────────────────────────────────────────── */
+const FN_DEFS = {
+
+'ax.plot': {
+  label: 'ax.plot()',
+  params: [
+    { name:'color',       type:'color',   default:'#00e5a0', desc:'Line color. Accepts hex, named color, or RGB.' },
+    { name:'linewidth',   type:'range',   default:2, min:0.5, max:8, step:0.5, desc:'Thickness of the line in points.' },
+    { name:'linestyle',   type:'select',  default:'-', options:['-','--',':','-.'], desc:'Line style pattern.' },
+    { name:'marker',      type:'select',  default:'None', options:['None','o','s','^','D','*','x','+'], desc:'Shape drawn at each data point.' },
+    { name:'markersize',  type:'range',   default:6, min:2, max:18, step:1, desc:'Size of markers in points.' },
+    { name:'alpha',       type:'range',   default:1.0, min:0.1, max:1.0, step:0.05, desc:'Transparency (0=invisible, 1=opaque).' },
+    { name:'grid',        type:'bool',    default:true, desc:'Show or hide background gridlines.' },
+    { name:'hide_spines', type:'bool',    default:true, desc:'Remove top and right border lines (cleaner look).' },
+  ],
+  build(v) {
+    const ms = v.marker === 'None' ? '' : `, markersize=${v.markersize}`;
+    const mk = v.marker === 'None' ? '' : `, marker='${v.marker}'`;
+    const grid = v.grid ? "\nax.grid(True, linestyle='--', alpha=0.2)" : '';
+    const spines = v.hide_spines ?
+      "\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)" : '';
+    return `import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 4*np.pi, 200)
+y1 = np.sin(x)
+y2 = np.sin(x) * 0.7 + 0.3
+
+fig, ax = plt.subplots(figsize=(9, 4))
+
+ax.plot(x, y1,
+    color='${v.color}',
+    linewidth=${v.linewidth},
+    linestyle='${v.linestyle}'${mk}${ms},
+    alpha=${v.alpha},
+    label='sin(x)')
+
+ax.plot(x, y2,
+    color='#00b4d8',
+    linewidth=${v.linewidth},
+    linestyle='${v.linestyle}'${mk}${ms},
+    alpha=${v.alpha} * 0.7,
+    label='0.7·sin(x)+0.3')
+
+ax.set_title('ax.plot() — Parameter Explorer',
+    fontsize=13, fontweight='bold', color='#e8f0fe')
+ax.set_xlabel('x (radians)', color='#8b9ab5')
+ax.set_ylabel('y', color='#8b9ab5')
+ax.legend()
+ax.set_facecolor('#0b0f1a')
+fig.patch.set_facecolor('#0b0f1a')
+ax.tick_params(colors='#8b9ab5')${grid}${spines}
+fig.tight_layout(); plt.show()`;
+  }
+},
+
+'ax.scatter': {
+  label: 'ax.scatter()',
+  params: [
+    { name:'color',       type:'color',  default:'#00e5a0', desc:'Point fill color.' },
+    { name:'size',        type:'range',  default:50, min:5, max:300, step:5, desc:'Point size (s parameter) in points².' },
+    { name:'alpha',       type:'range',  default:0.7, min:0.05, max:1.0, step:0.05, desc:'Transparency of points.' },
+    { name:'edgecolors',  type:'select', default:'none', options:['none','white','black','#00e5a0'], desc:'Border color of each point.' },
+    { name:'marker',      type:'select', default:'o', options:['o','s','^','D','*','x','+','v'], desc:'Shape of each point.' },
+    { name:'cmap_mode',   type:'bool',   default:false, desc:'Use a colormap instead of a single color (maps z-values to color).' },
+    { name:'grid',        type:'bool',   default:true, desc:'Show gridlines.' },
+    { name:'hide_spines', type:'bool',   default:true, desc:'Remove top and right spines.' },
+  ],
+  build(v) {
+    const colorArg = v.cmap_mode ?
+      `    c=z,\n    cmap='viridis',` :
+      `    color='${v.color}',`;
+    const grid = v.grid ? "\nax.grid(True, linestyle='--', alpha=0.2)" : '';
+    const spines = v.hide_spines ?
+      "\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)" : '';
+    return `import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(42)
+n = 180
+x = np.random.randn(n)
+y = x * 1.2 + np.random.randn(n) * 0.8
+z = np.sqrt(x**2 + y**2)  # distance from origin
+
+fig, ax = plt.subplots(figsize=(7, 5))
+
+sc = ax.scatter(x, y,
+${colorArg}
+    s=${v.size},
+    alpha=${v.alpha},
+    edgecolors='${v.edgecolors}',
+    marker='${v.marker}')
+
+${v.cmap_mode ? "plt.colorbar(sc, ax=ax, label='Distance from origin')" : ''}
+ax.set_title('ax.scatter() — Parameter Explorer',
+    fontsize=13, fontweight='bold', color='#e8f0fe')
+ax.set_xlabel('X', color='#8b9ab5')
+ax.set_ylabel('Y', color='#8b9ab5')
+ax.set_facecolor('#0b0f1a')
+fig.patch.set_facecolor('#0b0f1a')
+ax.tick_params(colors='#8b9ab5')${grid}${spines}
+fig.tight_layout(); plt.show()`;
+  }
+},
+
+'ax.bar': {
+  label: 'ax.bar()',
+  params: [
+    { name:'color',      type:'color',  default:'#00e5a0', desc:'Bar fill color.' },
+    { name:'width',      type:'range',  default:0.7, min:0.1, max:1.0, step:0.05, desc:'Width of each bar (0–1 where 1 = bars touching).' },
+    { name:'alpha',      type:'range',  default:0.85, min:0.1, max:1.0, step:0.05, desc:'Bar transparency.' },
+    { name:'edgecolor',  type:'select', default:'none', options:['none','white','black','#0b0f1a'], desc:'Color of bar border.' },
+    { name:'show_vals',  type:'bool',   default:true, desc:'Annotate each bar with its value on top.' },
+    { name:'horizontal', type:'bool',   default:false, desc:'Draw horizontal bars instead of vertical (barh).' },
+    { name:'grid',       type:'bool',   default:true, desc:'Show gridlines on the value axis.' },
+  ],
+  build(v) {
+    const labels = "['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug']";
+    const vals   = "[42, 67, 55, 78, 91, 83, 70, 95]";
+    const grid = v.grid ?
+      `\nax.grid(axis='${v.horizontal?'x':'y'}', linestyle='--', alpha=0.2)` : '';
+    const annotation = v.show_vals ? (v.horizontal ?
+`for i, (rect, val) in enumerate(zip(bars, values)):
+    ax.text(val + 0.5, rect.get_y() + rect.get_height()/2,
+            str(val), va='center', fontsize=8, color='#8b9ab5')` :
+`for rect, val in zip(bars, values):
+    ax.annotate(str(val),
+        xy=(rect.get_x() + rect.get_width()/2, rect.get_height()),
+        xytext=(0, 4), textcoords='offset points',
+        ha='center', va='bottom', fontsize=8, color='#8b9ab5')`) : '';
+
+    const chartFn = v.horizontal ?
+      `bars = ax.barh(labels, values,\n    height=${v.width},` :
+      `bars = ax.bar(labels, values,\n    width=${v.width},`;
+    return `import matplotlib.pyplot as plt
+
+labels = ${labels}
+values = ${vals}
+
+fig, ax = plt.subplots(figsize=(9, 4))
+
+${chartFn}
+    color='${v.color}',
+    alpha=${v.alpha},
+    edgecolor='${v.edgecolor}')
+
+${annotation}
+ax.set_title('ax.bar() — Parameter Explorer',
+    fontsize=13, fontweight='bold', color='#e8f0fe')
+ax.${v.horizontal?'set_xlabel':'set_ylabel'}('Value', color='#8b9ab5')
+ax.set_facecolor('#0b0f1a')
+fig.patch.set_facecolor('#0b0f1a')
+ax.tick_params(colors='#8b9ab5')
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)${grid}
+fig.tight_layout(); plt.show()`;
+  }
+},
+
+'ax.hist': {
+  label: 'ax.hist()',
+  params: [
+    { name:'color',    type:'color',  default:'#00e5a0', desc:'Bar fill color.' },
+    { name:'bins',     type:'range',  default:20, min:5, max:60, step:1, desc:'Number of equal-width bins to divide data into.' },
+    { name:'alpha',    type:'range',  default:0.75, min:0.1, max:1.0, step:0.05, desc:'Transparency.' },
+    { name:'density',  type:'bool',   default:false, desc:'Normalise to probability density (area = 1) instead of count.' },
+    { name:'cumulative',type:'bool',  default:false, desc:'Show cumulative counts/density instead of per-bin.' },
+    { name:'edgecolor',type:'select', default:'none', options:['none','white','black','#0b0f1a'], desc:'Bar border color.' },
+    { name:'grid',     type:'bool',   default:true, desc:'Show gridlines.' },
+  ],
+  build(v) {
+    const ylabel = v.density ? 'Density' : 'Count';
+    const grid = v.grid ? "\nax.grid(axis='y', linestyle='--', alpha=0.2)" : '';
+    return `import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(5)
+data = np.concatenate([
+    np.random.normal(65, 12, 400),
+    np.random.normal(80,  7, 200)
+])
+
+fig, ax = plt.subplots(figsize=(9, 4))
+
+ax.hist(data,
+    bins=${v.bins},
+    color='${v.color}',
+    alpha=${v.alpha},
+    density=${v.density},
+    cumulative=${v.cumulative},
+    edgecolor='${v.edgecolor}')
+
+ax.set_title('ax.hist() — Parameter Explorer',
+    fontsize=13, fontweight='bold', color='#e8f0fe')
+ax.set_xlabel('Score', color='#8b9ab5')
+ax.set_ylabel('${ylabel}', color='#8b9ab5')
+ax.set_facecolor('#0b0f1a')
+fig.patch.set_facecolor('#0b0f1a')
+ax.tick_params(colors='#8b9ab5')
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)${grid}
+fig.tight_layout(); plt.show()`;
+  }
+},
+
+'sns.scatterplot': {
+  label: 'sns.scatterplot()',
+  params: [
+    { name:'palette',    type:'select', default:'Set2', options:['Set2','Set1','tab10','husl','muted','bright','colorblind','Dark2'], desc:'Color scheme for hue categories.' },
+    { name:'size_col',   type:'bool',   default:true, desc:'Enable size encoding — larger petal_width = larger point.' },
+    { name:'style_col',  type:'bool',   default:false, desc:'Use different marker shapes per species.' },
+    { name:'alpha',      type:'range',  default:0.8, min:0.1, max:1.0, step:0.05, desc:'Point transparency.' },
+    { name:'s_min',      type:'range',  default:30, min:10, max:100, step:5, desc:'Minimum point size.' },
+    { name:'s_max',      type:'range',  default:150, min:50, max:400, step:10, desc:'Maximum point size.' },
+    { name:'theme',      type:'select', default:'darkgrid', options:['darkgrid','whitegrid','dark','white','ticks'], desc:'Seaborn global theme.' },
+  ],
+  build(v) {
+    const sz = v.size_col ? `,\n    size='petal_width',\n    sizes=(${v.s_min}, ${v.s_max})` : '';
+    const st = v.style_col ? `,\n    style='species'` : '';
+    return `import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.set_theme(style='${v.theme}')
+df = sns.load_dataset('iris')
+
+fig, ax = plt.subplots(figsize=(8, 5))
+
+sns.scatterplot(
+    data=df,
+    x='sepal_length',
+    y='petal_length',
+    hue='species',
+    palette='${v.palette}',
+    alpha=${v.alpha}${sz}${st},
+    ax=ax)
+
+ax.set_title('sns.scatterplot() — Parameter Explorer',
+    fontsize=13, fontweight='bold')
+ax.set_xlabel('Sepal Length (cm)')
+ax.set_ylabel('Petal Length (cm)')
+ax.legend(title='Species',
+    bbox_to_anchor=(1.02,1), loc='upper left')
+fig.tight_layout(); plt.show()`;
+  }
+},
+
+'sns.histplot': {
+  label: 'sns.histplot()',
+  params: [
+    { name:'kde',      type:'bool',   default:true, desc:'Overlay a smooth KDE (Kernel Density Estimate) curve.' },
+    { name:'bins',     type:'range',  default:25, min:5, max:60, step:1, desc:'Number of histogram bins.' },
+    { name:'stat',     type:'select', default:'density', options:['count','density','probability','percent'], desc:'What the y-axis represents.' },
+    { name:'element',  type:'select', default:'bars', options:['bars','step','poly'], desc:'How to draw the histogram shape.' },
+    { name:'fill',     type:'bool',   default:true, desc:'Fill the histogram bars (when element=bars/poly).' },
+    { name:'alpha',    type:'range',  default:0.6, min:0.1, max:1.0, step:0.05, desc:'Transparency of fill.' },
+    { name:'palette',  type:'select', default:'Set2', options:['Set2','Set1','tab10','muted','colorblind'], desc:'Color scheme for hue groups.' },
+  ],
+  build(v) {
+    return `import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np, pandas as pd
+
+np.random.seed(3)
+df = pd.DataFrame({
+    'score': np.concatenate([
+        np.random.normal(65, 12, 350),
+        np.random.normal(80,  8, 250)]),
+    'class': ['A']*350 + ['B']*250
+})
+
+fig, ax = plt.subplots(figsize=(9, 4))
+
+sns.histplot(data=df,
+    x='score',
+    hue='class',
+    bins=${v.bins},
+    kde=${v.kde},
+    stat='${v.stat}',
+    element='${v.element}',
+    fill=${v.fill},
+    alpha=${v.alpha},
+    palette='${v.palette}',
+    ax=ax)
+
+ax.set_title('sns.histplot() — Parameter Explorer',
+    fontsize=13, fontweight='bold')
+ax.set_xlabel('Score')
+fig.tight_layout(); plt.show()`;
+  }
+},
+
+'sns.boxplot': {
+  label: 'sns.boxplot()',
+  params: [
+    { name:'width',    type:'range',  default:0.5, min:0.2, max:0.95, step:0.05, desc:'Width of each box (0–1).' },
+    { name:'palette',  type:'select', default:'Set2', options:['Set2','Set1','tab10','muted','pastel','dark'], desc:'Color scheme per category.' },
+    { name:'notch',    type:'bool',   default:false, desc:'Draw notched boxes — the notch shows the 95% CI of the median.' },
+    { name:'fliers',   type:'bool',   default:true, desc:'Show outlier points beyond the whiskers.' },
+    { name:'strip',    type:'bool',   default:false, desc:'Overlay individual data points using sns.stripplot().' },
+    { name:'theme',    type:'select', default:'darkgrid', options:['darkgrid','whitegrid','ticks'], desc:'Seaborn theme.' },
+  ],
+  build(v) {
+    const strip = v.strip ?
+`\nsns.stripplot(data=df, x='day', y='total_bill',
+    color='white', alpha=0.3, size=2.5, ax=ax)` : '';
+    const flierprop = v.fliers ? '' :
+      `,\n    flierprops={'marker':'','markersize':0}`;
+    return `import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.set_theme(style='${v.theme}')
+df = sns.load_dataset('tips')
+
+fig, ax = plt.subplots(figsize=(9, 5))
+
+sns.boxplot(data=df,
+    x='day', y='total_bill',
+    hue='sex',
+    palette='${v.palette}',
+    width=${v.width},
+    notch=${v.notch}${flierprop},
+    ax=ax)${strip}
+
+ax.set_title('sns.boxplot() — Parameter Explorer',
+    fontsize=13, fontweight='bold')
+ax.set_xlabel('Day of Week')
+ax.set_ylabel('Total Bill (USD)')
+ax.legend(title='Gender')
+fig.tight_layout(); plt.show()`;
+  }
+},
+
+'sns.heatmap': {
+  label: 'sns.heatmap()',
+  params: [
+    { name:'cmap',       type:'select', default:'coolwarm', options:['coolwarm','RdYlGn','viridis','Blues','YlOrRd','PuBuGn','RdBu_r'], desc:'Colormap for cell values.' },
+    { name:'annot',      type:'bool',   default:true, desc:'Show the numeric value inside each cell.' },
+    { name:'square',     type:'bool',   default:true, desc:'Force each cell to be square.' },
+    { name:'linewidths', type:'range',  default:0.5, min:0, max:3, step:0.25, desc:'Width of lines separating cells.' },
+    { name:'fmt',        type:'select', default:'.2f', options:['.2f','.1f','.0f','d'], desc:'Number format for annotations.' },
+    { name:'shrink',     type:'range',  default:0.8, min:0.3, max:1.0, step:0.05, desc:'Colorbar height as fraction of axes height.' },
+  ],
+  build(v) {
+    return `import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd, numpy as np
+
+np.random.seed(5)
+cols = ['Age','Income','Score',
+        'Tenure','Loans','CLV']
+n = len(cols)
+data = np.random.rand(n, n)
+m = (data + data.T) / 2
+np.fill_diagonal(m, 1.0)
+corr = pd.DataFrame(m * 2 - 1,
+    columns=cols, index=cols)
+
+fig, ax = plt.subplots(figsize=(7, 6))
+
+sns.heatmap(corr,
+    annot=${v.annot},
+    fmt='${v.fmt}',
+    cmap='${v.cmap}',
+    center=0,
+    vmin=-1, vmax=1,
+    linewidths=${v.linewidths},
+    linecolor='#0b0f1a',
+    square=${v.square},
+    cbar_kws={'shrink': ${v.shrink}},
+    ax=ax)
+
+ax.set_title('sns.heatmap() — Parameter Explorer',
+    fontsize=13, fontweight='bold')
+ax.tick_params(labelsize=9)
+fig.tight_layout(); plt.show()`;
+  }
+},
+
+};
+
+/* ─────────────────────────────────────────────────────────────
+   UI ENGINE
+───────────────────────────────────────────────────────────── */
+let currentFn = 'ax.plot';
+let pyodide = null;
+let pyodideReady = false;
+const vals = {};
+
+function buildControls(fnKey) {
+  const def = FN_DEFS[fnKey];
+  if (!def) return;
+  document.getElementById('fn-label').textContent = def.label;
+
+  // reset vals
+  def.params.forEach(p => { vals[p.name] = p.default; });
+
+  const list = document.getElementById('param-list');
+  list.innerHTML = def.params.map(p => {
+    let input = '';
+    if (p.type === 'range') {
+      input = `<input class="pe-range" type="range"
+        min="${p.min}" max="${p.max}" step="${p.step}"
+        value="${p.default}"
+        oninput="updateVal('${p.name}', parseFloat(this.value), this)"
+        id="input-${p.name}"/>`;
+    } else if (p.type === 'select') {
+      const opts = p.options.map(o =>
+        `<option value="${o}" ${o===p.default?'selected':''}>${o}</option>`
+      ).join('');
+      input = `<select class="pe-select"
+        onchange="updateVal('${p.name}', this.value, this)"
+        id="input-${p.name}">${opts}</select>`;
+    } else if (p.type === 'color') {
+      input = `<input class="pe-color" type="color"
+        value="${p.default}"
+        oninput="updateVal('${p.name}', this.value, this)"
+        id="input-${p.name}"/>`;
+    } else if (p.type === 'bool') {
+      input = `<input class="pe-checkbox" type="checkbox"
+        ${p.default?'checked':''}
+        onchange="updateVal('${p.name}', this.checked, this)"
+        id="input-${p.name}"/>`;
+    }
+    return `<div class="param-row">
+      <div class="param-label">
+        <span class="param-name">${p.name}</span>
+        <span class="param-val" id="val-${p.name}">${p.default}</span>
+      </div>
+      <div>${input}</div>
+      <div class="param-desc">${p.desc}</div>
+    </div>`;
+  }).join('');
+
+  updateCodeDisplay();
+}
+
+function updateVal(name, value, el) {
+  vals[name] = value;
+  const valEl = document.getElementById('val-' + name);
+  if (valEl) valEl.textContent = typeof value === 'boolean' ? (value?'True':'False') : value;
+  updateCodeDisplay();
+}
+
+function updateCodeDisplay() {
+  const def = FN_DEFS[currentFn];
+  if (!def) return;
+  const code = def.build(vals);
+  document.getElementById('code-display').textContent = code;
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ── PYODIDE ──
+async function loadPyodide() {
+  const dot = document.getElementById('pe-dot');
+  const txt = document.getElementById('pe-status-text');
+  try {
+    dot.className = 'status-dot';
+    txt.textContent = 'Loading Python (Pyodide)…';
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js';
+    document.head.appendChild(script);
+    await new Promise((res, rej) => { script.onload=res; script.onerror=rej; });
+    pyodide = await window.loadPyodide();
+    txt.textContent = 'Installing packages…';
+    await pyodide.loadPackage(['matplotlib','numpy','micropip']);
+    const mp = pyodide.pyimport('micropip');
+    await mp.install(['seaborn','pandas']);
+    await pyodide.runPythonAsync(`
+import matplotlib; matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np, pandas as pd, seaborn as sns
+`);
+    pyodideReady = true;
+    dot.className = 'status-dot ready';
+    txt.textContent = 'Python ready ✓';
+    document.getElementById('run-btn').disabled = false;
+  } catch(e) {
+    dot.className = 'status-dot error';
+    txt.textContent = 'Failed: ' + e.message;
+  }
+}
+
+async function runCode() {
+  if (!pyodideReady) { alert('Python still loading…'); return; }
+  const code = document.getElementById('code-display').textContent;
+  const btn = document.getElementById('run-btn');
+  btn.innerHTML = '<span class="run-spinner"></span>';
+  btn.disabled = true;
+  const out = document.getElementById('pe-output');
+  out.innerHTML = '';
+  const t0 = Date.now();
+
+  try {
+    pyodide.setStdout({ batched: ()=>{} });
+    pyodide.setStderr({ batched: ()=>{} });
+    const wrapped = `
+import matplotlib.pyplot as plt, io, base64, sys
+_captured=[]
+_orig_show=plt.show
+def _ps(*a,**k):
+    figs=[plt.figure(i) for i in plt.get_fignums()]
+    for fig in figs:
+        buf=io.BytesIO()
+        fig.savefig(buf,format='png',bbox_inches='tight',dpi=120,facecolor='#0b0f1a')
+        buf.seek(0)
+        _captured.append(base64.b64encode(buf.read()).decode())
+        plt.close(fig)
+plt.show=_ps
+${code}
+if plt.get_fignums(): _ps()
+_captured`;
+    const result = await pyodide.runPythonAsync(wrapped);
+    const images = result?.toJs ? result.toJs() : (Array.isArray(result)?result:[]);
+    const elapsed = ((Date.now()-t0)/1000).toFixed(2);
+    document.getElementById('run-time').textContent = `⏱ ${elapsed}s`;
+    if (images && images.length) {
+      images.forEach(b64 => {
+        const img = document.createElement('img');
+        img.src = 'data:image/png;base64,' + b64;
+        img.style.maxWidth='100%';
+        out.appendChild(img);
+      });
+    } else {
+      out.innerHTML = '<p style="color:var(--text-dim);font-size:0.85rem;">Code ran — no chart detected. Make sure plt.show() is called.</p>';
+    }
+    await pyodide.runPythonAsync('plt.show=_orig_show');
+  } catch(e) {
+    out.innerHTML = `<pre style="color:var(--danger);font-family:var(--font-mono);font-size:0.75rem;white-space:pre-wrap;">${escHtml(e.message||String(e))}</pre>`;
+  }
+  btn.innerHTML = '▶ Run';
+  btn.disabled = false;
+}
+
+// ── WIRE UP ──
+document.querySelectorAll('.fn-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.fn-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    currentFn = this.getAttribute('data-fn');
+    buildControls(currentFn);
+  });
+});
+
+document.getElementById('run-btn').addEventListener('click', runCode);
+
+document.getElementById('copy-btn').addEventListener('click', () => {
+  const code = document.getElementById('code-display').textContent;
+  navigator.clipboard.writeText(code).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value=code; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+  document.getElementById('copy-btn').textContent='Copied!';
+  setTimeout(()=>{document.getElementById('copy-btn').textContent='Copy';},2000);
+});
+
+document.getElementById('open-playground-btn').addEventListener('click', () => {
+  const code = document.getElementById('code-display').textContent;
+  localStorage.setItem('vizlearn_playground_code', code);
+  window.location.href = 'playground.html';
+});
+
+// Init
+buildControls('ax.plot');
+loadPyodide();
+</script>
+</body>
+</html>

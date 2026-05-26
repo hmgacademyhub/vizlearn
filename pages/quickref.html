@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quick Reference — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css"/>
+  <style>
+    .qr-hero{padding:48px 0 28px;background:var(--bg2);border-bottom:1px solid var(--border);}
+    .qr-hero h1{font-family:var(--font-head);font-size:2rem;font-weight:800;letter-spacing:-1px;margin-bottom:6px;}
+
+    /* filter tabs */
+    .tab-strip{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--bg2);margin-bottom:24px;}
+    .ts-btn{padding:10px 20px;border:none;border-bottom:2px solid transparent;background:transparent;
+      color:var(--text-muted);font-size:0.85rem;font-weight:600;cursor:pointer;
+      transition:var(--transition);font-family:var(--font-body);}
+    .ts-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,229,160,0.04);}
+    .ts-btn:hover{color:var(--text);}
+
+    /* two-column card grid */
+    .qr-grid{columns:2;column-gap:16px;padding:0 0 80px;}
+    @media(max-width:800px){.qr-grid{columns:1;}}
+    .qr-card{break-inside:avoid;background:var(--bg2);border:1px solid var(--border);
+      border-radius:var(--radius);margin-bottom:14px;overflow:hidden;}
+    .qr-card-head{padding:8px 14px;background:var(--bg3);border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .qr-card-title{font-family:var(--font-head);font-size:0.8rem;font-weight:700;}
+    .qr-card-lib{font-family:var(--font-mono);font-size:0.65rem;font-weight:700;
+      padding:2px 7px;border-radius:4px;}
+    .qr-card pre{padding:10px 14px;font-family:var(--font-mono);font-size:0.72rem;
+      line-height:1.65;color:#c9d1d9;overflow-x:auto;white-space:pre;margin:0;background:#0d1117;}
+    .qr-card-foot{padding:6px 14px;background:var(--bg3);border-top:1px solid var(--border);
+      display:flex;gap:6px;}
+
+    /* Print styles */
+    @media print{
+      .navbar,.hamburger,.qr-hero,.tab-strip,.qr-card-foot,.back-to-top{display:none!important;}
+      body{background:white;color:black;font-size:11px;}
+      .qr-grid{columns:3;padding:0;}
+      .qr-card{border:1px solid #ccc;background:white;margin-bottom:8px;}
+      .qr-card-head{background:#f5f5f5;}
+      .qr-card-title{color:black;}
+      .qr-card pre{background:#fafafa;color:#333;font-size:0.65rem;}
+      .container{max-width:100%;padding:0 8px;}
+      h1{margin:8px 0;font-size:1.2rem;color:black;}
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="brand"><span class="brand-icon">⬡</span><span class="brand-text">Viz<span class="accent">Learn</span></span></a>
+    <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="lessons.html">Lessons</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="datasets.html">Data Lab</a></li>
+        <li><a href="upload.html">CSV Lab</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li>
+        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+        <li><a href="compare.html">Comparator</a></li>
+        <li><a href="params.html">Params</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="errors.html">Errors</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="progress.html">Progress</a></li>
+        <li><a href="quickref.html" class="active">Quick Ref</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div style="padding-top:64px;">
+  <div class="qr-hero">
+    <div class="container">
+      <div class="section-label">QUICK REFERENCE</div>
+      <h1>Syntax at a Glance</h1>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px;">
+        Compact, print-friendly syntax reference. Filter by library or topic, then click
+        <strong style="color:var(--accent);">Print / Save as PDF</strong> for an offline reference card.
+      </p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print / Save PDF</button>
+        <button class="btn btn-secondary btn-sm" id="expand-all-btn" onclick="toggleAll(true)">Expand All</button>
+        <button class="btn btn-secondary btn-sm" onclick="toggleAll(false)">Collapse All</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style="padding-top:24px;">
+    <div class="tab-strip" id="tab-strip">
+      <button class="ts-btn active" data-lib="all">All</button>
+      <button class="ts-btn" data-lib="matplotlib">Matplotlib</button>
+      <button class="ts-btn" data-lib="seaborn">Seaborn</button>
+      <button class="ts-btn" data-lib="plotly">Plotly</button>
+      <button class="ts-btn" data-lib="pandas">Pandas</button>
+      <button class="ts-btn" data-lib="styling">Styling</button>
+      <button class="ts-btn" data-lib="layout">Layout</button>
+      <button class="ts-btn" data-lib="workflow">EDA Workflow</button>
+    </div>
+    <div class="qr-grid" id="qr-grid"></div>
+  </div>
+</div>
+
+<script src="../assets/js/main.js"></script>
+<script>
+const QR_CARDS = [
+  /* ── MATPLOTLIB ── */
+  {lib:'matplotlib',title:'Standard Import',code:
+`import matplotlib.pyplot as plt
+import numpy as np
+# OOP style (recommended):
+fig, ax = plt.subplots(figsize=(9,5))
+# fig = canvas | ax = plot area`},
+  {lib:'matplotlib',title:'Line Chart',code:
+`ax.plot(x, y,
+    color='#00e5a0',   # line color
+    linewidth=2.5,     # thickness
+    linestyle='--',    # -  --  :  -.
+    marker='o',        # point shape
+    markersize=6,
+    alpha=0.9,
+    label='Series A')`},
+  {lib:'matplotlib',title:'Bar Chart',code:
+`ax.bar(x, height,
+    width=0.7,
+    color='#00b4d8',
+    edgecolor='white',
+    alpha=0.85,
+    label='Group A')
+# Horizontal: ax.barh(y, width)`},
+  {lib:'matplotlib',title:'Scatter Plot',code:
+`ax.scatter(x, y,
+    c=color_array,   # per-point color
+    s=size_array,    # per-point size
+    cmap='viridis',
+    alpha=0.7,
+    edgecolors='none')`},
+  {lib:'matplotlib',title:'Histogram',code:
+`ax.hist(data,
+    bins=25,
+    density=False,   # True=probability
+    color='#f4a261',
+    alpha=0.8,
+    edgecolor='none')`},
+  {lib:'matplotlib',title:'Pie Chart',code:
+`ax.pie(sizes,
+    labels=labels,
+    autopct='%1.1f%%',
+    startangle=140,
+    explode=explode,
+    wedgeprops={'linewidth':2})
+# Donut: add wedgeprops={'width':0.5}`},
+  {lib:'matplotlib',title:'Fill Between (Area)',code:
+`ax.fill_between(x, y1, y2,
+    alpha=0.2, color='#00e5a0')
+# Conditional fill:
+ax.fill_between(x, y, 0,
+    where=(y>0), alpha=0.3,
+    color='green')`},
+  {lib:'matplotlib',title:'Heatmap (imshow)',code:
+`im = ax.imshow(matrix,
+    cmap='RdYlGn',
+    vmin=0, vmax=1,
+    aspect='auto')
+plt.colorbar(im, ax=ax, shrink=0.85)`},
+  {lib:'matplotlib',title:'Axes Labels & Title',code:
+`ax.set_title('Title', fontsize=14,
+             fontweight='bold', pad=12)
+ax.set_xlabel('X Label', fontsize=11)
+ax.set_ylabel('Y Label', fontsize=11)`},
+  {lib:'matplotlib',title:'Tick Control',code:
+`ax.set_xticks([0,25,50,75,100])
+ax.set_xticklabels(['0%','25%','50%',
+    '75%','100%'])
+ax.tick_params(labelsize=9,
+    rotation=45, colors='#8b9ab5')`},
+  {lib:'matplotlib',title:'Legend',code:
+`ax.legend()
+# Positioned:
+ax.legend(loc='upper right',
+    title='Group', fontsize=9,
+    framealpha=0.8)
+# Outside plot:
+ax.legend(bbox_to_anchor=(1.02,1),
+    loc='upper left')`},
+  {lib:'matplotlib',title:'Save Figure',code:
+`fig.savefig('chart.png',
+    dpi=150,
+    bbox_inches='tight',
+    facecolor='#0d1117')`},
+
+  /* ── SEABORN ── */
+  {lib:'seaborn',title:'Import & Theme',code:
+`import seaborn as sns
+import matplotlib.pyplot as plt
+sns.set_theme(style='darkgrid')
+# darkgrid whitegrid dark white ticks
+sns.set_palette('Set2')`},
+  {lib:'seaborn',title:'Scatter Plot',code:
+`sns.scatterplot(data=df,
+    x='col_x', y='col_y',
+    hue='category',  # color by group
+    size='weight',   # size by value
+    style='group',   # marker by group
+    palette='Set2',
+    alpha=0.8, ax=ax)`},
+  {lib:'seaborn',title:'Histogram + KDE',code:
+`sns.histplot(data=df, x='value',
+    hue='group',
+    bins=25,
+    kde=True,        # KDE overlay
+    stat='density',  # normalize
+    alpha=0.6,
+    palette='Set2', ax=ax)`},
+  {lib:'seaborn',title:'Box Plot',code:
+`sns.boxplot(data=df,
+    x='category', y='value',
+    hue='group',
+    palette='Set2',
+    width=0.5,
+    notch=False, ax=ax)
+# Add data: sns.stripplot(..., ax=ax)`},
+  {lib:'seaborn',title:'Violin Plot',code:
+`sns.violinplot(data=df,
+    x='category', y='value',
+    hue='group',
+    split=True,       # compare 2 groups
+    inner='quartile', # box/quartile/point
+    palette='Set1', ax=ax)`},
+  {lib:'seaborn',title:'Correlation Heatmap',code:
+`corr = df.corr()   # compute correlations
+sns.heatmap(corr,
+    annot=True, fmt='.2f',
+    cmap='coolwarm', center=0,
+    vmin=-1, vmax=1,
+    linewidths=0.5,
+    square=True, ax=ax)`},
+  {lib:'seaborn',title:'Bar Plot',code:
+`sns.barplot(data=df,
+    x='category', y='value',
+    hue='group',
+    errorbar='sd',   # error bars
+    capsize=0.1,
+    palette='Set2', ax=ax)
+# Note: plots MEAN + error bars`},
+  {lib:'seaborn',title:'Pair Plot',code:
+`g = sns.pairplot(df,
+    hue='target',
+    palette='Set2',
+    diag_kind='kde',
+    plot_kws={'alpha':0.6,'s':30})
+g.fig.suptitle('Pairs', y=1.02)`},
+  {lib:'seaborn',title:'Line Plot',code:
+`sns.lineplot(data=df,
+    x='date', y='value',
+    hue='group',
+    linewidth=2.2,
+    errorbar='ci',   # CI band
+    markers=True, ax=ax)`},
+  {lib:'seaborn',title:'Regression Plot',code:
+`sns.regplot(data=df,
+    x='x_col', y='y_col',
+    scatter_kws={'alpha':0.5},
+    line_kws={'color':'#00e5a0'},
+    ci=95, ax=ax)`},
+
+  /* ── PLOTLY ── */
+  {lib:'plotly',title:'Import',code:
+`import plotly.express as px
+import plotly.graph_objects as go
+# Built-in datasets:
+df = px.data.iris()
+df = px.data.tips()
+df = px.data.gapminder()`},
+  {lib:'plotly',title:'Scatter',code:
+`fig = px.scatter(df,
+    x='x_col', y='y_col',
+    color='category',
+    size='value',
+    hover_data=['extra'],
+    title='Chart Title',
+    template='plotly_dark')
+fig.show()`},
+  {lib:'plotly',title:'Bar Chart',code:
+`fig = px.bar(df,
+    x='category', y='value',
+    color='group',
+    barmode='group',  # group|stack
+    text='value',
+    template='plotly_dark')
+fig.update_traces(
+    textposition='outside')
+fig.show()`},
+  {lib:'plotly',title:'Line Chart',code:
+`fig = px.line(df,
+    x='date', y='value',
+    color='group',
+    markers=True,
+    template='plotly_dark')
+fig.update_layout(
+    xaxis_rangeslider_visible=True)
+fig.show()`},
+  {lib:'plotly',title:'Pie / Donut',code:
+`fig = px.pie(df,
+    names='category',
+    values='count',
+    hole=0.4,      # donut gap
+    template='plotly_dark')
+fig.update_traces(
+    textinfo='label+percent',
+    pull=[0.06,0,0,0])
+fig.show()`},
+  {lib:'plotly',title:'update_layout()',code:
+`fig.update_layout(
+    title='Chart Title',
+    title_font_size=16,
+    xaxis_title='X Axis',
+    yaxis_title='Y Axis',
+    plot_bgcolor='#0d1117',
+    paper_bgcolor='#0b0f1a',
+    height=500)`},
+
+  /* ── PANDAS ── */
+  {lib:'pandas',title:'df.plot() Basics',code:
+`# kind options:
+# line bar barh hist box
+# kde area scatter pie hexbin
+df.plot(kind='line',
+    figsize=(10,5),
+    color=['#00e5a0','#00b4d8'],
+    title='Quick Line Chart')
+plt.tight_layout()
+plt.show()`},
+  {lib:'pandas',title:'Bar & Stacked Bar',code:
+`df.plot.bar(
+    color=['#00e5a0','#00b4d8'],
+    edgecolor='none', width=0.7)
+# Stacked:
+df.plot.bar(stacked=True,
+    colormap='tab10')`},
+  {lib:'pandas',title:'Histogram',code:
+`df.plot.hist(
+    bins=25, alpha=0.65,
+    color=['#00e5a0','#00b4d8'],
+    edgecolor='none')
+# Single column:
+df['col'].plot.hist(bins=25)`},
+  {lib:'pandas',title:'Box Plot',code:
+`df.plot.box(
+    patch_artist=True,
+    boxprops=dict(
+        facecolor='#1e2a3a',
+        color='#00e5a0'),
+    medianprops=dict(
+        color='#00e5a0',linewidth=2))`},
+  {lib:'pandas',title:'Correlation',code:
+`corr = df.corr()     # compute
+print(corr.round(2)) # inspect
+# Visualize:
+sns.heatmap(corr,
+    annot=True,
+    cmap='coolwarm',
+    center=0)`},
+
+  /* ── STYLING ── */
+  {lib:'styling',title:'Spine Control',code:
+`# Remove top & right (clean look)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+# Color spines:
+ax.spines['bottom'].set_color('#2a3a52')
+ax.spines['left'].set_color('#2a3a52')`},
+  {lib:'styling',title:'Colormaps Guide',code:
+`# Sequential (low → high):
+# viridis  Blues  YlOrRd  BuPu
+# Diverging (negative → positive):
+# coolwarm  RdYlGn  RdBu_r
+# Qualitative (categories):
+# Set2  tab10  husl  colorblind
+# AVOID: jet (misleading)`},
+  {lib:'styling',title:'Color Formats',code:
+`color='#00e5a0'        # hex (best)
+color='steelblue'      # named
+color=(0.1,0.6,0.9)   # RGB 0-1
+color=(0.1,0.6,0.9,0.7) # RGBA
+alpha=0.7              # transparency`},
+  {lib:'styling',title:'Text & Font',code:
+`ax.set_title('Title',
+    fontsize=14,
+    fontweight='bold',
+    color='#e8f0fe',
+    pad=12)
+ax.tick_params(
+    labelsize=9,
+    rotation=45,
+    colors='#8b9ab5')`},
+  {lib:'styling',title:'Dark Theme',code:
+`ax.set_facecolor('#0d1117')
+fig.patch.set_facecolor('#0d1117')
+ax.tick_params(colors='#8b9ab5')
+ax.spines['bottom'].set_color('#2a3a52')
+ax.spines['left'].set_color('#2a3a52')
+ax.grid(linestyle='--',alpha=0.15)`},
+
+  /* ── LAYOUT ── */
+  {lib:'layout',title:'Subplots',code:
+`fig, axes = plt.subplots(
+    nrows=2, ncols=3,
+    figsize=(14,8),
+    sharex=False, sharey=False)
+axes[0,0].plot(...)   # top-left
+axes[1,2].bar(...)    # bottom-right
+fig.tight_layout()`},
+  {lib:'layout',title:'tight_layout',code:
+`fig.tight_layout()
+fig.tight_layout(pad=2.0)
+# With suptitle:
+fig.suptitle('Overall Title',
+    fontsize=14, y=1.01)
+fig.tight_layout(
+    rect=[0,0,1,0.95])`},
+  {lib:'layout',title:'Figure Size & DPI',code:
+`# figsize=(width, height) in inches
+# Single plot: (8,5) or (9,5)
+# Wide:        (12,5)
+# Tall:        (8,8)
+# 2x2 grid:    (12,10)
+# dpi: screen=96, print=150-300`},
+  {lib:'layout',title:'Legend Positioning',code:
+`# Inside:
+ax.legend(loc='upper right')
+ax.legend(loc='lower left')
+# Outside right:
+ax.legend(bbox_to_anchor=(1.02,1),
+    loc='upper left')
+fig.tight_layout()   # prevent clip`},
+
+  /* ── WORKFLOW ── */
+  {lib:'workflow',title:'EDA Checklist',code:
+`# 1. Shape & types
+print(df.shape, df.dtypes)
+# 2. Missing values
+print(df.isnull().sum())
+# 3. Distributions
+df.hist(bins=25, figsize=(12,8))
+# 4. Correlations
+sns.heatmap(df.corr(),annot=True)
+# 5. Pairwise relationships
+sns.pairplot(df, hue='target')`},
+  {lib:'workflow',title:'Import Template',code:
+`import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+import numpy as np
+
+sns.set_theme(style='darkgrid')
+plt.rcParams['figure.dpi'] = 100
+plt.rcParams['figure.figsize'] = (9,5)
+
+df = pd.read_csv('data.csv')`},
+  {lib:'workflow',title:'Figure Template',code:
+`fig, ax = plt.subplots(figsize=(9,5))
+fig.patch.set_facecolor('#0d1117')
+ax.set_facecolor('#0d1117')
+
+# ... your chart code here ...
+
+ax.set_title('Title', fontsize=13,
+    fontweight='bold', color='#e8f0fe')
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.tick_params(colors='#8b9ab5')
+ax.grid(linestyle='--', alpha=0.15)
+fig.tight_layout()
+plt.show()`},
+  {lib:'workflow',title:'Common Chart Decision',code:
+`# Distribution of 1 variable?   → hist/kde
+# Compare groups?                → box/violin
+# Relationship between 2 vars?   → scatter
+# Trend over time?               → line
+# Compare categories?            → bar
+# Part of whole?                 → pie/donut
+# Correlation matrix?            → heatmap
+# All pairwise (EDA)?            → pairplot`},
+];
+
+const LIB_COLORS = {
+  matplotlib:'#2e86c1',seaborn:'#1e8449',
+  plotly:'#9b59b6',pandas:'#d35400',
+  styling:'#00b4d8',layout:'#f4a261',
+  workflow:'#10b981'
+};
+
+function escH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+let expandedCards = new Set();
+
+function buildGrid(filter='all') {
+  const grid = document.getElementById('qr-grid');
+  const visible = filter==='all' ? QR_CARDS : QR_CARDS.filter(c=>c.lib===filter);
+  grid.innerHTML = visible.map((c,i)=>{
+    const col = LIB_COLORS[c.lib]||'#8b9ab5';
+    const isOpen = expandedCards.has(i) || filter !== 'all';
+    return `<div class="qr-card" data-idx="${i}">
+      <div class="qr-card-head" onclick="toggleCard(${i})">
+        <span class="qr-card-title">${c.title}</span>
+        <div style="display:flex;gap:5px;align-items:center;">
+          <span class="qr-card-lib" style="background:${col}22;color:${col};">
+            ${c.lib.toUpperCase().slice(0,3)}
+          </span>
+          <span style="color:var(--text-dim);font-size:0.75rem;">${isOpen?'▾':'▸'}</span>
+        </div>
+      </div>
+      ${isOpen ? `<pre>${escH(c.code)}</pre>
+      <div class="qr-card-foot">
+        <button class="btn btn-secondary btn-sm" onclick="copyCard(${i},this)">Copy</button>
+        <button class="btn btn-primary btn-sm" onclick="runCard(${i})">▶ Run</button>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function toggleCard(idx) {
+  if(expandedCards.has(idx)) expandedCards.delete(idx);
+  else expandedCards.add(idx);
+  const activeLib = document.querySelector('.ts-btn.active')?.getAttribute('data-lib')||'all';
+  buildGrid(activeLib);
+}
+
+function toggleAll(open) {
+  if(open) QR_CARDS.forEach((_,i)=>expandedCards.add(i));
+  else expandedCards.clear();
+  const activeLib = document.querySelector('.ts-btn.active')?.getAttribute('data-lib')||'all';
+  buildGrid(activeLib);
+}
+
+function copyCard(idx,btn) {
+  const visible = (() => {
+    const f = document.querySelector('.ts-btn.active')?.getAttribute('data-lib')||'all';
+    return f==='all' ? QR_CARDS : QR_CARDS.filter(c=>c.lib===f);
+  })();
+  const code = visible[idx]?.code||'';
+  navigator.clipboard.writeText(code).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=code;
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+  });
+  btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',2000);
+}
+
+function runCard(idx) {
+  const visible = (() => {
+    const f = document.querySelector('.ts-btn.active')?.getAttribute('data-lib')||'all';
+    return f==='all' ? QR_CARDS : QR_CARDS.filter(c=>c.lib===f);
+  })();
+  const code = visible[idx]?.code||'';
+  localStorage.setItem('vizlearn_playground_code', code);
+  window.location.href='playground.html';
+}
+
+document.querySelectorAll('.ts-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.ts-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    expandedCards.clear();
+    buildGrid(this.getAttribute('data-lib'));
+  });
+});
+
+buildGrid('all');
+</script>
+</body>
+</html>

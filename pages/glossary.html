@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Glossary — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css"/>
+  <style>
+    .gloss-hero {
+      padding: 56px 0 36px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+    }
+    .gloss-hero h1 {
+      font-family: var(--font-head);
+      font-size: 2.2rem; font-weight: 800;
+      letter-spacing: -1px; margin-bottom: 8px;
+    }
+    .gloss-hero p { color: var(--text-muted); font-size: 0.95rem; max-width: 640px; }
+
+    /* alphabet nav */
+    .alpha-nav {
+      display: flex; flex-wrap: wrap; gap: 4px;
+      margin: 16px 0 0;
+    }
+    .alpha-btn {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border); border-radius: 6px;
+      font-family: var(--font-mono); font-size: 0.75rem;
+      font-weight: 700; color: var(--text-dim);
+      cursor: pointer; background: transparent;
+      transition: var(--transition);
+    }
+    .alpha-btn:hover, .alpha-btn.has-terms {
+      border-color: var(--accent); color: var(--accent);
+      background: rgba(0,229,160,0.06);
+    }
+    .alpha-btn.inactive { opacity: 0.25; cursor: default; }
+
+    /* search */
+    .gloss-search {
+      max-width: 480px; margin: 20px 0;
+    }
+    .gloss-search input {
+      width: 100%;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 11px 16px;
+      color: var(--text); font-size: 0.9rem;
+      font-family: var(--font-body);
+      transition: var(--transition);
+    }
+    .gloss-search input:focus {
+      outline: none; border-color: var(--accent);
+    }
+
+    /* category filter */
+    .cat-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+    .cat-btn {
+      padding: 5px 13px;
+      border: 1px solid var(--border); border-radius: 999px;
+      background: transparent; color: var(--text-muted);
+      font-size: 0.78rem; font-weight: 600; cursor: pointer;
+      transition: var(--transition); font-family: var(--font-body);
+    }
+    .cat-btn.active, .cat-btn:hover {
+      border-color: var(--accent2); color: var(--accent2);
+      background: rgba(0,180,216,0.06);
+    }
+
+    /* letter section */
+    .letter-section { margin-bottom: 40px; }
+    .letter-heading {
+      font-family: var(--font-head);
+      font-size: 2rem; font-weight: 800;
+      color: var(--text-dim); letter-spacing: -1px;
+      padding: 8px 0 4px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    /* term card */
+    .term-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .term-card:hover { border-color: var(--border); }
+    .term-header {
+      padding: 14px 18px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      cursor: pointer; gap: 12px;
+      user-select: none;
+    }
+    .term-header:hover { background: var(--bg3); }
+    .term-name {
+      font-family: var(--font-head);
+      font-size: 1rem; font-weight: 700;
+    }
+    .term-short {
+      font-size: 0.82rem; color: var(--text-muted);
+      margin-left: 12px; flex: 1;
+    }
+    .term-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .term-tag {
+      font-size: 0.65rem; font-weight: 700;
+      padding: 2px 7px; border-radius: 4px;
+      font-family: var(--font-mono); letter-spacing: 0.5px;
+    }
+    .term-chevron {
+      color: var(--text-dim); font-size: 0.8rem;
+      transition: var(--transition); flex-shrink: 0;
+    }
+    .term-card.open .term-chevron { transform: rotate(90deg); }
+
+    .term-body {
+      display: none;
+      padding: 0 18px 18px;
+      border-top: 1px solid var(--border);
+    }
+    .term-card.open .term-body { display: block; }
+
+    .term-def {
+      font-size: 0.88rem; color: var(--text-muted);
+      line-height: 1.8; margin: 14px 0 10px;
+    }
+    .term-def code {
+      font-family: var(--font-mono); font-size: 0.8rem;
+      background: var(--bg3); padding: 1px 5px;
+      border-radius: 4px; color: var(--accent2);
+    }
+    .term-example {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem; line-height: 1.75;
+      color: #c9d1d9;
+      overflow-x: auto;
+      white-space: pre;
+      margin: 8px 0;
+    }
+    .term-also {
+      font-size: 0.78rem; color: var(--text-dim);
+      margin-top: 8px;
+    }
+    .term-also a {
+      color: var(--accent2); text-decoration: underline;
+      cursor: pointer; margin: 0 3px;
+    }
+    .term-actions { display: flex; gap: 6px; margin-top: 10px; }
+
+    /* no-results */
+    .no-results {
+      text-align: center; padding: 60px 20px;
+      color: var(--text-dim);
+    }
+    .no-results span { font-size: 2.5rem; display: block; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="brand">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text">Viz<span class="accent">Learn</span></span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="lessons.html">Lessons</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="datasets.html">Data Lab</a></li>
+        <li><a href="upload.html">CSV Lab</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li>
+        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+        <li><a href="compare.html">Comparator</a></li>
+        <li><a href="params.html">Params</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="glossary.html" class="active">Glossary</a></li>
+        <li><a href="errors.html">Errors</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="progress.html">Progress</a></li>
+        <li><a href="quickref.html">Quick Ref</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div style="padding-top:64px;">
+
+  <div class="gloss-hero">
+    <div class="container">
+      <div class="section-label">REFERENCE</div>
+      <h1>Visualization Glossary</h1>
+      <p>Every technical term you encounter in matplotlib, seaborn, plotly, and data visualization — defined clearly, with code examples. Click any term to expand it.</p>
+      <div class="gloss-search">
+        <input type="text" id="gloss-search"
+          placeholder="Search terms: axes, hue, kde, colormap, spine …"
+          autocomplete="off"/>
+      </div>
+      <div class="cat-filter" id="cat-filter">
+        <button class="cat-btn active" data-cat="all">All</button>
+        <button class="cat-btn" data-cat="matplotlib">Matplotlib</button>
+        <button class="cat-btn" data-cat="seaborn">Seaborn</button>
+        <button class="cat-btn" data-cat="plotly">Plotly</button>
+        <button class="cat-btn" data-cat="concept">Concepts</button>
+        <button class="cat-btn" data-cat="parameter">Parameters</button>
+        <button class="cat-btn" data-cat="chart">Chart Types</button>
+      </div>
+      <div class="alpha-nav" id="alpha-nav"></div>
+    </div>
+  </div>
+
+  <div class="container" style="padding-top:36px; padding-bottom:80px;">
+    <div id="gloss-content"></div>
+  </div>
+
+</div>
+
+<script src="../assets/js/main.js"></script>
+<script>
+/* ─────────────────────────────────────────────────────────────
+   GLOSSARY DATA
+   Each term: { letter, name, short, cats[], tags[], def, example, also[] }
+───────────────────────────────────────────────────────────── */
+const TERMS = [
+  /* ── A ── */
+  { letter:'A', name:'Axes',
+    short:'The plot area inside a Figure.',
+    cats:['matplotlib','concept'],
+    tags:['matplotlib','concept'],
+    def:`An <code>Axes</code> object is the actual plot area — the rectangle that contains your data, axes, ticks, title, and labels. One Figure can contain multiple Axes objects (subplots). Do not confuse "Axes" (the plot region) with "axis" (a single x or y dimension).<br/><br/>In the OOP interface you get an Axes via <code>fig, ax = plt.subplots()</code>. Every chart method — <code>ax.plot()</code>, <code>ax.bar()</code>, <code>ax.set_title()</code> — is called on the Axes object.`,
+    example:`fig, ax = plt.subplots()          # ax is the Axes object
+ax.plot([1,2,3],[4,5,6])          # draw on ax
+ax.set_title('My Chart')          # set title on ax
+ax.set_xlabel('x')                # label x-axis on ax`,
+    also:['Figure','Subplot','Spine'] },
+
+  { letter:'A', name:'Alpha',
+    short:'Transparency level (0 = invisible, 1 = opaque).',
+    cats:['matplotlib','parameter'],
+    tags:['parameter','transparency'],
+    def:`<code>alpha</code> controls how transparent an element is. A value of <code>0</code> means fully invisible; <code>1</code> means fully opaque. Values between these create partial transparency. This is essential when plotting overlapping elements — for example, two histograms on the same axes — because without alpha you cannot see the overlap.`,
+    example:`ax.scatter(x, y, alpha=0.5)       # 50% transparent points
+ax.bar(cats, vals, alpha=0.8)     # slightly transparent bars
+ax.hist(data, alpha=0.6)          # overlapping histograms`,
+    also:['Color','Hue'] },
+
+  { letter:'A', name:'Annotation',
+    short:'Text or arrows added to a chart to highlight a data point.',
+    cats:['matplotlib','concept'],
+    tags:['matplotlib','text','annotation'],
+    def:`Annotations label specific data points to call attention to them. <code>ax.text(x, y, "text")</code> places text at a coordinate. <code>ax.annotate()</code> is more powerful — it can draw an arrow from a text label to the target point, with full control over arrow style, font size, and offset.`,
+    example:`# Simple text label
+ax.text(3.5, 8.2, 'Peak', fontsize=9, color='white')
+
+# Arrow annotation pointing to a data point
+ax.annotate('Outlier!',
+    xy=(x_point, y_point),       # the point to point TO
+    xytext=(x_point-1, y_point+2), # where the text sits
+    arrowprops=dict(arrowstyle='->', color='#00e5a0'),
+    fontsize=9, color='#00e5a0')`,
+    also:['Text','Axes'] },
+
+  /* ── B ── */
+  { letter:'B', name:'Bandwidth (KDE)',
+    short:'Controls the smoothness of a KDE curve.',
+    cats:['seaborn','concept'],
+    tags:['kde','seaborn','smoothing'],
+    def:`In a KDE (Kernel Density Estimate) plot, bandwidth determines how smooth the resulting curve is. A small bandwidth makes the curve follow every peak in the data (high variance, possibly noisy). A large bandwidth over-smooths and hides real structure. Seaborn exposes this via <code>bw_adjust</code>: values below 1 tighten the curve; values above 1 widen it.`,
+    example:`sns.kdeplot(data, bw_adjust=0.5)   # tighter, more detail
+sns.kdeplot(data, bw_adjust=1.0)   # default
+sns.kdeplot(data, bw_adjust=2.0)   # smoother, broader`,
+    also:['KDE','Histplot'] },
+
+  { letter:'B', name:'Backend (Matplotlib)',
+    short:'The rendering engine matplotlib uses to produce output.',
+    cats:['matplotlib','concept'],
+    tags:['matplotlib','backend','render'],
+    def:`A backend is the system that actually draws the chart pixels. Common backends: <code>TkAgg</code> (interactive GUI window), <code>Agg</code> (non-interactive — writes to PNG file or bytes), <code>Qt5Agg</code> (Qt GUI). In web environments (like VizLearn's Playground), the <code>Agg</code> backend is used — it renders to an in-memory PNG which is then displayed as a base64 image. You rarely need to set this manually.`,
+    example:`import matplotlib
+matplotlib.use('Agg')          # set BEFORE importing pyplot
+import matplotlib.pyplot as plt`,
+    also:['Figure','Savefig'] },
+
+  /* ── C ── */
+  { letter:'C', name:'Colormap (cmap)',
+    short:'A mapping from data values to colors.',
+    cats:['matplotlib','concept','parameter'],
+    tags:['colormap','cmap','color','matplotlib'],
+    def:`A colormap assigns a color to each data value. They come in three types:<br/>
+<strong>Sequential</strong> (one direction): <code>viridis</code>, <code>Blues</code>, <code>YlOrRd</code> — use when data ranges from low to high.<br/>
+<strong>Diverging</strong> (two directions from a center): <code>coolwarm</code>, <code>RdYlGn</code> — use when data has a meaningful center (like 0 in a correlation matrix).<br/>
+<strong>Qualitative</strong> (categorical): <code>Set2</code>, <code>tab10</code> — use for unordered categories.<br/><br/>
+Avoid <code>jet</code> — it is not colorblind-safe and creates misleading visual gradients.`,
+    example:`ax.scatter(x, y, c=z, cmap='viridis')    # sequential
+sns.heatmap(corr, cmap='coolwarm', center=0) # diverging
+sns.scatterplot(data=df, hue='species',
+                palette='Set2')              # qualitative`,
+    also:['Heatmap','Scatter Plot','Palette'] },
+
+  { letter:'C', name:'Color',
+    short:'How to specify colors in matplotlib and seaborn.',
+    cats:['matplotlib','parameter'],
+    tags:['color','hex','rgb','matplotlib'],
+    def:`Colors can be specified in four ways in matplotlib:<br/>
+1. <strong>Named colors</strong>: <code>'blue'</code>, <code>'steelblue'</code>, <code>'tomato'</code><br/>
+2. <strong>Hex codes</strong>: <code>'#00e5a0'</code>, <code>'#2e86c1'</code> (recommended — precise)<br/>
+3. <strong>RGB tuples</strong>: <code>(0.2, 0.5, 0.8)</code> — values 0 to 1<br/>
+4. <strong>RGBA tuples</strong>: <code>(0.2, 0.5, 0.8, 0.6)</code> — last value is alpha<br/><br/>
+In seaborn, colors for categories are controlled via <code>palette=</code> rather than <code>color=</code>.`,
+    example:`ax.plot(x, y, color='#00e5a0')      # hex
+ax.bar(cats, vals, color='steelblue') # named
+ax.scatter(x, y, c=(0.1, 0.6, 0.9)) # RGB tuple`,
+    also:['Alpha','Colormap','Palette'] },
+
+  { letter:'C', name:'Confidence Interval (CI)',
+    short:'A range that likely contains the true population mean.',
+    cats:['seaborn','concept'],
+    tags:['statistics','ci','seaborn','error bars'],
+    def:`In seaborn's <code>barplot()</code> and <code>lineplot()</code>, a 95% confidence interval is computed by bootstrapping and shown as error bars. This means: if you repeated the sampling 100 times, the true mean would fall within this range 95 times. The CI shrinks as sample size increases. You can change this with <code>errorbar='sd'</code> (standard deviation) or <code>errorbar=None</code> to remove it.`,
+    example:`sns.barplot(data=df, x='day', y='tip',
+            errorbar='ci')   # 95% CI (default)
+sns.barplot(data=df, x='day', y='tip',
+            errorbar='sd')   # std deviation
+sns.barplot(data=df, x='day', y='tip',
+            errorbar=None)   # no error bar`,
+    also:['Bar Plot','Seaborn','Bootstrap'] },
+
+  /* ── D ── */
+  { letter:'D', name:'DPI',
+    short:'Dots Per Inch — controls the resolution of a saved figure.',
+    cats:['matplotlib','parameter'],
+    tags:['dpi','resolution','savefig','matplotlib'],
+    def:`DPI determines how many pixels per inch a figure contains. For screen display, 72–96 DPI is standard. For print-quality output, use 150–300 DPI. Higher DPI means larger file size but sharper output. Set it when creating the figure with <code>fig = plt.figure(dpi=150)</code> or when saving with <code>fig.savefig('out.png', dpi=150)</code>.`,
+    example:`# Standard screen quality
+fig, ax = plt.subplots(figsize=(8,5), dpi=96)
+
+# High quality for reports
+fig.savefig('report.png', dpi=300, bbox_inches='tight')`,
+    also:['Figure','Savefig'] },
+
+  { letter:'D', name:'Distribution Plot',
+    short:'A chart showing the spread and shape of a dataset.',
+    cats:['seaborn','chart'],
+    tags:['distribution','histogram','kde','chart type'],
+    def:`A distribution plot shows how data values are spread. The most common types are: <strong>Histogram</strong> (counts in bins), <strong>KDE</strong> (smooth density curve), and <strong>Box Plot</strong> (quartiles and outliers). In seaborn, <code>sns.histplot(kde=True)</code> combines histogram bars with a KDE overlay in a single call. Use distribution plots during EDA to check for skewness, multiple peaks (bimodal), and outliers.`,
+    example:`# Histogram + KDE (seaborn)
+sns.histplot(data=df, x='score', kde=True, bins=25)
+
+# Pure KDE
+sns.kdeplot(data=df, x='score', fill=True, alpha=0.5)
+
+# Matplotlib histogram
+ax.hist(data, bins=25, density=True)`,
+    also:['Histogram','KDE','Box Plot'] },
+
+  /* ── E ── */
+  { letter:'E', name:'EDA (Exploratory Data Analysis)',
+    short:'Using charts to understand a dataset before modelling.',
+    cats:['concept'],
+    tags:['eda','workflow','data science'],
+    def:`EDA is the process of visually exploring a dataset to understand its structure, detect anomalies, and form hypotheses before building models. Key EDA charts: <strong>Histogram</strong> for distributions, <strong>Scatter plot</strong> for relationships, <strong>Heatmap</strong> for correlations, <strong>Box plot</strong> for outliers and spread, <strong>Pair plot</strong> for all pairwise relationships at once. Pandas <code>df.describe()</code> and <code>df.corr()</code> are often used alongside these charts.`,
+    example:`# Standard EDA workflow
+print(df.shape)
+print(df.describe())
+print(df.isnull().sum())
+
+# Pair plot for all relationships
+sns.pairplot(df, hue='target')
+
+# Correlation heatmap
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm')`,
+    also:['Pair Plot','Heatmap','Box Plot','Histogram'] },
+
+  /* ── F ── */
+  { letter:'F', name:'Figure',
+    short:'The outermost container — the entire canvas.',
+    cats:['matplotlib','concept'],
+    tags:['matplotlib','figure','canvas'],
+    def:`A <code>Figure</code> is the top-level container in matplotlib. It holds everything: one or more Axes, the title, colorbar, and the background. You create it with <code>plt.figure()</code> or more commonly <code>fig, ax = plt.subplots()</code>. Control its size with <code>figsize=(width_inches, height_inches)</code> and its background color with <code>fig.patch.set_facecolor()</code>.`,
+    example:`# Create Figure alone
+fig = plt.figure(figsize=(10, 6), dpi=100)
+
+# Create Figure + Axes together (most common)
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Create Figure with a 2x2 grid of Axes
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))`,
+    also:['Axes','Subplot','tight_layout'] },
+
+  { letter:'F', name:'fill_between',
+    short:'Fills the area between two y-values along the x-axis.',
+    cats:['matplotlib','concept'],
+    tags:['matplotlib','fill','area','shading'],
+    def:`<code>ax.fill_between(x, y1, y2)</code> shades the region between two curves or between a curve and a baseline. Commonly used for: area charts, confidence intervals (shading above/below a line), and highlighting regions (e.g., above or below a target). The <code>where</code> parameter lets you fill only when a condition is True (e.g., when sales exceed target).`,
+    example:`x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+# Fill between curve and zero
+ax.fill_between(x, y, 0, alpha=0.2, color='#00e5a0')
+
+# Fill only where y > 0
+ax.fill_between(x, y, 0,
+    where=(y > 0), alpha=0.3, color='green')
+
+# Fill between two curves
+ax.fill_between(x, y_lower, y_upper,
+    alpha=0.2, label='Confidence band')`,
+    also:['Area Chart','Alpha'] },
+
+  /* ── G ── */
+  { letter:'G', name:'Grid',
+    short:'Reference lines drawn across the plot background.',
+    cats:['matplotlib','parameter'],
+    tags:['grid','matplotlib','styling'],
+    def:`Gridlines help readers trace values across the chart. <code>ax.grid(True)</code> enables both horizontal and vertical lines. Use <code>axis='y'</code> for only horizontal lines (most readable for bar charts). Always pair with <code>alpha=0.2</code> or a light <code>linestyle='--'</code> so the grid is visible but doesn't compete with the data.`,
+    example:`ax.grid(True)                              # both axes
+ax.grid(True, axis='y')                    # horizontal only
+ax.grid(True, linestyle='--', alpha=0.25)  # dashed, subtle
+ax.grid(True, color='white', alpha=0.1)    # very subtle white`,
+    also:['Axes','Styling','Spine'] },
+
+  /* ── H ── */
+  { letter:'H', name:'Heatmap',
+    short:'A color-coded matrix where color represents a numeric value.',
+    cats:['seaborn','matplotlib','chart'],
+    tags:['heatmap','matrix','correlation','chart type'],
+    def:`A heatmap encodes numeric values in a 2D grid using color intensity. The most common use in data science is a <strong>correlation heatmap</strong>: <code>df.corr()</code> computes pairwise Pearson correlations (-1 to +1), and <code>sns.heatmap()</code> visualises them. Key parameters: <code>annot=True</code> (show values), <code>cmap='coolwarm'</code> (diverging colormap), <code>center=0</code> (centers color at zero), <code>linewidths=0.5</code> (cell borders).`,
+    example:`import seaborn as sns
+
+corr = df.corr()  # compute correlation matrix
+sns.heatmap(corr,
+    annot=True,
+    fmt='.2f',
+    cmap='coolwarm',
+    center=0,
+    vmin=-1, vmax=1,
+    linewidths=0.5,
+    square=True)`,
+    also:['Colormap','Correlation','EDA'] },
+
+  { letter:'H', name:'Histogram',
+    short:'Bars showing how often data values fall into bins.',
+    cats:['matplotlib','seaborn','chart'],
+    tags:['histogram','distribution','bins','chart type'],
+    def:`A histogram divides continuous data into equal-width intervals (bins) and counts how many values fall in each bin. The height of each bar shows the frequency (or density, if <code>density=True</code>). Key decision: number of bins. Too few bins hides the shape of the distribution; too many creates a jagged, noisy chart. A starting point of 20–30 bins works for most datasets of 100–1000 rows.`,
+    example:`# Matplotlib
+ax.hist(data, bins=25, color='#00e5a0',
+        density=False,   # True = probability density
+        alpha=0.8)
+
+# Seaborn (adds KDE automatically)
+sns.histplot(data=df, x='score',
+             bins=25, kde=True)`,
+    also:['KDE','Distribution Plot','Bins'] },
+
+  { letter:'H', name:'Hue',
+    short:'A seaborn parameter that colors data points by a categorical variable.',
+    cats:['seaborn','parameter'],
+    tags:['hue','seaborn','color','category'],
+    def:`In seaborn, <code>hue=</code> is one of the most powerful parameters. It maps a third variable onto color, automatically assigning a distinct color to each unique category and adding a legend. For categorical data, it uses the active palette (discrete colors). For numeric data, it uses a continuous colormap. Available in: <code>scatterplot</code>, <code>lineplot</code>, <code>histplot</code>, <code>boxplot</code>, <code>barplot</code>, <code>violinplot</code>, and more.`,
+    example:`sns.scatterplot(data=df,
+    x='sepal_length', y='petal_length',
+    hue='species',        # one color per species
+    palette='Set2')       # which color scheme
+
+sns.histplot(data=df, x='score',
+    hue='class',          # overlay one histogram per class
+    palette='muted')`,
+    also:['Palette','Seaborn','Color'] },
+
+  /* ── I ── */
+  { letter:'I', name:'imshow',
+    short:'Matplotlib function that displays a 2D array as a heatmap or image.',
+    cats:['matplotlib','concept'],
+    tags:['matplotlib','imshow','heatmap','image'],
+    def:`<code>ax.imshow(data)</code> renders any 2D numpy array as a color-coded image. For heatmaps, the value at each cell determines the color using the chosen <code>cmap</code>. For actual images, pass a 3D array (height × width × RGB). Key parameters: <code>cmap</code>, <code>vmin</code>/<code>vmax</code> (clip color range), <code>aspect='auto'</code> (don't force square pixels), <code>interpolation='nearest'</code> (no blurring between cells).`,
+    example:`import numpy as np
+
+matrix = np.random.rand(6, 6)
+im = ax.imshow(matrix,
+    cmap='RdYlGn',
+    vmin=0, vmax=1,
+    aspect='auto')
+plt.colorbar(im, ax=ax)   # add color scale`,
+    also:['Heatmap','Colormap','Colorbar'] },
+
+  /* ── K ── */
+  { letter:'K', name:'KDE (Kernel Density Estimate)',
+    short:'A smooth curve showing the probability distribution of data.',
+    cats:['seaborn','concept'],
+    tags:['kde','density','seaborn','distribution'],
+    def:`A KDE is a smooth, continuous estimate of a probability distribution. Unlike a histogram (which depends on bin size), a KDE fits a smooth kernel function at each data point and sums them. The result is a curve where the y-axis shows probability density (area under the curve = 1 when <code>stat='density'</code>). In seaborn: <code>sns.kdeplot()</code> or <code>sns.histplot(kde=True)</code>. The <code>bw_adjust</code> parameter controls smoothness.`,
+    example:`# Pure KDE plot
+sns.kdeplot(data=df, x='age',
+    fill=True, alpha=0.5,
+    bw_adjust=1.0)
+
+# Histogram with KDE overlay
+sns.histplot(data=df, x='age',
+    kde=True, bins=25, stat='density')`,
+    also:['Histogram','Distribution Plot','Bandwidth'] },
+
+  /* ── L ── */
+  { letter:'L', name:'Legend',
+    short:'A key that maps colors, markers, or line styles to data series.',
+    cats:['matplotlib','concept'],
+    tags:['legend','label','matplotlib'],
+    def:`A legend identifies which visual element corresponds to which data series. In matplotlib, you first assign a <code>label</code> to each plot call, then call <code>ax.legend()</code> to display the legend box. In seaborn, legends are added automatically when <code>hue=</code> is used. Key positioning: <code>loc='upper right'</code> (inside plot), <code>bbox_to_anchor=(1.02, 1)</code> (outside right), <code>ncol=2</code> (two columns).`,
+    example:`ax.plot(x, y1, color='#00e5a0', label='Series A')
+ax.plot(x, y2, color='#00b4d8', label='Series B')
+ax.legend()                         # default position
+
+# Controlled legend
+ax.legend(loc='upper left',
+          title='Group',
+          fontsize=9,
+          framealpha=0.8,
+          bbox_to_anchor=(1.02, 1)) # outside right`,
+    also:['Label','Axes','Seaborn'] },
+
+  { letter:'L', name:'lineplot (Seaborn)',
+    short:'Draws a line chart with optional confidence interval band.',
+    cats:['seaborn','concept'],
+    tags:['seaborn','line','ci','time series'],
+    def:`<code>sns.lineplot()</code> is seaborn's line chart function. Its key advantage over matplotlib's <code>ax.plot()</code> is that it works directly with DataFrames and automatically aggregates multiple observations per x-value — drawing the mean as the line and a confidence interval band around it. Use it for time-series data, multi-group trends, and whenever your data has measurement variance you want to show.`,
+    example:`sns.lineplot(data=df,
+    x='date', y='sales',
+    hue='region',          # one line per region
+    style='region',        # different dash patterns
+    linewidth=2.2,
+    errorbar='ci',         # confidence band
+    ax=ax)`,
+    also:['Confidence Interval','Hue','Time Series'] },
+
+  /* ── O ── */
+  { letter:'O', name:'OOP Interface (Object-Oriented)',
+    short:'The recommended matplotlib coding style using fig and ax objects.',
+    cats:['matplotlib','concept'],
+    tags:['matplotlib','oop','interface','style'],
+    def:`Matplotlib has two interfaces: the <strong>pyplot (state-machine)</strong> style using <code>plt.plot()</code> and <code>plt.title()</code>, and the <strong>OOP style</strong> using <code>ax.plot()</code> and <code>ax.set_title()</code>. The OOP style is preferred in data science because it is explicit about which Axes you are modifying, scales naturally to subplots, and avoids global state bugs. Rule: if your code has more than one chart or subplot, always use the OOP style.`,
+    example:`# ✅ OOP style (recommended)
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.plot(x, y)
+ax.set_title('Chart Title')
+ax.set_xlabel('X Axis')
+
+# ⚠ pyplot style (simpler but limited)
+plt.plot(x, y)
+plt.title('Chart Title')
+plt.xlabel('X Axis')`,
+    also:['Axes','Figure','Axes Methods'] },
+
+  /* ── P ── */
+  { letter:'P', name:'Palette',
+    short:'A named color scheme for categorical data in seaborn.',
+    cats:['seaborn','parameter'],
+    tags:['palette','seaborn','color','categorical'],
+    def:`A seaborn palette is a set of colors used for categorical data. Common palettes: <code>'Set2'</code> (8 soft colors, good for publications), <code>'tab10'</code> (10 distinct colors), <code>'husl'</code> (perceptually uniform, colorblind-friendly), <code>'colorblind'</code> (safe for all viewers), <code>'muted'</code> (desaturated), <code>'bright'</code> (vivid). Set globally with <code>sns.set_palette()</code> or per-chart with <code>palette=</code>.`,
+    example:`# Set globally
+sns.set_palette('Set2')
+
+# Per chart
+sns.scatterplot(data=df, x='x', y='y',
+    hue='group',
+    palette='tab10')
+
+# Custom hex palette
+custom = ['#00e5a0','#00b4d8','#f4a261']
+sns.boxplot(data=df, x='cat', y='val',
+    palette=custom)`,
+    also:['Hue','Color','Colormap'] },
+
+  { letter:'P', name:'Pair Plot',
+    short:'A grid of scatter plots for every pair of numeric columns.',
+    cats:['seaborn','chart'],
+    tags:['pairplot','seaborn','eda','relationships'],
+    def:`<code>sns.pairplot(df)</code> creates an n×n grid where each cell is a scatter plot of two columns. The diagonal shows each column's distribution (histogram or KDE). It is the fastest way to see all pairwise relationships in a dataset at once. Adding <code>hue='target'</code> colors all plots by the target variable — ideal for classification EDA where you want to see if classes are separable.`,
+    example:`# Basic
+sns.pairplot(df)
+
+# With hue and KDE diagonal
+sns.pairplot(df,
+    hue='species',
+    palette='Set2',
+    diag_kind='kde',
+    plot_kws={'alpha':0.6, 's':30})`,
+    also:['EDA','Hue','Scatter Plot'] },
+
+  /* ── S ── */
+  { letter:'S', name:'Spine',
+    short:'One of the four border lines around an Axes.',
+    cats:['matplotlib','concept'],
+    tags:['matplotlib','spine','styling','border'],
+    def:`Spines are the four lines forming the rectangular border of an Axes: <code>'top'</code>, <code>'bottom'</code>, <code>'left'</code>, <code>'right'</code>. A common styling convention is to remove the top and right spines to create a cleaner, more professional look. Access them via <code>ax.spines['top']</code> and apply <code>.set_visible(False)</code> or <code>.set_color('gray')</code>.`,
+    example:`# Remove top and right spines (most common)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# Custom spine color
+ax.spines['bottom'].set_color('#2a3a52')
+ax.spines['left'].set_color('#2a3a52')
+
+# Remove all spines
+for spine in ax.spines.values():
+    spine.set_visible(False)`,
+    also:['Axes','Grid','Styling'] },
+
+  { letter:'S', name:'Subplot',
+    short:'One of multiple plots arranged inside a single Figure.',
+    cats:['matplotlib','concept'],
+    tags:['subplot','matplotlib','layout','grid'],
+    def:`A subplot is an Axes positioned in a grid within a Figure. Created with <code>plt.subplots(nrows, ncols)</code>. The resulting <code>axes</code> variable is a 2D array indexed as <code>axes[row, col]</code>. Key options: <code>sharex=True</code> / <code>sharey=True</code> links the axis ranges across panels; <code>figsize</code> controls the total Figure size (divide by rows/cols to get per-subplot size); <code>fig.tight_layout()</code> prevents overlap.`,
+    example:`# 2 rows, 3 columns
+fig, axes = plt.subplots(2, 3, figsize=(14, 8))
+axes[0, 0].plot(x, y)        # top-left
+axes[0, 2].bar(cats, vals)   # top-right
+axes[1, 1].hist(data)        # center-bottom
+
+fig.tight_layout()  # prevent overlap
+plt.show()`,
+    also:['Figure','Axes','tight_layout'] },
+
+  /* ── T ── */
+  { letter:'T', name:'tight_layout',
+    short:'Automatically adjusts subplot spacing to prevent overlapping labels.',
+    cats:['matplotlib','concept'],
+    tags:['matplotlib','layout','spacing','tight_layout'],
+    def:`<code>fig.tight_layout()</code> (or <code>plt.tight_layout()</code>) automatically calculates and applies padding between subplots so that axis labels, tick labels, titles, and colorbars do not overlap. Call it as the last step before <code>plt.show()</code> or <code>fig.savefig()</code>. Add <code>pad=2.0</code> for extra spacing or <code>rect=[0, 0, 1, 0.95]</code> to leave room for a suptitle.`,
+    example:`fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+# ... add charts to each axes ...
+fig.tight_layout()            # fix overlaps
+fig.tight_layout(pad=1.5)     # with extra padding
+fig.suptitle('Title', y=1.01) # add overall title`,
+    also:['Subplot','Figure','suptitle'] },
+
+  { letter:'T', name:'Tick / Tick Labels',
+    short:'The small marks and labels along the x and y axes.',
+    cats:['matplotlib','concept'],
+    tags:['tick','labels','matplotlib','axis'],
+    def:`Ticks are the small marks on the axes that indicate specific values. Tick labels are the text next to them. Customize them with: <code>ax.set_xticks()</code> (set exact positions), <code>ax.set_xticklabels()</code> (set custom text), <code>ax.tick_params()</code> (control size, rotation, color, direction). Rotate long category labels by 30–45 degrees to prevent overlap.`,
+    example:`ax.set_xticks([0, 25, 50, 75, 100])
+ax.set_xticklabels(['0%','25%','50%','75%','100%'])
+
+# Rotate labels to prevent overlap
+ax.tick_params(axis='x', rotation=45)
+
+# Styling ticks
+ax.tick_params(
+    labelsize=9,
+    colors='#8b9ab5',
+    direction='out',
+    length=4)`,
+    also:['Axes','Labels','Grid'] },
+
+  /* ── V ── */
+  { letter:'V', name:'Violin Plot',
+    short:'Combines a box plot with a KDE to show the full distribution shape.',
+    cats:['seaborn','chart'],
+    tags:['violin','seaborn','distribution','chart type'],
+    def:`A violin plot is a box plot with a KDE curve mirrored on both sides. The width of the violin at any point represents the probability density at that value — wider means more data points near that value. It shows the full shape of the distribution (unlike a box plot which only shows summary statistics). Use <code>split=True</code> in seaborn to compare two groups (e.g., male/female) on the same violin.`,
+    example:`sns.violinplot(data=df,
+    x='day', y='total_bill',
+    hue='sex',
+    split=True,          # half violin per group
+    inner='quartile',    # add quartile lines inside
+    palette='Set1')`,
+    also:['Box Plot','KDE','Distribution Plot'] },
+];
+
+/* ─────────────────────────────────────────────────────────────
+   RENDER ENGINE
+───────────────────────────────────────────────────────────── */
+const CAT_COLORS = {
+  matplotlib:'rgba(46,134,193,0.15)',
+  seaborn:'rgba(30,132,73,0.15)',
+  plotly:'rgba(155,89,182,0.15)',
+  concept:'rgba(0,180,216,0.12)',
+  parameter:'rgba(244,162,97,0.12)',
+  chart:'rgba(0,229,160,0.12)',
+};
+const CAT_TEXT = {
+  matplotlib:'#2e86c1', seaborn:'#1e8449',
+  plotly:'#9b59b6', concept:'#00b4d8',
+  parameter:'#f4a261', chart:'#00e5a0',
+};
+
+function escHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderTerms(filterCat='all', filterText='') {
+  const container = document.getElementById('gloss-content');
+  const text = filterText.toLowerCase();
+
+  // filter
+  const visible = TERMS.filter(t => {
+    const catMatch = filterCat === 'all' || t.cats.includes(filterCat);
+    const textMatch = !text ||
+      t.name.toLowerCase().includes(text) ||
+      (t.short||'').toLowerCase().includes(text) ||
+      (t.def||'').toLowerCase().includes(text) ||
+      (t.tags||[]).some(tag => tag.includes(text));
+    return catMatch && textMatch;
+  });
+
+  if (!visible.length) {
+    container.innerHTML = `<div class="no-results">
+      <span>🔍</span>
+      <p>No terms match "<strong>${escHtml(filterText||filterCat)}</strong>"</p>
+    </div>`;
+    return;
+  }
+
+  // group by letter
+  const grouped = {};
+  visible.forEach(t => {
+    const l = t.letter;
+    if (!grouped[l]) grouped[l] = [];
+    grouped[l].push(t);
+  });
+
+  let html = '';
+  Object.keys(grouped).sort().forEach(letter => {
+    html += `<div class="letter-section" id="section-${letter}">
+      <div class="letter-heading">${letter}</div>`;
+    grouped[letter].forEach(t => {
+      const tags = (t.tags||[]).map(tag =>
+        `<span class="term-tag"
+          style="background:${CAT_COLORS[tag]||'rgba(255,255,255,0.06)'};
+                 color:${CAT_TEXT[tag]||'var(--text-muted)'}">
+          ${tag}
+        </span>`).join('');
+      const alsoLinks = (t.also||[]).map(a =>
+        `<a onclick="searchFor('${a}')">${a}</a>`
+      ).join('');
+      const encodedCode = encodeURIComponent(
+        'import matplotlib.pyplot as plt\nimport numpy as np\n\n' + (t.example||'')
+      );
+      html += `
+        <div class="term-card" id="term-${t.name.replace(/\W/g,'_')}">
+          <div class="term-header" onclick="toggleTerm(this)">
+            <span class="term-name">${t.name}</span>
+            <span class="term-short">${t.short}</span>
+            <div class="term-tags">${tags}</div>
+            <span class="term-chevron">▶</span>
+          </div>
+          <div class="term-body">
+            <p class="term-def">${t.def}</p>
+            ${t.example ? `
+            <div style="margin:8px 0 4px;font-size:0.72rem;
+              font-weight:700;letter-spacing:1px;
+              text-transform:uppercase;color:var(--text-dim);">
+              Code Example
+            </div>
+            <pre class="term-example">${escHtml(t.example)}</pre>
+            <div class="term-actions">
+              <button class="btn btn-secondary btn-sm"
+                onclick="copyCode('${encodedCode}')">Copy</button>
+              <button class="btn btn-primary btn-sm"
+                onclick="runCode('${encodedCode}')">▶ Run in Playground</button>
+            </div>` : ''}
+            ${t.also && t.also.length ? `<p class="term-also">See also: ${alsoLinks}</p>` : ''}
+          </div>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
+  buildAlphaNav(grouped);
+}
+
+function buildAlphaNav(grouped) {
+  const nav = document.getElementById('alpha-nav');
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  nav.innerHTML = letters.map(l =>
+    `<button class="alpha-btn ${grouped[l] ? 'has-terms' : 'inactive'}"
+      onclick="${grouped[l] ? `scrollToLetter('${l}')` : 'void(0)'}">
+      ${l}
+    </button>`
+  ).join('');
+}
+
+function toggleTerm(header) {
+  header.closest('.term-card').classList.toggle('open');
+}
+
+function scrollToLetter(l) {
+  const el = document.getElementById('section-' + l);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function searchFor(term) {
+  const inp = document.getElementById('gloss-search');
+  inp.value = term;
+  renderTerms(currentCat, term);
+}
+
+function copyCode(encoded) {
+  const text = decodeURIComponent(encoded);
+  navigator.clipboard.writeText(text).catch(()=>{
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+}
+
+function runCode(encoded) {
+  localStorage.setItem('vizlearn_playground_code',
+    decodeURIComponent(encoded));
+  window.location.href = 'playground.html';
+}
+
+let currentCat = 'all';
+
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.cat-btn')
+      .forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    currentCat = this.getAttribute('data-cat');
+    renderTerms(currentCat,
+      document.getElementById('gloss-search').value);
+  });
+});
+
+document.getElementById('gloss-search')
+  .addEventListener('input', function() {
+    renderTerms(currentCat, this.value);
+  });
+
+// Initial render
+renderTerms();
+</script>
+</body>
+</html>

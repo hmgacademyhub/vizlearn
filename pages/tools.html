@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Learning Tools — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar"><div class="nav-inner"><a href="../index.html" class="brand"><span class="brand-icon">⬡</span><span class="brand-text">Viz<span class="accent">Learn</span></span></a><ul class="nav-links"><li><a href="../index.html">Home</a></li><li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li><li><a href="lessons.html">Lessons</a></li><li><a href="playground.html">Playground</a></li><li><a href="datasets.html">Data Lab</a></li><li><a href="upload.html">CSV Lab</a></li><li><a href="projects.html">Projects</a></li><li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html" class="active">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li><li><a href="progress.html">Progress</a></li><li><a href="about.html">About</a></li></ul><button class="hamburger" id="hamburger"><span></span><span></span><span></span></button></div></nav>
+
+<main style="padding-top:64px;">
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-label">FINAL LEARNING LAYER · FREE · LOCAL-FIRST</div>
+      <h1>Learning Tools</h1>
+      <p class="text-muted" style="max-width:900px;">A set of free, local-first study tools that make VizLearn feel like a complete learning system: global search, personal notes, flashcard review, study checklist, and printable certificate. Everything is stored in your browser unless you export it.</p>
+      <div class="vl-note mt-16"><strong>No AI API, no database, no login:</strong> These tools use static JavaScript, localStorage, and browser print/export features.</div>
+    </div>
+  </section>
+
+  <section class="container" style="padding:34px 24px 90px;">
+    <div class="tab-strip" style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:22px;">
+      <button class="ts-btn active" onclick="showTool('search', this)">Search</button>
+      <button class="ts-btn" onclick="showTool('notes', this)">Notes</button>
+      <button class="ts-btn" onclick="showTool('flashcards', this)">Flashcards</button>
+      <button class="ts-btn" onclick="showTool('checklist', this)">Checklist</button>
+      <button class="ts-btn" onclick="showTool('certificate', this)">Certificate</button>
+    </div>
+
+    <!-- GLOBAL SEARCH -->
+    <section id="tool-search" class="tool-section vl-panel">
+      <div class="vl-panel-head"><h2>Global Platform Search</h2><span class="badge badge-beginner">Static index</span></div>
+      <p class="text-muted">Search lessons, features, tools, and references from one place. This is a fast static index, not a server search.</p>
+      <input id="searchBox" class="vl-input mt-16" placeholder="Search e.g. heatmap, storytelling, CSV, error, matplotlib…" oninput="renderSearch()">
+      <div id="searchResults" class="vl-search-results mt-24"></div>
+    </section>
+
+    <!-- NOTES -->
+    <section id="tool-notes" class="tool-section vl-panel" style="display:none;">
+      <div class="vl-panel-head"><h2>Personal Notes & Bookmarks</h2><span class="badge badge-sns">localStorage</span></div>
+      <p class="text-muted">Save learning notes, useful links, questions, and project reflections. Notes remain private in your browser until you export them.</p>
+      <div class="vl-form-grid mt-16">
+        <label>Title<input id="noteTitle" class="vl-input" placeholder="e.g. When to use heatmaps"></label>
+        <label>Related page<select id="notePage" class="vl-input"><option>Lessons</option><option>Playground</option><option>Dataset Lab</option><option>CSV Lab</option><option>Project Studio</option><option>Story Builder</option><option>Comparator</option><option>Error Guide</option><option>Other</option></select></label>
+        <label>Tags<input id="noteTags" class="vl-input" placeholder="matplotlib, heatmap, exam"></label>
+        <label>Importance<select id="noteImportance" class="vl-input"><option>Normal</option><option>Important</option><option>Exam / Revision</option><option>Project idea</option></select></label>
+      </div>
+      <label class="vl-label">Note body</label>
+      <textarea id="noteBody" class="vl-input" rows="5" placeholder="Write what you learned, what confused you, or what you want to try next…"></textarea>
+      <div class="vl-actions"><button class="btn btn-primary" onclick="saveNote()">Save Note</button><button class="btn btn-secondary" onclick="exportNotes()">Export Markdown</button><button class="btn btn-ghost" onclick="clearNoteForm()">Clear Form</button></div>
+      <div id="notesList" class="mt-24"></div>
+    </section>
+
+    <!-- FLASHCARDS -->
+    <section id="tool-flashcards" class="tool-section vl-panel" style="display:none;">
+      <div class="vl-panel-head"><h2>Flashcard Review</h2><span class="badge badge-plotly">Spaced practice</span></div>
+      <p class="text-muted">Review core visualization ideas. Mark each card as Hard, Good, or Easy. The next review date is saved locally.</p>
+      <div class="vl-toolbar"><select id="cardFilter" class="vl-input" onchange="renderCard()"><option value="all">All cards</option><option value="due">Due today</option><option value="Matplotlib">Matplotlib</option><option value="Seaborn">Seaborn</option><option value="Plotly">Plotly</option><option value="Pandas">Pandas</option><option value="Concept">Concept</option></select><button class="btn btn-secondary" onclick="resetCards()">Reset Card Progress</button></div>
+      <div id="flashcardBox" class="vl-flashcard"></div>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section id="tool-checklist" class="tool-section vl-panel" style="display:none;">
+      <div class="vl-panel-head"><h2>Visualization Quality Checklist</h2><span class="badge badge-pd">Before submission</span></div>
+      <p class="text-muted">Use this before submitting a chart, project, YouTube tutorial, school report, or portfolio notebook.</p>
+      <div class="vl-progress-mini"><span id="checkBar"></span></div><p id="checkCount" class="text-mono text-muted">0 / 0 checks complete</p>
+      <div id="checkList" class="vl-task-list mt-16"></div>
+      <div class="vl-actions"><button class="btn btn-secondary" onclick="resetChecklist()">Reset Checklist</button><button class="btn btn-primary" onclick="copyChecklistReport()">Copy Report</button></div>
+    </section>
+
+    <!-- CERTIFICATE -->
+    <section id="tool-certificate" class="tool-section vl-panel" style="display:none;">
+      <div class="vl-panel-head"><h2>Printable Completion Certificate</h2><span class="badge badge-advanced">Print / PDF</span></div>
+      <p class="text-muted">Generate a simple certificate for self-paced completion, classroom workshops, or HMG Academy sessions. It is not a formal accreditation system; it is a printable learning record.</p>
+      <div class="vl-form-grid mt-16">
+        <label>Learner name<input id="certName" class="vl-input" placeholder="Enter learner name"></label>
+        <label>Course / workshop title<input id="certCourse" class="vl-input" value="Python Data Visualization with VizLearn"></label>
+        <label>Instructor / facilitator<input id="certInstructor" class="vl-input" value="Adewale Samson Adeagbo"></label>
+        <label>Completion note<input id="certNote" class="vl-input" value="Completed structured visualization lessons, practice tasks, and project work."></label>
+      </div>
+      <div class="vl-actions"><button class="btn btn-primary" onclick="renderCertificate()">Generate Certificate</button><button class="btn btn-secondary" onclick="window.print()">Print / Save PDF</button></div>
+      <div id="certificatePreview" class="vl-certificate mt-24"></div>
+    </section>
+  </section>
+</main>
+
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>Learning Tools · Local-first study support for VizLearn</p></div></div></footer>
+<script src="../assets/js/main.js"></script>
+<script>
+const SEARCH_INDEX = [
+  ['Home','Platform overview, feature showcase, learning paths','../index.html','overview start free browser visualization'],
+  ['Roadmap','Simple-to-complex learning sequence','roadmap.html','beginner advanced path milestones'],
+  ['Lessons','42 structured lessons for Matplotlib, Seaborn, Plotly, Pandas','lessons.html','curriculum matplotlib seaborn plotly pandas'],
+  ['Playground','Run Python visualization code in browser with Pyodide','playground.html','python code run pyodide matplotlib seaborn'],
+  ['Dataset Lab','Embedded datasets with starter code and analysis questions','datasets.html','dataset csv education business operations'],
+  ['CSV Upload Lab','Upload your own CSV privately and generate chart code','upload.html','upload file csv privacy chart recommendation'],
+  ['Project Studio','Guided projects with rubrics and starter code','projects.html','capstone project portfolio rubric'],
+  ['Story Builder','Chart advisor and data story brief generator','storytelling.html','insight evidence action limitation chart choice'],
+  ['Instructor Mode','Lesson planner and teaching rubric','instructor.html','teacher class lesson plan assessment'],
+  ['Comparator','Same chart across multiple Python libraries','compare.html','compare syntax matplotlib seaborn plotly pandas'],
+  ['Parameter Explorer','Interactive parameter intuition builder','params.html','alpha linewidth hue palette bins'],
+  ['Cheat Sheet','Searchable syntax cards','cheatsheet.html','copy run syntax cards'],
+  ['Quiz','Code-reading and debugging questions','quiz.html','test identify debug predict parameters'],
+  ['Glossary','Visualization terms and examples','glossary.html','axes figure hue legend colormap'],
+  ['Error Guide','Common visualization errors and fixes','errors.html','debug fix traceback legend axis'],
+  ['Gallery','Chart examples that open in Playground','gallery.html','examples charts visual inspiration'],
+  ['Progress','Dashboard, streaks, badges, backup and restore','progress.html','progress badges backup restore localStorage'],
+  ['Quick Reference','Printable syntax reference','quickref.html','print pdf reference syntax'],
+  ['About','Creator bio and HMG Concepts context','about.html','adewale hmg educator data scientist']
+];
+function showTool(id, btn){ document.querySelectorAll('.tool-section').forEach(s=>s.style.display='none'); document.getElementById('tool-'+id).style.display='block'; document.querySelectorAll('.ts-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); if(id==='search') renderSearch(); if(id==='notes') renderNotes(); if(id==='flashcards') renderCard(); if(id==='checklist') renderChecklist(); if(id==='certificate') renderCertificate(); }
+function renderSearch(){ const q=(document.getElementById('searchBox').value||'').toLowerCase().trim(); const list=SEARCH_INDEX.filter(x=>!q || (x.join(' ').toLowerCase().includes(q))); document.getElementById('searchResults').innerHTML=list.map(x=>`<a class="vl-search-item" href="${x[2]}"><strong>${x[0]}</strong><span>${x[1]}</span><em>Open →</em></a>`).join('') || '<p class="text-muted">No result found.</p>'; }
+
+const NOTE_KEY='vizlearn_notes';
+function getNotes(){try{return JSON.parse(localStorage.getItem(NOTE_KEY)||'[]')}catch{return[]}}
+function setNotes(n){localStorage.setItem(NOTE_KEY,JSON.stringify(n));}
+function saveNote(){ const n=getNotes(); const note={id:Date.now(),title:noteTitle.value||'Untitled note',page:notePage.value,tags:noteTags.value,importance:noteImportance.value,body:noteBody.value,ts:new Date().toISOString()}; n.unshift(note); setNotes(n); clearNoteForm(); renderNotes(); VizLearnToast&&VizLearnToast('Note saved'); }
+function clearNoteForm(){ noteTitle.value=''; noteTags.value=''; noteBody.value=''; noteImportance.value='Normal'; }
+function delNote(id){ if(confirm('Delete this note?')){ setNotes(getNotes().filter(n=>n.id!==id)); renderNotes(); }}
+function renderNotes(){ const notes=getNotes(); notesList.innerHTML=notes.length?notes.map(n=>`<article class="vl-note-card"><div><strong>${n.title}</strong><p>${n.body.replace(/[<>&]/g,'')}</p><small>${n.page} · ${n.importance} · ${n.tags||'no tags'} · ${new Date(n.ts).toLocaleDateString()}</small></div><button class="btn btn-danger btn-sm" onclick="delNote(${n.id})">Delete</button></article>`).join(''):'<p class="text-muted">No notes yet.</p>'; }
+function exportNotes(){ const md=getNotes().map(n=>`## ${n.title}\n\n**Page:** ${n.page}  \n**Importance:** ${n.importance}  \n**Tags:** ${n.tags||''}  \n**Date:** ${n.ts}\n\n${n.body}\n`).join('\n---\n'); navigator.clipboard.writeText(md); const blob=new Blob([md],{type:'text/markdown'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='vizlearn-notes.md'; a.click(); URL.revokeObjectURL(a.href); }
+
+const CARDS=[
+ ['Concept','What is the best chart for showing the distribution of one numeric variable?','Histogram. Use KDE optionally to show smooth density.'],
+ ['Concept','What is the best chart for showing relationship between two numeric variables?','Scatter plot. Add hue/style only when group comparison is useful.'],
+ ['Matplotlib','What is the difference between Figure and Axes?','Figure is the full canvas; Axes is the plotting area where data is drawn.'],
+ ['Matplotlib','Why use ax.set_title() instead of ax.title()?','Axes objects use setter methods such as set_title, set_xlabel, and set_ylabel.'],
+ ['Seaborn','What does hue do?','It maps a variable to color groups, helping compare categories or segments.'],
+ ['Seaborn','Why call sns.set_theme() before plotting?','It applies global style settings before figures and axes are created.'],
+ ['Plotly','Why use Plotly?','For interactive browser charts with hover, zoom, filtering, and rich HTML output.'],
+ ['Pandas','When is df.plot() useful?','For fast exploratory plots directly from a DataFrame.'],
+ ['Concept','What makes a chart title effective?','It states the insight, not just the chart type. Example: Attendance rises with quiz performance.'],
+ ['Concept','What should every chart explanation include?','Insight, evidence, action, and limitation.']
+];
+let cardIndex=0, revealed=false; const CARD_KEY='vizlearn_flashcards';
+function getCardProg(){try{return JSON.parse(localStorage.getItem(CARD_KEY)||'{}')}catch{return{}}}
+function setCardProg(p){localStorage.setItem(CARD_KEY,JSON.stringify(p));}
+function due(card,i){const p=getCardProg()[i]; return !p || !p.next || new Date(p.next)<=new Date();}
+function cardPool(){ const f=cardFilter.value; return CARDS.map((c,i)=>({c,i})).filter(o=>f==='all'||(f==='due'?due(o.c,o.i):o.c[0]===f)); }
+function renderCard(){ const pool=cardPool(); if(!pool.length){flashcardBox.innerHTML='<p class="text-muted">No cards match this filter or nothing is due today.</p>'; return;} if(cardIndex>=pool.length) cardIndex=0; const {c,i}=pool[cardIndex]; const p=getCardProg()[i]||{}; flashcardBox.innerHTML=`<div class="vl-card-top"><span class="badge badge-beginner">${c[0]}</span><span class="text-mono text-muted">Card ${cardIndex+1}/${pool.length}</span></div><h2>${c[1]}</h2>${revealed?`<p class="vl-flash-answer">${c[2]}</p><div class="vl-actions"><button class="btn btn-danger btn-sm" onclick="gradeCard(${i},1)">Hard</button><button class="btn btn-secondary btn-sm" onclick="gradeCard(${i},3)">Good</button><button class="btn btn-primary btn-sm" onclick="gradeCard(${i},7)">Easy</button></div>`:`<button class="btn btn-primary" onclick="revealed=true;renderCard()">Reveal Answer</button>`}<p class="text-muted mt-16">Reviews: ${p.reviews||0} · Next: ${p.next?new Date(p.next).toLocaleDateString():'today'}</p>`; }
+function gradeCard(i,days){ const p=getCardProg(); const d=new Date(); d.setDate(d.getDate()+days); p[i]={reviews:((p[i]&&p[i].reviews)||0)+1,next:d.toISOString()}; setCardProg(p); revealed=false; cardIndex++; renderCard(); }
+function resetCards(){ if(confirm('Reset flashcard progress?')){localStorage.removeItem(CARD_KEY); cardIndex=0; revealed=false; renderCard();}}
+
+const CHECKS=['The chart answers a clear question','The chart type matches the data and intent','The title states an insight, not only a topic','X-axis and Y-axis labels are clear','Units or percentages are shown where needed','Colors support meaning and are not excessive','Legend is present only when useful','Text is readable on mobile or projector','The visualization avoids misleading scales','The explanation includes insight, evidence, action, and limitation'];
+const CHECK_KEY='vizlearn_quality_checks';
+function getChecks(){try{return JSON.parse(localStorage.getItem(CHECK_KEY)||'{}')}catch{return{}}}
+function setCheck(i,val){const c=getChecks(); c[i]=val; localStorage.setItem(CHECK_KEY,JSON.stringify(c)); renderChecklist();}
+function renderChecklist(){ const c=getChecks(); const done=CHECKS.filter((_,i)=>c[i]).length; checkCount.textContent=`${done} / ${CHECKS.length} checks complete`; checkBar.style.width=Math.round(done/CHECKS.length*100)+'%'; checkList.innerHTML=CHECKS.map((x,i)=>`<label class="vl-task ${c[i]?'done':''}"><input type="checkbox" ${c[i]?'checked':''} onchange="setCheck(${i},this.checked)"><span>${x}</span><a href="#">${c[i]?'Done':'Check'}</a></label>`).join(''); }
+function resetChecklist(){localStorage.removeItem(CHECK_KEY);renderChecklist();}
+function copyChecklistReport(){ const c=getChecks(); const txt=CHECKS.map((x,i)=>`${c[i]?'[x]':'[ ]'} ${x}`).join('\n'); navigator.clipboard.writeText(txt); VizLearnToast&&VizLearnToast('Checklist report copied'); }
+function renderCertificate(){ const progress=JSON.parse(localStorage.getItem('vizlearn_progress')||'{}'); const done=Object.values(progress).filter(v=>v.status==='complete').length; const name=certName.value||'Learner Name'; const course=certCourse.value||'Python Data Visualization with VizLearn'; const inst=certInstructor.value||'Adewale Samson Adeagbo'; const note=certNote.value||''; certificatePreview.innerHTML=`<div class="cert-inner"><div class="cert-brand">⬡ VizLearn</div><h2>Certificate of Learning</h2><p>This certifies that</p><h1>${name}</h1><p>has participated in</p><h3>${course}</h3><p>${note}</p><div class="cert-row"><span>Lessons completed locally: ${done}/42</span><span>Date: ${new Date().toLocaleDateString('en-GB')}</span></div><div class="cert-sign">${inst}<br><small>Facilitator / Creator</small></div><p class="cert-small">Generated locally by VizLearn. This is a learning record, not a regulated accreditation.</p></div>`; }
+renderSearch();
+</script>
+</body>
+</html>

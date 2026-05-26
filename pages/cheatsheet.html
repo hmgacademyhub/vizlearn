@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cheat Sheet — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="../index.html" class="brand"><span class="brand-icon">⬡</span><span class="brand-text">Viz<span class="accent">Learn</span></span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="lessons.html">Lessons</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="datasets.html">Data Lab</a></li>
+        <li><a href="upload.html">CSV Lab</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li>
+        <li><a href="cheatsheet.html" class="active">Cheat Sheet</a></li>
+        <li><a href="compare.html">Comparator</a></li>
+        <li><a href="params.html">Params</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="errors.html">Errors</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="progress.html">Progress</a></li>
+        <li><a href="quickref.html">Quick Ref</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="cheatsheet-wrapper" style="padding-top:64px;">
+    <div class="cheatsheet-header" style="background:var(--bg2);border-bottom:1px solid var(--border);padding:48px 0 32px;">
+      <div class="container">
+        <div class="section-label">QUICK REFERENCE</div>
+        <h1 class="cheatsheet-header-title" style="font-family:var(--font-head);font-size:2.2rem;font-weight:800;letter-spacing:-1px;margin-bottom:8px;">Visualization Cheat Sheet</h1>
+        <p style="color:var(--text-muted);font-size:0.95rem;">All the syntax you need — searchable, copyable, and runnable. 100+ code snippets across 4 libraries.</p>
+
+        <div class="cheatsheet-search-bar" style="margin:20px 0 0;">
+          <div class="search-input-wrap">
+            <input type="text" id="search-input" placeholder="Search: scatter, heatmap, legend, color ..." autocomplete="off" />
+            <span class="search-icon">🔍</span>
+          </div>
+        </div>
+
+        <div class="quiz-filters" style="margin-top:16px;">
+          <button class="filter-btn active" data-filter="all">All Libraries</button>
+          <button class="filter-btn" data-filter="matplotlib">Matplotlib</button>
+          <button class="filter-btn" data-filter="seaborn">Seaborn</button>
+          <button class="filter-btn" data-filter="plotly">Plotly</button>
+          <button class="filter-btn" data-filter="pandas">Pandas</button>
+          <button class="filter-btn" data-filter="styling">Styling</button>
+          <button class="filter-btn" data-filter="layout">Layout</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="cheatsheet-grid" id="cheat-grid" style="padding:40px 0 80px;">
+        <!-- Cards injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+  const CHEAT_DATA = [
+    // ── MATPLOTLIB ─────────────────────────────────────────────
+    { lib:'matplotlib', cat:'setup', title:'Standard Import', tags:['import','setup'],
+      code:`import matplotlib.pyplot as plt\nimport numpy as np\n\n# Always use OOP style:\nfig, ax = plt.subplots(figsize=(9, 5))\n# fig = the canvas\n# ax  = the plot area`},
+    { lib:'matplotlib', cat:'line', title:'Line Chart', tags:['line','plot'],
+      code:`ax.plot(x, y,\n    color='#00e5a0',\n    linewidth=2.5,\n    linestyle='--',   # '-', '--', ':', '-.'  \n    marker='o',       # 'o','s','^','D'\n    markersize=6,\n    alpha=0.9,\n    label='Series A'\n)`},
+    { lib:'matplotlib', cat:'bar', title:'Bar Chart', tags:['bar','vertical'],
+      code:`ax.bar(x, height,\n    width=0.8,\n    color='#00b4d8',\n    edgecolor='white',\n    linewidth=0.5,\n    alpha=0.85,\n    bottom=0,          # for stacked bars\n    label='Group A'\n)`},
+    { lib:'matplotlib', cat:'scatter', title:'Scatter Plot', tags:['scatter','points'],
+      code:`ax.scatter(x, y,\n    c=color_array,     # per-point colors\n    s=size_array,      # per-point sizes\n    cmap='viridis',    # colormap\n    alpha=0.7,\n    edgecolors='none',\n    marker='o'\n)`},
+    { lib:'matplotlib', cat:'histogram', title:'Histogram', tags:['hist','distribution'],
+      code:`ax.hist(data,\n    bins=30,           # number of buckets\n    density=False,     # True = probability\n    color='#f4a261',\n    edgecolor='none',\n    alpha=0.8,\n    cumulative=False\n)`},
+    { lib:'matplotlib', cat:'pie', title:'Pie Chart', tags:['pie','donut'],
+      code:`ax.pie(sizes,\n    labels=labels,\n    colors=colors,\n    autopct='%1.1f%%', # show percentages\n    startangle=140,\n    explode=explode,   # offset a slice\n    pctdistance=0.85,\n    shadow=False\n)`},
+    { lib:'matplotlib', cat:'layout', title:'Subplots Layout', tags:['subplot','layout','grid'],
+      code:`# 2-row, 3-column grid\nfig, axes = plt.subplots(\n    nrows=2, ncols=3,\n    figsize=(14, 8),\n    sharex=False,\n    sharey=False\n)\naxes[0, 0].plot(...)  # top-left\naxes[1, 2].bar(...)   # bottom-right\nfig.tight_layout()`},
+    { lib:'matplotlib', cat:'styling', title:'Axes Styling', tags:['style','spines','ticks','grid'],
+      code:`ax.set_title('Title', fontsize=14, fontweight='bold', pad=12)\nax.set_xlabel('X Label', fontsize=11)\nax.set_ylabel('Y Label', fontsize=11)\nax.tick_params(labelsize=9, rotation=30)\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\nax.grid(True, linestyle='--', alpha=0.3)\nax.set_facecolor('#0d1117')\nfig.patch.set_facecolor('#0d1117')`},
+    { lib:'matplotlib', cat:'styling', title:'Legend Control', tags:['legend','labels'],
+      code:`# Basic legend\nax.legend()\n\n# Positioned legend\nax.legend(\n    loc='upper right',     # position\n    title='Category',\n    fontsize=9,\n    framealpha=0.8,\n    edgecolor='gray'\n)\n\n# Legend outside plot\nax.legend(bbox_to_anchor=(1.02, 1), loc='upper left')`},
+    { lib:'matplotlib', cat:'styling', title:'Annotations', tags:['annotate','text','arrow'],
+      code:`# Simple text\nax.text(x, y, 'Note here', fontsize=9, color='white')\n\n# Arrow annotation\nax.annotate('Peak!',\n    xy=(peak_x, peak_y),       # point to\n    xytext=(-40, 15),          # text offset\n    textcoords='offset points',\n    arrowprops=dict(\n        arrowstyle='->',\n        color='#00e5a0'\n    ),\n    fontsize=9, color='#00e5a0'\n)`},
+    { lib:'matplotlib', cat:'colormaps', title:'Colormaps', tags:['colormap','cmap','color'],
+      code:`# Sequential (one direction)\ncmap='viridis'   # blue→green→yellow (colorblind-safe)\ncmap='Blues'     # single-hue blue\ncmap='YlOrRd'    # yellow→orange→red\n\n# Diverging (two directions from center)\ncmap='coolwarm'  # blue → white → red\ncmap='RdYlGn'    # red → yellow → green\n\n# Qualitative (categories)\ncmap='Set2'      # 8 distinct colors\ncmap='tab10'     # 10 distinct colors\n\n# AVOID: 'jet' (misleading, not colorblind-safe)`},
+    { lib:'matplotlib', cat:'export', title:'Save Figure', tags:['save','export','file'],
+      code:`# Save as PNG\nfig.savefig('chart.png',\n    dpi=150,           # resolution\n    bbox_inches='tight', # no clipping\n    facecolor='#0d1117'  # background\n)\n\n# Save as SVG (scalable)\nfig.savefig('chart.svg', format='svg')\n\n# Save as PDF\nfig.savefig('report.pdf', format='pdf')`},
+
+    // ── SEABORN ────────────────────────────────────────────────
+    { lib:'seaborn', cat:'setup', title:'Import & Theme', tags:['import','setup','theme'],
+      code:`import seaborn as sns\nimport matplotlib.pyplot as plt\n\n# Set global theme\nsns.set_theme(style='darkgrid')\n# Styles: 'darkgrid','whitegrid','dark','white','ticks'\n\n# Set color palette\nsns.set_palette('Set2')\n# Options: 'Set1-3','muted','bright','deep','colorblind','husl'`},
+    { lib:'seaborn', cat:'scatter', title:'Scatter Plot', tags:['scatter','scatterplot'],
+      code:`sns.scatterplot(\n    data=df,\n    x='column_x',\n    y='column_y',\n    hue='category',    # color by group\n    size='magnitude',  # size by value\n    style='group',     # marker by group\n    sizes=(30, 200),\n    palette='Set2',\n    alpha=0.8,\n    ax=ax\n)`},
+    { lib:'seaborn', cat:'distribution', title:'Histogram + KDE', tags:['hist','histplot','kde','distribution'],
+      code:`sns.histplot(\n    data=df,\n    x='value',\n    hue='group',       # overlay groups\n    bins=30,\n    kde=True,          # add KDE curve\n    stat='density',    # normalize\n    element='bars',    # 'bars','step','poly'\n    fill=True,\n    alpha=0.6,\n    ax=ax\n)`},
+    { lib:'seaborn', cat:'distribution', title:'KDE Plot', tags:['kde','kdeplot','density'],
+      code:`sns.kdeplot(\n    data=df,\n    x='value',\n    hue='group',\n    fill=True,\n    alpha=0.5,\n    bw_adjust=1.0,     # smoothness\n    cut=0,             # trim at data edges\n    ax=ax\n)`},
+    { lib:'seaborn', cat:'categorical', title:'Box Plot', tags:['box','boxplot','quartile'],
+      code:`sns.boxplot(\n    data=df,\n    x='category',\n    y='value',\n    hue='group',\n    palette='Set2',\n    width=0.5,\n    flierprops={'marker':'o','alpha':0.5},\n    ax=ax\n)`},
+    { lib:'seaborn', cat:'categorical', title:'Violin Plot', tags:['violin','violinplot','kde'],
+      code:`sns.violinplot(\n    data=df,\n    x='category',\n    y='value',\n    hue='group',\n    split=True,        # side-by-side halves\n    inner='quartile',  # 'box','quartile','point'\n    palette='Set1',\n    ax=ax\n)`},
+    { lib:'seaborn', cat:'categorical', title:'Bar Plot', tags:['bar','barplot','mean','ci'],
+      code:`sns.barplot(\n    data=df,\n    x='category',\n    y='value',\n    hue='group',\n    errorbar='sd',     # 'sd','ci','pi',None\n    capsize=0.1,\n    palette='Set2',\n    ax=ax\n)\n# Note: shows mean ± error by default`},
+    { lib:'seaborn', cat:'matrix', title:'Heatmap', tags:['heatmap','matrix','correlation'],
+      code:`# Correlation heatmap\ncorr = df.corr()\nsns.heatmap(\n    corr,\n    annot=True,        # show values\n    fmt='.2f',\n    cmap='coolwarm',\n    center=0,\n    vmin=-1, vmax=1,\n    linewidths=0.5,\n    linecolor='#0d1117',\n    square=True,\n    cbar_kws={'shrink': 0.8},\n    ax=ax\n)`},
+    { lib:'seaborn', cat:'matrix', title:'Pair Plot', tags:['pairplot','pairs','eda'],
+      code:`g = sns.pairplot(\n    df,\n    hue='species',\n    palette='Set2',\n    diag_kind='kde',   # 'hist','kde'\n    plot_kws={\n        'alpha': 0.6,\n        's': 40,\n        'edgecolor': 'none'\n    },\n    height=2.5\n)\ng.fig.suptitle('Pair Plot', y=1.02)`},
+    { lib:'seaborn', cat:'relational', title:'Line Plot', tags:['line','lineplot','time'],
+      code:`sns.lineplot(\n    data=df,\n    x='date',\n    y='value',\n    hue='group',\n    style='group',     # different line styles\n    linewidth=2.0,\n    markers=True,\n    dashes=False,\n    errorbar='ci',     # confidence interval band\n    ax=ax\n)`},
+    { lib:'seaborn', cat:'regression', title:'Regression Plot', tags:['regression','lmplot','regplot'],
+      code:`# With confidence interval\nsns.regplot(\n    data=df,\n    x='x_col',\n    y='y_col',\n    scatter_kws={'alpha':0.5},\n    line_kws={'color':'#00e5a0'},\n    ci=95,\n    ax=ax\n)\n\n# Multi-facet regression\nsns.lmplot(data=df, x='x', y='y', hue='group')`},
+
+    // ── PLOTLY ─────────────────────────────────────────────────
+    { lib:'plotly', cat:'setup', title:'Import Plotly Express', tags:['import','setup','plotly'],
+      code:`import plotly.express as px\nimport plotly.graph_objects as go\n\n# px = high-level (recommended to start)\n# go = low-level (full control)\n\n# Built-in datasets for practice:\ndf = px.data.iris()\ndf = px.data.gapminder()\ndf = px.data.tips()`},
+    { lib:'plotly', cat:'scatter', title:'Interactive Scatter', tags:['scatter','hover','interactive'],
+      code:`fig = px.scatter(\n    df,\n    x='x_col',\n    y='y_col',\n    color='category',\n    size='magnitude',\n    hover_data=['extra_col'],\n    animation_frame='year',  # animated!\n    title='Chart Title',\n    template='plotly_dark',\n    color_discrete_sequence=px.colors.qualitative.Set2\n)\nfig.show()`},
+    { lib:'plotly', cat:'bar', title:'Bar Chart', tags:['bar','grouped','stacked'],
+      code:`fig = px.bar(\n    df, x='category', y='value',\n    color='group',\n    barmode='group',   # 'group','stack','overlay'\n    text='value',\n    title='Bar Chart',\n    template='plotly_dark'\n)\nfig.update_traces(texttemplate='%{text:.1f}',\n                  textposition='outside')\nfig.show()`},
+    { lib:'plotly', cat:'line', title:'Line Chart', tags:['line','time','range'],
+      code:`fig = px.line(\n    df, x='date', y='value',\n    color='group',\n    markers=True,\n    title='Trend Over Time',\n    template='plotly_dark'\n)\nfig.update_layout(\n    xaxis_rangeslider_visible=True  # adds zoom slider\n)\nfig.show()`},
+    { lib:'plotly', cat:'layout', title:'update_layout()', tags:['layout','title','legend','style'],
+      code:`fig.update_layout(\n    title='Chart Title',\n    title_font_size=16,\n    xaxis_title='X Axis',\n    yaxis_title='Y Axis',\n    legend_title='Category',\n    legend=dict(x=1.02, y=1),\n    plot_bgcolor='#0d1117',\n    paper_bgcolor='#0b0f1a',\n    font=dict(color='#e8f0fe', size=12),\n    height=500,\n    margin=dict(l=60,r=40,t=60,b=60)\n)`},
+
+    // ── PANDAS ─────────────────────────────────────────────────
+    { lib:'pandas', cat:'setup', title:'df.plot() Basics', tags:['pandas','plot','setup'],
+      code:`import pandas as pd\nimport matplotlib.pyplot as plt\n\n# df.plot() wraps matplotlib automatically\n# kind options:\n# 'line','bar','barh','hist','box',\n# 'kde','area','scatter','pie','hexbin'\n\ndf.plot(kind='line', figsize=(10,5),\n        color=['#00e5a0','#00b4d8'],\n        title='Quick Line Chart')\nplt.tight_layout()\nplt.show()`},
+    { lib:'pandas', cat:'bar', title:'Bar & Stacked Bar', tags:['bar','stacked','grouped'],
+      code:`# Grouped bar\ndf.plot.bar(figsize=(10,5), width=0.75,\n           color=['#00e5a0','#00b4d8','#f4a261'],\n           edgecolor='none', alpha=0.85)\n\n# Stacked bar\ndf.plot.bar(stacked=True,\n           colormap='tab10',\n           figsize=(10,5))\n\n# Horizontal bar\ndf.plot.barh(stacked=True, figsize=(8,6))`},
+    { lib:'pandas', cat:'distribution', title:'Histogram', tags:['hist','histogram'],
+      code:`# All columns at once\ndf.plot.hist(\n    bins=25,\n    alpha=0.6,\n    color=['#00e5a0','#00b4d8','#f4a261'],\n    edgecolor='none',\n    figsize=(10,5)\n)\n\n# Single column\ndf['column'].plot.hist(bins=30, color='#00e5a0')`},
+    { lib:'pandas', cat:'box', title:'Box Plot', tags:['box','quartile','whisker'],
+      code:`df.plot.box(\n    figsize=(10,5),\n    patch_artist=True,\n    boxprops=dict(\n        facecolor='#1e2a3a',\n        color='#00e5a0'\n    ),\n    medianprops=dict(color='#00e5a0', linewidth=2),\n    whiskerprops=dict(color='#8b9ab5'),\n    flierprops=dict(\n        marker='o', color='#f4a261',\n        markersize=3, alpha=0.5\n    )\n)`},
+
+    // ── STYLING ────────────────────────────────────────────────
+    { lib:'matplotlib', cat:'styling', title:'Color Names Quick Ref', tags:['color','palette','hex'],
+      code:`# Hex colors (recommended)\ncolor = '#00e5a0'   # accent green\ncolor = '#00b4d8'   # accent blue\ncolor = '#f4a261'   # warm orange\ncolor = '#9b59b6'   # purple\ncolor = '#ef4444'   # red/danger\ncolor = '#f59e0b'   # amber/warning\n\n# Named colors\ncolor = 'steelblue'\ncolor = 'tomato'\ncolor = 'mediumseagreen'\n\n# RGB tuple (0 to 1)\ncolor = (0.2, 0.6, 0.8)`},
+    { lib:'matplotlib', cat:'layout', title:'tight_layout & spacing', tags:['layout','tight','spacing'],
+      code:`# Fix overlapping plots\nfig.tight_layout()\nfig.tight_layout(pad=2.0)  # add padding\n\n# Manual subplot spacing\nfig.subplots_adjust(\n    left=0.1,   right=0.9,\n    bottom=0.1, top=0.9,\n    wspace=0.3, hspace=0.4\n)\n\n# Shared figure title\nfig.suptitle('Overall Title', fontsize=14,\n             fontweight='bold', y=1.01)`},
+  ];
+
+  function buildCards(data) {
+    const grid = document.getElementById('cheat-grid');
+    grid.innerHTML = '';
+    data.forEach(item => {
+      const libColors = {
+        matplotlib:'#2e86c1', seaborn:'#1e8449', plotly:'#9b59b6', pandas:'#d35400'
+      };
+      const card = document.createElement('div');
+      card.className = 'cheat-card';
+      card.setAttribute('data-lib', item.lib);
+      card.setAttribute('data-tags', (item.tags||[]).join(' ') + ' ' + item.title.toLowerCase());
+      card.innerHTML = `
+        <div class="cheat-card-header">
+          <span class="cheat-card-title">${item.title}</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span style="font-size:0.68rem;background:rgba(0,0,0,0.3);color:${libColors[item.lib]};padding:2px 7px;border-radius:4px;font-family:var(--font-mono);font-weight:700;">${item.lib.toUpperCase().slice(0,3)}</span>
+            <button class="copy-btn" style="font-size:0.68rem;padding:3px 8px;" data-code="${encodeURIComponent(item.code)}">Copy</button>
+            <button onclick="sendToPlay('${encodeURIComponent(item.code)}')" style="padding:3px 8px;border-radius:5px;border:none;font-size:0.68rem;font-weight:600;cursor:pointer;background:rgba(0,229,160,0.12);color:var(--accent);font-family:var(--font-mono);">▶ Run</button>
+          </div>
+        </div>
+        <div class="cheat-card-body"><pre>${escHtml(item.code)}</pre></div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+  function sendToPlay(encoded) {
+    localStorage.setItem('vizlearn_playground_code', decodeURIComponent(encoded));
+    window.location.href = 'playground.html';
+  }
+
+  // Override copy for encoded data
+  document.addEventListener('click', e => {
+    if (e.target.classList.contains('copy-btn') && e.target.dataset.code) {
+      const text = decodeURIComponent(e.target.dataset.code);
+      navigator.clipboard.writeText(text).catch(()=>{
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta);
+      });
+      e.target.textContent = 'Copied!';
+      setTimeout(()=>{ e.target.textContent = 'Copy'; }, 2000);
+      e.stopImmediatePropagation();
+    }
+  });
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const f = this.getAttribute('data-filter');
+      applyFilters(f, document.getElementById('search-input').value);
+    });
+  });
+
+  // Search
+  document.getElementById('search-input').addEventListener('input', function() {
+    const active = document.querySelector('.filter-btn.active');
+    const lib = active ? active.getAttribute('data-filter') : 'all';
+    applyFilters(lib, this.value.toLowerCase());
+  });
+
+  function applyFilters(lib, search) {
+    const cards = document.querySelectorAll('.cheat-card');
+    const specialCats = ['styling','layout'];
+    cards.forEach(card => {
+      const cardLib = card.getAttribute('data-lib');
+      const tags = card.getAttribute('data-tags') || '';
+      const libMatch = lib === 'all' || cardLib === lib || (specialCats.includes(lib) && tags.includes(lib));
+      const searchMatch = !search || tags.includes(search);
+      card.style.display = libMatch && searchMatch ? '' : 'none';
+    });
+  }
+
+  buildCards(CHEAT_DATA);
+  </script>
+</body>
+</html>

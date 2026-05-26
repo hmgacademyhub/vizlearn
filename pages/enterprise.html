@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enterprise Console — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar"><div class="nav-inner"><a href="../index.html" class="brand"><span class="brand-icon">⬡</span><span class="brand-text">Viz<span class="accent">Learn</span></span></a><ul class="nav-links"><li><a href="../index.html">Home</a></li><li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li><li><a href="lessons.html">Lessons</a></li><li><a href="playground.html">Playground</a></li><li><a href="datasets.html">Data Lab</a></li><li><a href="upload.html">CSV Lab</a></li><li><a href="projects.html">Projects</a></li><li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html" class="active">Enterprise</a></li><li><a href="progress.html">Progress</a></li><li><a href="about.html">About</a></li></ul><button class="hamburger" id="hamburger"><span></span><span></span><span></span></button></div></nav>
+
+<main style="padding-top:64px;">
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-label">ENTERPRISE / SCHOOL / COHORT MODE · FREE STATIC ARCHITECTURE</div>
+      <h1>Enterprise Console</h1>
+      <p class="text-muted" style="max-width:940px;">A local-first administration layer for schools, bootcamps, NGOs, HMG Academy cohorts, and internal training teams. Manage cohorts, import learner backups, aggregate progress, build assignments, track issues, and export audit logs without paid APIs, servers, or databases.</p>
+      <div class="vl-note mt-16"><strong>Enterprise without server cost:</strong> This console uses localStorage, JSON/CSV imports, browser exports, and static hosting. It is designed for free GitHub Pages or Cloudflare Pages deployment.</div>
+    </div>
+  </section>
+
+  <section class="container" style="padding:34px 24px 90px;">
+    <div class="tab-strip" style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:22px;">
+      <button class="ts-btn active" onclick="showEnt('org', this)">Organisation</button>
+      <button class="ts-btn" onclick="showEnt('cohort', this)">Cohorts</button>
+      <button class="ts-btn" onclick="showEnt('analytics', this)">Analytics</button>
+      <button class="ts-btn" onclick="showEnt('assignment', this)">Assignments</button>
+      <button class="ts-btn" onclick="showEnt('issues', this)">Issue Register</button>
+      <button class="ts-btn" onclick="showEnt('audit', this)">Audit</button>
+      <button class="ts-btn" onclick="showEnt('governance', this)">Governance</button>
+    </div>
+
+    <!-- ORGANISATION -->
+    <section id="ent-org" class="ent-section vl-panel">
+      <div class="vl-panel-head"><h2>Organisation Profile & Local Branding</h2><span class="badge badge-beginner">local config</span></div>
+      <p class="text-muted">Store basic organisation settings locally. This is useful when VizLearn is used by a school, NGO, academy, corporate training unit, or HMG Concepts client.</p>
+      <div class="vl-form-grid mt-16">
+        <label>Organisation / School name<input id="orgName" class="vl-input" placeholder="e.g. HMG Academy"></label>
+        <label>Programme name<input id="orgProgram" class="vl-input" placeholder="e.g. Data Visualization Bootcamp"></label>
+        <label>Facilitator / Lead<input id="orgLead" class="vl-input" placeholder="e.g. Adewale Samson Adeagbo"></label>
+        <label>Contact email<input id="orgEmail" class="vl-input" placeholder="e.g. hmgconcepts@gmail.com"></label>
+        <label>Primary brand colour<input id="orgColor" class="vl-input" type="color" value="#00e5a0"></label>
+        <label>Default cohort<select id="orgDefaultCohort" class="vl-input"></select></label>
+      </div>
+      <label class="vl-label">Internal note / training policy</label>
+      <textarea id="orgPolicy" class="vl-input" rows="4" placeholder="Example: Learners export progress every Friday. Facilitators aggregate backups in Enterprise Console. No learner data is uploaded to external APIs."></textarea>
+      <div class="vl-actions"><button class="btn btn-primary" onclick="saveOrg()">Save Organisation Profile</button><button class="btn btn-secondary" onclick="exportOrg()">Export Org Config</button><label class="btn btn-ghost" style="cursor:pointer">Import Org Config<input type="file" accept="application/json,.json" onchange="importOrg(event)" style="display:none"></label></div>
+      <div id="orgPreview" class="ent-org-preview mt-24"></div>
+    </section>
+
+    <!-- COHORTS -->
+    <section id="ent-cohort" class="ent-section vl-panel" style="display:none">
+      <div class="vl-panel-head"><h2>Cohort & Learner Manager</h2><span class="badge badge-sns">CSV / JSON</span></div>
+      <p class="text-muted">Create cohorts and maintain learner lists locally. For privacy and cost control, this is not a cloud database. Export the cohort file and keep it safely with the facilitator.</p>
+      <div class="vl-form-grid mt-16">
+        <label>Cohort name<input id="cohortName" class="vl-input" placeholder="e.g. HMG Viz Cohort 1"></label>
+        <label>Start date<input id="cohortStart" class="vl-input" type="date"></label>
+        <label>End date<input id="cohortEnd" class="vl-input" type="date"></label>
+        <label>Delivery mode<select id="cohortMode" class="vl-input"><option>Virtual</option><option>Physical</option><option>Hybrid</option><option>Self-paced</option></select></label>
+      </div>
+      <div class="vl-actions"><button class="btn btn-primary" onclick="addCohort()">Create Cohort</button><button class="btn btn-secondary" onclick="exportCohorts()">Export Cohorts JSON</button><label class="btn btn-ghost" style="cursor:pointer">Import Cohorts JSON<input type="file" accept="application/json,.json" onchange="importCohorts(event)" style="display:none"></label></div>
+      <hr style="border:0;border-top:1px solid var(--border);margin:24px 0">
+      <h3>Add learner</h3>
+      <div class="vl-form-grid">
+        <label>Learner name<input id="learnerName" class="vl-input" placeholder="Full name"></label>
+        <label>Learner ID<input id="learnerId" class="vl-input" placeholder="e.g. HMG-VIZ-001"></label>
+        <label>Email / phone<input id="learnerContact" class="vl-input" placeholder="optional"></label>
+        <label>Cohort<select id="learnerCohort" class="vl-input"></select></label>
+      </div>
+      <div class="vl-actions"><button class="btn btn-primary" onclick="addLearner()">Add Learner</button><button class="btn btn-secondary" onclick="exportLearnersCSV()">Export Learners CSV</button><label class="btn btn-ghost" style="cursor:pointer">Import Learners CSV<input type="file" accept=".csv,text/csv" onchange="importLearnersCSV(event)" style="display:none"></label></div>
+      <div id="cohortBoard" class="mt-24"></div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section id="ent-analytics" class="ent-section vl-panel" style="display:none">
+      <div class="vl-panel-head"><h2>Cohort Analytics from Learner Backups</h2><span class="badge badge-plotly">aggregate locally</span></div>
+      <p class="text-muted">Learners export backup JSON from the Progress page. The facilitator imports those files here to generate aggregate metrics. No online database is required.</p>
+      <div class="vl-actions"><label class="btn btn-primary" style="cursor:pointer">Import Learner Backup JSON Files<input type="file" multiple accept="application/json,.json" onchange="importBackups(event)" style="display:none"></label><button class="btn btn-secondary" onclick="exportAnalyticsCSV()">Export Analytics CSV</button><button class="btn btn-ghost" onclick="clearAnalytics()">Clear Imported Analytics</button></div>
+      <div id="analyticsSummary" class="stat-strip"></div>
+      <div id="analyticsTable" class="mt-24"></div>
+    </section>
+
+    <!-- ASSIGNMENTS -->
+    <section id="ent-assignment" class="ent-section vl-panel" style="display:none">
+      <div class="vl-panel-head"><h2>Assignment & Deadline Builder</h2><span class="badge badge-pd">exportable</span></div>
+      <p class="text-muted">Create structured assignments for cohorts. Export as Markdown for WhatsApp, Google Classroom, email, LMS, or printed handout.</p>
+      <div class="vl-form-grid mt-16">
+        <label>Assignment title<input id="assTitle" class="vl-input" placeholder="e.g. Week 2: Histogram and Box Plot Practice"></label>
+        <label>Cohort<select id="assCohort" class="vl-input"></select></label>
+        <label>Due date<input id="assDue" class="vl-input" type="date"></label>
+        <label>Difficulty<select id="assLevel" class="vl-input"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></label>
+      </div>
+      <label class="vl-label">Required pages / tasks</label>
+      <div class="vl-chip-row" id="assignmentTasks"></div>
+      <label class="vl-label">Instruction</label>
+      <textarea id="assInstruction" class="vl-input" rows="4" placeholder="Describe what learners should submit and how it will be assessed."></textarea>
+      <div class="vl-actions"><button class="btn btn-primary" onclick="saveAssignment()">Save Assignment</button><button class="btn btn-secondary" onclick="exportAssignmentsMarkdown()">Export Markdown</button><button class="btn btn-ghost" onclick="exportAssignmentsJSON()">Export JSON</button></div>
+      <div id="assignmentList" class="mt-24"></div>
+    </section>
+
+    <!-- ISSUES -->
+    <section id="ent-issues" class="ent-section vl-panel" style="display:none">
+      <div class="vl-panel-head"><h2>Issue, Feedback & Improvement Register</h2><span class="badge badge-intermediate">QA workflow</span></div>
+      <p class="text-muted">Track bugs, learner confusion, content gaps, device issues, and requested improvements. Export as CSV for GitHub Issues or internal review.</p>
+      <div class="vl-form-grid mt-16">
+        <label>Issue title<input id="issueTitle" class="vl-input" placeholder="e.g. Playground slow on first load"></label>
+        <label>Category<select id="issueCat" class="vl-input"><option>Bug</option><option>Content gap</option><option>Learner confusion</option><option>Device/browser issue</option><option>Feature request</option><option>Deployment issue</option></select></label>
+        <label>Priority<select id="issuePriority" class="vl-input"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></label>
+        <label>Status<select id="issueStatus" class="vl-input"><option>Open</option><option>In review</option><option>Resolved</option><option>Deferred</option></select></label>
+      </div>
+      <label class="vl-label">Details</label><textarea id="issueDetails" class="vl-input" rows="4" placeholder="Describe what happened, where it happened, and how to reproduce it."></textarea>
+      <div class="vl-actions"><button class="btn btn-primary" onclick="saveIssue()">Save Issue</button><button class="btn btn-secondary" onclick="exportIssuesCSV()">Export Issues CSV</button><button class="btn btn-ghost" onclick="copyGitHubIssue()">Copy GitHub Issue Text</button></div>
+      <div id="issueList" class="mt-24"></div>
+    </section>
+
+    <!-- AUDIT -->
+    <section id="ent-audit" class="ent-section vl-panel" style="display:none">
+      <div class="vl-panel-head"><h2>Audit Log</h2><span class="badge badge-advanced">accountability</span></div>
+      <p class="text-muted">Records key local administrative actions: cohort creation, imports, exports, assignments, issue changes, and analytics aggregation. This supports accountability even without a backend.</p>
+      <div class="vl-actions"><button class="btn btn-secondary" onclick="exportAuditCSV()">Export Audit CSV</button><button class="btn btn-ghost" onclick="clearAudit()">Clear Audit Log</button></div>
+      <div id="auditList" class="mt-24"></div>
+    </section>
+
+    <!-- GOVERNANCE -->
+    <section id="ent-governance" class="ent-section vl-panel" style="display:none">
+      <div class="vl-panel-head"><h2>Data Governance & Enterprise Readiness</h2><span class="badge badge-advanced">policy</span></div>
+      <div class="vl-cards-3">
+        <article class="vl-card"><h3>Data minimisation</h3><p>Collect only learner name/ID/contact if needed. Progress backups should be shared intentionally by learners or facilitators.</p></article>
+        <article class="vl-card"><h3>No AI API exposure</h3><p>The system does not send learner code, notes, CSV data, or progress to external AI services.</p></article>
+        <article class="vl-card"><h3>Local-first storage</h3><p>Most administrative data stays in the facilitator’s browser until exported as JSON/CSV/Markdown.</p></article>
+        <article class="vl-card"><h3>Portable records</h3><p>Cohorts, learner lists, assignments, issues, analytics, and audits can be exported for record keeping.</p></article>
+        <article class="vl-card"><h3>Free deployment</h3><p>Use GitHub Pages or Cloudflare Pages. No server, database, paid functions, or AI subscription required.</p></article>
+        <article class="vl-card"><h3>Recommended controls</h3><p>Keep exported files in a secure Google Drive/OneDrive folder with restricted access. Remove personal contacts if not needed.</p></article>
+      </div>
+      <div class="vl-note mt-24"><strong>Enterprise positioning:</strong> This console is suitable for lightweight institutional training. If a client later requires central login, server dashboards, or regulated data storage, that should be a separate paid/backend project — not part of the free static version.</div>
+    </section>
+  </section>
+</main>
+
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>Enterprise Console · Local-first school, cohort and training administration for VizLearn</p></div></div></footer>
+<script src="../assets/js/main.js"></script>
+<script>
+const EKEYS={org:'viz_ent_org',cohorts:'viz_ent_cohorts',learners:'viz_ent_learners',analytics:'viz_ent_analytics',assignments:'viz_ent_assignments',issues:'viz_ent_issues',audit:'viz_ent_audit'};
+const ASSIGNMENT_TASKS=['Complete Roadmap Phase 1','Complete 3 Matplotlib lessons','Run 2 Playground snippets','Use Dataset Lab','Upload CSV in CSV Lab','Complete Project Studio task','Write Story Builder brief','Take Quiz','Export Progress backup'];
+function read(k, fallback){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(fallback))}catch{return fallback}}
+function write(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function logAudit(action, detail){const a=read(EKEYS.audit,[]);a.unshift({ts:new Date().toISOString(),action,detail});write(EKEYS.audit,a.slice(0,300));renderAudit();}
+function showEnt(id,btn){document.querySelectorAll('.ent-section').forEach(x=>x.style.display='none');document.getElementById('ent-'+id).style.display='block';document.querySelectorAll('.ts-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderAll();}
+function download(name, text, type='application/json'){const blob=new Blob([text],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);}
+function csvEscape(x){x=String(x??'');return /[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x;}
+function toCSV(rows){if(!rows.length)return '';const heads=Object.keys(rows[0]);return heads.join(',')+'\n'+rows.map(r=>heads.map(h=>csvEscape(r[h])).join(',')).join('\n');}
+function parseCSV(text){const lines=text.trim().split(/\r?\n/);const heads=lines.shift().split(',').map(x=>x.trim());return lines.filter(Boolean).map(line=>{const parts=line.split(',');return Object.fromEntries(heads.map((h,i)=>[h,(parts[i]||'').trim()]));});}
+
+function saveOrg(){const org={name:orgName.value,program:orgProgram.value,lead:orgLead.value,email:orgEmail.value,color:orgColor.value,defaultCohort:orgDefaultCohort.value,policy:orgPolicy.value,updatedAt:new Date().toISOString()};write(EKEYS.org,org);document.documentElement.style.setProperty('--accent',org.color||'#00e5a0');logAudit('Saved organisation profile',org.name||'Unnamed organisation');renderOrg();}
+function renderOrg(){const org=read(EKEYS.org,{});orgName.value=org.name||'';orgProgram.value=org.program||'';orgLead.value=org.lead||'';orgEmail.value=org.email||'';orgColor.value=org.color||'#00e5a0';orgPolicy.value=org.policy||'';if(org.color)document.documentElement.style.setProperty('--accent',org.color);orgPreview.innerHTML=`<div class="ent-brand-card"><h2>${org.name||'Organisation name not set'}</h2><p>${org.program||'Programme name not set'}</p><small>Lead: ${org.lead||'—'} · Contact: ${org.email||'—'}</small></div>`;}
+function exportOrg(){download('vizlearn-org-config.json',JSON.stringify(read(EKEYS.org,{}),null,2));logAudit('Exported organisation config','JSON');}
+function importOrg(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{write(EKEYS.org,JSON.parse(r.result));logAudit('Imported organisation config',f.name);renderAll();};r.readAsText(f);}
+
+function getCohorts(){return read(EKEYS.cohorts,[])} function getLearners(){return read(EKEYS.learners,[])}
+function refreshCohortSelects(){const c=getCohorts();const opts=['<option value="">Select cohort</option>'].concat(c.map(x=>`<option value="${x.id}">${x.name}</option>`)).join('');[orgDefaultCohort,learnerCohort,assCohort].forEach(s=>{if(s)s.innerHTML=opts;});}
+function addCohort(){const c=getCohorts();const item={id:'coh_'+Date.now(),name:cohortName.value||'Untitled Cohort',start:cohortStart.value,end:cohortEnd.value,mode:cohortMode.value,createdAt:new Date().toISOString()};c.unshift(item);write(EKEYS.cohorts,c);cohortName.value='';logAudit('Created cohort',item.name);renderAll();}
+function addLearner(){const l=getLearners();const item={id:learnerId.value||('LRN-'+Date.now()),name:learnerName.value||'Unnamed learner',contact:learnerContact.value,cohortId:learnerCohort.value,createdAt:new Date().toISOString()};l.unshift(item);write(EKEYS.learners,l);learnerName.value='';learnerId.value='';learnerContact.value='';logAudit('Added learner',item.name);renderAll();}
+function exportCohorts(){download('vizlearn-cohorts.json',JSON.stringify({cohorts:getCohorts(),learners:getLearners()},null,2));logAudit('Exported cohorts','JSON');}
+function importCohorts(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const d=JSON.parse(r.result);write(EKEYS.cohorts,d.cohorts||[]);write(EKEYS.learners,d.learners||[]);logAudit('Imported cohorts',f.name);renderAll();};r.readAsText(f);}
+function exportLearnersCSV(){download('vizlearn-learners.csv',toCSV(getLearners()),'text/csv');logAudit('Exported learners','CSV');}
+function importLearnersCSV(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const rows=parseCSV(r.result).map(x=>({id:x.id||x.learnerId||('LRN-'+Date.now()+Math.random()),name:x.name||x.learner||'Unnamed learner',contact:x.contact||x.email||'',cohortId:x.cohortId||x.cohort||'',createdAt:new Date().toISOString()}));write(EKEYS.learners,getLearners().concat(rows));logAudit('Imported learners CSV',`${f.name} (${rows.length})`);renderAll();};r.readAsText(f);}
+function renderCohorts(){const c=getCohorts(), l=getLearners();cohortBoard.innerHTML=c.length?c.map(co=>{const members=l.filter(x=>x.cohortId===co.id);return `<article class="ent-cohort-card"><div><h3>${co.name}</h3><p>${co.mode} · ${co.start||'no start'} → ${co.end||'no end'} · ${members.length} learners</p><div class="vl-chip-row">${members.slice(0,8).map(m=>`<span class="vl-chip">${m.name}</span>`).join('')}${members.length>8?'<span class="vl-chip">+'+(members.length-8)+' more</span>':''}</div></div><button class="btn btn-danger btn-sm" onclick="deleteCohort('${co.id}')">Delete</button></article>`}).join(''):'<p class="text-muted">No cohorts created yet.</p>';}
+function deleteCohort(id){if(confirm('Delete this cohort? Learners remain but will be unassigned.')){write(EKEYS.cohorts,getCohorts().filter(c=>c.id!==id));write(EKEYS.learners,getLearners().map(l=>l.cohortId===id?{...l,cohortId:''}:l));logAudit('Deleted cohort',id);renderAll();}}
+
+function importBackups(e){const files=[...e.target.files];if(!files.length)return;let loaded=0;const current=read(EKEYS.analytics,[]);files.forEach(f=>{const r=new FileReader();r.onload=()=>{try{const p=JSON.parse(r.result);const data=p.data||{};const prog=JSON.parse(data.vizlearn_progress||'{}');const qh=JSON.parse(data.vizlearn_quiz_history||'[]');const roadmap=JSON.parse(data.vizlearn_roadmap||'{}');const projects=JSON.parse(data.vizlearn_projects_done||'{}');const lessons=Object.values(prog).filter(v=>v&&v.status==='complete').length;const quizCorrect=qh.filter(x=>x.correct).length;current.push({file:f.name,learner:f.name.replace(/\.json$/,''),lessons,quizCorrect,quizTotal:qh.length,roadmap:Object.values(roadmap).filter(Boolean).length,projects:Object.values(projects).filter(Boolean).length,importedAt:new Date().toISOString()});}catch(err){alert('Could not import '+f.name+': '+err.message);}loaded++;if(loaded===files.length){write(EKEYS.analytics,current);logAudit('Imported learner backups',`${files.length} files`);renderAll();}};r.readAsText(f);});}
+function renderAnalytics(){const a=read(EKEYS.analytics,[]);const avg=n=>a.length?Math.round(a.reduce((s,x)=>s+(+x[n]||0),0)/a.length):0;analyticsSummary.innerHTML=`<div class="stat-card"><div class="stat-card-num">${a.length}</div><div class="stat-card-label">Backups</div><div class="stat-card-sub">imported</div></div><div class="stat-card"><div class="stat-card-num">${avg('lessons')}</div><div class="stat-card-label">Avg Lessons</div><div class="stat-card-sub">of 42</div></div><div class="stat-card"><div class="stat-card-num">${avg('quizCorrect')}</div><div class="stat-card-label">Avg Quiz Correct</div><div class="stat-card-sub">local history</div></div><div class="stat-card"><div class="stat-card-num">${avg('projects')}</div><div class="stat-card-label">Avg Projects</div><div class="stat-card-sub">completed</div></div><div class="stat-card"><div class="stat-card-num">${avg('roadmap')}</div><div class="stat-card-label">Avg Roadmap</div><div class="stat-card-sub">milestones</div></div>`;analyticsTable.innerHTML=a.length?`<div style="overflow:auto"><table class="param-table"><thead><tr><th>Learner/File</th><th>Lessons</th><th>Quiz</th><th>Roadmap</th><th>Projects</th><th>Imported</th></tr></thead><tbody>${a.map(x=>`<tr><td>${x.learner}</td><td>${x.lessons}/42</td><td>${x.quizCorrect}/${x.quizTotal}</td><td>${x.roadmap}</td><td>${x.projects}</td><td>${new Date(x.importedAt).toLocaleString()}</td></tr>`).join('')}</tbody></table></div>`:'<p class="text-muted">No learner backups imported yet.</p>';}
+function exportAnalyticsCSV(){download('vizlearn-cohort-analytics.csv',toCSV(read(EKEYS.analytics,[])),'text/csv');logAudit('Exported analytics','CSV');}
+function clearAnalytics(){if(confirm('Clear imported analytics?')){write(EKEYS.analytics,[]);logAudit('Cleared analytics','All imported backup summaries removed');renderAll();}}
+
+function renderAssignmentTasks(){assignmentTasks.innerHTML=ASSIGNMENT_TASKS.map(t=>`<label class="vl-chip" style="cursor:pointer"><input type="checkbox" value="${t}" style="accent-color:var(--accent);margin-right:5px">${t}</label>`).join('');}
+function saveAssignment(){const tasks=[...assignmentTasks.querySelectorAll('input:checked')].map(x=>x.value);const a=read(EKEYS.assignments,[]);const item={id:'ass_'+Date.now(),title:assTitle.value||'Untitled assignment',cohortId:assCohort.value,due:assDue.value,level:assLevel.value,tasks,instruction:assInstruction.value,createdAt:new Date().toISOString()};a.unshift(item);write(EKEYS.assignments,a);assTitle.value='';assInstruction.value='';assignmentTasks.querySelectorAll('input').forEach(x=>x.checked=false);logAudit('Saved assignment',item.title);renderAssignments();}
+function renderAssignments(){const a=read(EKEYS.assignments,[]);const cmap=Object.fromEntries(getCohorts().map(c=>[c.id,c.name]));assignmentList.innerHTML=a.length?a.map(x=>`<article class="ent-cohort-card"><div><h3>${x.title}</h3><p>${cmap[x.cohortId]||'No cohort'} · Due: ${x.due||'not set'} · ${x.level}</p><div class="vl-chip-row">${x.tasks.map(t=>`<span class="vl-chip">${t}</span>`).join('')}</div><p class="text-muted">${x.instruction||''}</p></div><button class="btn btn-danger btn-sm" onclick="deleteAssignment('${x.id}')">Delete</button></article>`).join(''):'<p class="text-muted">No assignments saved yet.</p>';}
+function deleteAssignment(id){write(EKEYS.assignments,read(EKEYS.assignments,[]).filter(x=>x.id!==id));logAudit('Deleted assignment',id);renderAssignments();}
+function assignmentsMarkdown(){const cmap=Object.fromEntries(getCohorts().map(c=>[c.id,c.name]));return read(EKEYS.assignments,[]).map(a=>`# ${a.title}\n\n**Cohort:** ${cmap[a.cohortId]||'No cohort'}  \n**Due:** ${a.due||'Not set'}  \n**Level:** ${a.level}\n\n## Tasks\n${a.tasks.map(t=>'- '+t).join('\n')}\n\n## Instruction\n${a.instruction||''}\n`).join('\n---\n');}
+function exportAssignmentsMarkdown(){download('vizlearn-assignments.md',assignmentsMarkdown(),'text/markdown');logAudit('Exported assignments','Markdown');}
+function exportAssignmentsJSON(){download('vizlearn-assignments.json',JSON.stringify(read(EKEYS.assignments,[]),null,2));logAudit('Exported assignments','JSON');}
+
+function saveIssue(){const i=read(EKEYS.issues,[]);const item={id:'issue_'+Date.now(),title:issueTitle.value||'Untitled issue',category:issueCat.value,priority:issuePriority.value,status:issueStatus.value,details:issueDetails.value,createdAt:new Date().toISOString()};i.unshift(item);write(EKEYS.issues,i);issueTitle.value='';issueDetails.value='';logAudit('Saved issue',item.title);renderIssues();}
+function renderIssues(){const i=read(EKEYS.issues,[]);issueList.innerHTML=i.length?i.map(x=>`<article class="ent-issue ${x.priority.toLowerCase()}"><div><h3>${x.title}</h3><p>${x.category} · ${x.priority} · ${x.status} · ${new Date(x.createdAt).toLocaleDateString()}</p><p class="text-muted">${x.details||''}</p></div><button class="btn btn-danger btn-sm" onclick="deleteIssue('${x.id}')">Delete</button></article>`).join(''):'<p class="text-muted">No issues recorded yet.</p>';}
+function deleteIssue(id){write(EKEYS.issues,read(EKEYS.issues,[]).filter(x=>x.id!==id));logAudit('Deleted issue',id);renderIssues();}
+function exportIssuesCSV(){download('vizlearn-issues.csv',toCSV(read(EKEYS.issues,[])),'text/csv');logAudit('Exported issues','CSV');}
+function copyGitHubIssue(){const i=read(EKEYS.issues,[])[0];if(!i)return alert('Save an issue first.');const txt=`## ${i.title}\n\n**Category:** ${i.category}\n**Priority:** ${i.priority}\n**Status:** ${i.status}\n\n### Details\n${i.details}\n\n### Environment\nVizLearn static site, browser-based.`;navigator.clipboard.writeText(txt);VizLearnToast&&VizLearnToast('GitHub issue text copied');}
+
+function renderAudit(){const a=read(EKEYS.audit,[]);if(!document.getElementById('auditList'))return;auditList.innerHTML=a.length?`<div style="overflow:auto"><table class="param-table"><thead><tr><th>Time</th><th>Action</th><th>Detail</th></tr></thead><tbody>${a.map(x=>`<tr><td>${new Date(x.ts).toLocaleString()}</td><td>${x.action}</td><td>${x.detail}</td></tr>`).join('')}</tbody></table></div>`:'<p class="text-muted">No audit events yet.</p>';}
+function exportAuditCSV(){download('vizlearn-audit.csv',toCSV(read(EKEYS.audit,[])),'text/csv');}
+function clearAudit(){if(confirm('Clear audit log?')){write(EKEYS.audit,[]);renderAudit();}}
+function renderAll(){refreshCohortSelects();renderOrg();renderCohorts();renderAnalytics();renderAssignmentTasks();renderAssignments();renderIssues();renderAudit();}
+renderAll();
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instructor Mode — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar"><div class="nav-inner"><a href="../index.html" class="brand"><span class="brand-icon">⬡</span><span class="brand-text">Viz<span class="accent">Learn</span></span></a><ul class="nav-links"><li><a href="../index.html">Home</a></li><li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li><li><a href="lessons.html">Lessons</a></li><li><a href="playground.html">Playground</a></li><li><a href="upload.html">CSV Lab</a></li><li><a href="projects.html">Projects</a></li><li><a href="instructor.html" class="active">Instructor</a></li><li><a href="tools.html">Tools</a></li><li><a href="training.html">Training Pack</a></li><li><a href="enterprise.html">Enterprise</a></li><li><a href="progress.html">Progress</a></li><li><a href="about.html">About</a></li></ul><button class="hamburger" id="hamburger"><span></span><span></span><span></span></button></div></nav>
+<main style="padding-top:64px;">
+<section class="page-hero"><div class="container"><div class="section-label">FOR TEACHERS, FACILITATORS AND HMG ACADEMY</div><h1>Instructor Mode</h1><p class="text-muted" style="max-width:850px;">A free classroom planning layer for using VizLearn in a school, bootcamp, YouTube tutorial, virtual class, or self-paced cohort. It generates lesson flow, activity timing, assessment prompts, and grading rubrics without AI APIs.</p></div></section>
+<section class="container" style="padding:34px 24px 90px;">
+<div class="vl-split">
+<section class="vl-panel"><div class="vl-panel-head"><h2>Plan a session</h2><span class="badge badge-beginner">Rule based</span></div>
+<label class="vl-label">Session length</label><select id="mins" class="vl-input" onchange="build()"><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60" selected>60 minutes</option><option value="90">90 minutes</option></select>
+<label class="vl-label">Learner level</label><select id="level" class="vl-input" onchange="build()"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>
+<label class="vl-label">Topic focus</label><select id="topic" class="vl-input" onchange="build()"><option>Chart selection</option><option>Matplotlib basics</option><option>Seaborn statistical plots</option><option>Parameter tuning</option><option>Dataset analysis</option><option>Data storytelling</option></select>
+<label class="vl-label">Class format</label><select id="format" class="vl-input" onchange="build()"><option>Live virtual class</option><option>Physical classroom</option><option>Self-paced assignment</option><option>YouTube tutorial</option></select>
+<div class="vl-actions"><button class="btn btn-primary" onclick="build()">Generate Plan</button><button class="btn btn-secondary" onclick="copyPlan()">Copy Markdown</button><button class="btn btn-ghost" onclick="print()">Print</button></div></section>
+<section class="vl-panel"><div class="vl-panel-head"><h2>Why Instructor Mode exists</h2><span class="badge badge-sns">Pedagogy</span></div><p class="text-muted">VizLearn should support not only individual learners but also teachers. This page turns the platform into a reusable teaching toolkit: objective, demonstration, guided practice, independent task, assessment, and reflection.</p><div class="vl-note mt-16"><strong>No AI API:</strong> Plans are generated from transparent templates and timing rules. You can edit the text freely.</div></section>
+</div>
+<section class="vl-panel mt-24"><div class="vl-panel-head"><h2>Generated lesson plan</h2><span class="badge badge-plotly">Markdown</span></div><pre id="plan" class="vl-pre"></pre></section>
+<section class="vl-panel mt-24"><div class="vl-panel-head"><h2>Reusable assessment rubric</h2><span class="badge badge-pd">Project grading</span></div><div class="vl-cards-3"><article class="vl-card"><h3>Technical correctness — 30%</h3><p>Code runs, data loads correctly, chart type matches the question, and axes are valid.</p></article><article class="vl-card"><h3>Visual clarity — 30%</h3><p>Title, labels, legend, color, scale, and layout help the viewer understand quickly.</p></article><article class="vl-card"><h3>Interpretation — 40%</h3><p>Learner states the insight, supports it with evidence, recommends action, and mentions limitation.</p></article></div></section>
+</section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>Instructor Mode · Built for deliberate teaching and authentic learning</p></div></div></footer>
+<script src="../assets/js/main.js"></script>
+<script>
+function build(){ const m=+mins.value, lvl=level.value, top=topic.value, fmt=format.value; const demo=Math.round(m*.25), guided=Math.round(m*.3), independent=Math.round(m*.25), reflect=m-demo-guided-independent; const rec={
+'Chart selection':'Use Story Builder and Gallery. Ask learners to match questions to chart types.',
+'Matplotlib basics':'Use Lessons: Matplotlib 1–4, then run one Playground example.',
+'Seaborn statistical plots':'Use Seaborn lessons, Dataset Lab, and compare hue/palette choices.',
+'Parameter tuning':'Use Param Explorer. Change one parameter at a time and explain the effect.',
+'Dataset analysis':'Use Dataset Lab or CSV Upload Lab. Start with shape, columns, missing values, then chart.',
+'Data storytelling':'Use Story Builder. Require insight, evidence, action, and limitation.'}[top];
+plan.textContent=`# VizLearn Instructor Plan\n\n**Topic:** ${top}\n**Level:** ${lvl}\n**Format:** ${fmt}\n**Duration:** ${m} minutes\n\n## Learning objective\nBy the end of this session, learners should be able to use Python visualization to answer a data question, explain the chart choice, and communicate one evidence-based insight.\n\n## Session flow\n\n1. **Opening / context (${Math.max(3,Math.round(m*.08))} min)**\n   - State the problem question.\n   - Ask learners what chart they would use before showing code.\n\n2. **Instructor demonstration (${demo} min)**\n   - ${rec}\n   - Think aloud: explain why each parameter matters.\n\n3. **Guided practice (${guided} min)**\n   - Learners run the starter code in Playground.\n   - They change one variable, one color/style parameter, and one title/label.\n\n4. **Independent task (${independent} min)**\n   - Learners create a second chart from the same dataset.\n   - They write a 3-sentence interpretation.\n\n5. **Reflection and assessment (${reflect} min)**\n   - What pattern did you see?\n   - What number supports your claim?\n   - What decision should the audience take?\n   - What limitation should be stated?\n\n## Assessment prompt\nCreate one visualization that answers the session question. Submit the chart code, a screenshot/export, and a short data story: insight, evidence, action, limitation.\n\n## Free tools required\nBrowser, VizLearn, GitHub Pages/Cloudflare-hosted site, and optionally a CSV file. No paid API is required.`; }
+function copyPlan(){ navigator.clipboard.writeText(plan.textContent); VizLearnToast&&VizLearnToast('Lesson plan copied'); }
+build();
+</script>
+</body>
+</html>

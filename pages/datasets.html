@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dataset Lab — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="brand"><span class="brand-icon">⬡</span><span class="brand-text">Viz<span class="accent">Learn</span></span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li><li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li><li><a href="lessons.html">Lessons</a></li><li><a href="playground.html">Playground</a></li><li><a href="datasets.html" class="active">Data Lab</a></li><li><a href="upload.html">CSV Lab</a></li><li><a href="projects.html">Projects</a></li><li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="progress.html">Progress</a></li><li><a href="about.html">About</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<main style="padding-top:64px;">
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-label">PRACTICE WITH REALISTIC DATA</div>
+      <h1>Dataset Lab</h1>
+      <p class="text-muted" style="max-width:850px;">Synthetic, local-context datasets you can run immediately in the Playground. Each dataset includes questions, recommended charts, starter code, and CSV download. No server, no database, no paid storage.</p>
+      <div class="vl-note mt-16"><strong>Why embedded CSV?</strong> Browser Python cannot safely read your local disk without upload controls. These examples use <code>StringIO</code>, so the dataset travels with the code and runs anywhere Pyodide runs.</div>
+    </div>
+  </section>
+  <section class="container" style="padding:32px 24px 90px;">
+    <div class="vl-toolbar">
+      <input id="q" class="vl-input" placeholder="Search datasets, columns, chart types…" oninput="render()"/>
+      <select id="level" class="vl-input" onchange="render()"><option value="all">All levels</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>
+      <select id="domain" class="vl-input" onchange="render()"><option value="all">All domains</option><option>Education</option><option>Business</option><option>Operations</option><option>Survey</option></select>
+    </div>
+    <div id="dataset-grid" class="vl-dataset-grid"></div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>Dataset Lab · Synthetic datasets for safe public learning</p></div></div></footer>
+<script src="../assets/js/main.js"></script>
+<script>
+const DATASETS = [
+{ id:'student-scores', title:'Nigerian Student Scores', level:'Beginner', domain:'Education', rows:12, cols:'student, gender, class, maths, physics, chemistry, attendance_pct', charts:['Histogram','Box plot','Scatter plot','Grouped bar'], questions:['Which subject has the widest score spread?','Does attendance appear related to mathematics score?','Which class needs the most intervention?'], csv:`student,gender,class,maths,physics,chemistry,attendance_pct
+Amina,F,SS2,78,74,81,92
+Bayo,M,SS2,61,58,63,75
+Chidinma,F,SS3,88,83,79,96
+Damilola,M,SS1,52,49,55,68
+Efe,F,SS1,69,64,70,84
+Farouk,M,SS3,73,77,69,89
+Grace,F,SS2,91,86,88,98
+Hassan,M,SS1,47,52,50,61
+Ife,F,SS3,82,79,85,93
+Joshua,M,SS2,66,62,60,80
+Kemi,F,SS1,74,70,76,88
+Lanre,M,SS3,58,61,57,72`},
+{ id:'academy-enquiries', title:'Virtual Academy Enquiries', level:'Beginner', domain:'Business', rows:10, cols:'month, leads, enrolled, whatsapp, referral, website', charts:['Line chart','Stacked bar','Conversion bar'], questions:['Which month had the best lead-to-enrolment conversion?','Which channel drives the most enquiries?','Is growth steady or seasonal?'], csv:`month,leads,enrolled,whatsapp,referral,website
+Jan,42,11,20,13,9
+Feb,55,16,24,18,13
+Mar,61,18,29,17,15
+Apr,74,25,36,20,18
+May,68,20,32,18,18
+Jun,83,31,45,19,19
+Jul,97,38,50,25,22
+Aug,90,34,47,23,20
+Sep,78,29,39,21,18
+Oct,88,33,43,25,20`},
+{ id:'retail-sales', title:'Small Business Sales Mix', level:'Intermediate', domain:'Business', rows:16, cols:'week, product, category, units, revenue, advert_spend', charts:['Bar chart','Facet grid','Scatter plot'], questions:['Which category produces the highest revenue?','Does advert spend appear to lift units sold?','Which product underperforms despite promotion?'], csv:`week,product,category,units,revenue,advert_spend
+1,Notebook,Stationery,42,63000,5000
+1,Pen,Stationery,95,47500,3500
+1,Data Bundle,Digital,31,93000,9000
+1,Calculator,Electronics,14,112000,6000
+2,Notebook,Stationery,50,75000,6000
+2,Pen,Stationery,102,51000,4000
+2,Data Bundle,Digital,36,108000,9500
+2,Calculator,Electronics,13,104000,4500
+3,Notebook,Stationery,45,67500,5000
+3,Pen,Stationery,88,44000,3000
+3,Data Bundle,Digital,42,126000,11000
+3,Calculator,Electronics,17,136000,6500
+4,Notebook,Stationery,58,87000,6500
+4,Pen,Stationery,110,55000,4500
+4,Data Bundle,Digital,47,141000,12000
+4,Calculator,Electronics,18,144000,7000`},
+{ id:'lesson-attendance', title:'Attendance and Learning Outcomes', level:'Intermediate', domain:'Education', rows:14, cols:'week, class, attendance_pct, quiz_avg, assignment_avg', charts:['Line chart','Scatter plot','Heatmap'], questions:['Which class shows the strongest improvement?','Where does attendance drop before quiz performance drops?','Which metric should a teacher monitor weekly?'], csv:`week,class,attendance_pct,quiz_avg,assignment_avg
+1,JSS3,76,48,52
+2,JSS3,79,51,56
+3,JSS3,81,57,59
+4,JSS3,85,63,65
+5,JSS3,82,61,62
+6,JSS3,88,70,72
+7,JSS3,90,73,75
+1,SS2,84,59,63
+2,SS2,86,62,66
+3,SS2,80,60,64
+4,SS2,78,57,60
+5,SS2,83,65,68
+6,SS2,87,71,74
+7,SS2,91,78,80`},
+{ id:'service-delivery', title:'Delivery Delay Operations', level:'Advanced', domain:'Operations', rows:14, cols:'order_id, distance_km, dispatch_delay_min, traffic, delivery_status', charts:['Box plot','Count plot','Scatter plot'], questions:['Which traffic condition produces the longest delays?','Is dispatch delay or distance more related to late delivery?','Which operational threshold should trigger intervention?'], csv:`order_id,distance_km,dispatch_delay_min,traffic,delivery_status
+ORD001,4.2,12,Low,On-time
+ORD002,9.8,35,High,Late
+ORD003,7.1,18,Medium,On-time
+ORD004,12.4,44,High,Late
+ORD005,3.5,8,Low,On-time
+ORD006,15.0,22,Medium,Late
+ORD007,6.6,15,Low,On-time
+ORD008,10.5,40,High,Late
+ORD009,8.0,26,Medium,On-time
+ORD010,13.2,51,High,Late
+ORD011,5.7,17,Low,On-time
+ORD012,11.1,28,Medium,Late
+ORD013,2.9,9,Low,On-time
+ORD014,14.8,47,High,Late`},
+{ id:'learner-survey', title:'Data Visualization Learner Survey', level:'Advanced', domain:'Survey', rows:12, cols:'learner, tool, confidence_before, confidence_after, hours_practised', charts:['Slope chart','Bar chart','Distribution'], questions:['Which tool produces the largest confidence gain?','How does practice time relate to confidence after learning?','Which learners may need follow-up support?'], csv:`learner,tool,confidence_before,confidence_after,hours_practised
+L01,Matplotlib,2,6,5
+L02,Seaborn,3,7,6
+L03,Plotly,4,8,7
+L04,Pandas,2,5,3
+L05,Matplotlib,1,6,6
+L06,Seaborn,3,8,8
+L07,Plotly,2,7,5
+L08,Pandas,4,6,4
+L09,Matplotlib,3,7,7
+L10,Seaborn,2,6,5
+L11,Plotly,3,9,9
+L12,Pandas,2,5,4`}
+];
+function starter(d){return `import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nfrom io import StringIO\n\ncsv = """${d.csv}"""\ndf = pd.read_csv(StringIO(csv))\n\nprint(df.head())\nprint(df.describe(include='all'))\n\n# Starter visualization — modify this section\nsns.set_theme(style='whitegrid')\nfig, ax = plt.subplots(figsize=(8, 4))\n${d.id==='academy-enquiries' ? "ax.plot(df['month'], df['leads'], marker='o', label='Leads')\nax.plot(df['month'], df['enrolled'], marker='o', label='Enrolled')\nax.set_ylabel('Count')\nax.legend()" : d.id==='retail-sales' ? "sns.barplot(data=df, x='category', y='revenue', estimator=sum, errorbar=None, ax=ax)\nax.set_ylabel('Total revenue')" : d.id==='service-delivery' ? "sns.scatterplot(data=df, x='distance_km', y='dispatch_delay_min', hue='delivery_status', style='traffic', s=90, ax=ax)" : d.id==='learner-survey' ? "df['gain'] = df['confidence_after'] - df['confidence_before']\nsns.barplot(data=df, x='tool', y='gain', estimator='mean', errorbar=None, ax=ax)\nax.set_ylabel('Average confidence gain')" : "sns.scatterplot(data=df, x='attendance_pct', y='maths' if 'maths' in df.columns else df.columns[-1], hue=df.columns[2], s=90, ax=ax)"}\nax.set_title('${d.title}')\nplt.tight_layout()\nplt.show()`}
+function runDataset(id){ const d=DATASETS.find(x=>x.id===id); localStorage.setItem('vizlearn_playground_code', starter(d)); location.href='playground.html'; }
+function copyDataset(id){ const d=DATASETS.find(x=>x.id===id); navigator.clipboard.writeText(starter(d)); window.VizLearnToast && VizLearnToast('Starter code copied'); }
+function downloadCSV(id){ const d=DATASETS.find(x=>x.id===id); const blob=new Blob([d.csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=d.id+'.csv'; a.click(); URL.revokeObjectURL(a.href); }
+function render(){ const q=document.getElementById('q').value.toLowerCase(); const level=document.getElementById('level').value; const domain=document.getElementById('domain').value; const list=DATASETS.filter(d=>(level==='all'||d.level===level)&&(domain==='all'||d.domain===domain)&&JSON.stringify(d).toLowerCase().includes(q)); document.getElementById('dataset-grid').innerHTML=list.map(d=>`
+  <article class="vl-dataset-card">
+    <div class="vl-card-top"><span class="badge badge-beginner">${d.level}</span><span class="badge badge-plotly">${d.domain}</span></div>
+    <h2>${d.title}</h2><p class="text-muted">${d.rows} rows · Columns: <span class="text-mono">${d.cols}</span></p>
+    <h3>Questions to answer</h3><ol>${d.questions.map(x=>`<li>${x}</li>`).join('')}</ol>
+    <h3>Recommended visuals</h3><div class="vl-chip-row">${d.charts.map(x=>`<span class="vl-chip">${x}</span>`).join('')}</div>
+    <div class="vl-actions"><button class="btn btn-primary btn-sm" onclick="runDataset('${d.id}')">▶ Run starter</button><button class="btn btn-secondary btn-sm" onclick="copyDataset('${d.id}')">Copy code</button><button class="btn btn-ghost btn-sm" onclick="downloadCSV('${d.id}')">Download CSV</button></div>
+  </article>`).join('') || '<p class="text-muted">No dataset matches your filter.</p>'; }
+render();
+</script>
+</body>
+</html>

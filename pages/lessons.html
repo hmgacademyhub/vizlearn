@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lessons — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    .lesson-reader { max-width: 820px; padding: 40px 40px 80px; }
+    .lesson-nav-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 48px; padding-top: 24px;
+      border-top: 1px solid var(--border);
+      gap: 12px; flex-wrap: wrap;
+    }
+    .complete-btn {
+      padding: 10px 22px; background: rgba(0,229,160,0.1);
+      border: 1px solid var(--accent); color: var(--accent);
+      border-radius: var(--radius); font-weight: 700; font-size: 0.85rem;
+      cursor: pointer; transition: var(--transition);
+    }
+    .complete-btn:hover { background: rgba(0,229,160,0.2); }
+    .complete-btn.done { background: rgba(0,229,160,0.15); }
+    .sidebar-progress { padding: 14px 20px; border-bottom: 1px solid var(--border); }
+    .sidebar-progress p { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="../index.html" class="brand">
+        <span class="brand-icon">⬡</span>
+        <span class="brand-text">Viz<span class="accent">Learn</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="lessons.html" class="active">Lessons</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="datasets.html">Data Lab</a></li>
+        <li><a href="upload.html">CSV Lab</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li>
+        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+        <li><a href="compare.html">Comparator</a></li>
+        <li><a href="params.html">Params</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="errors.html">Errors</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="progress.html">Progress</a></li>
+        <li><a href="quickref.html">Quick Ref</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>📚 Curriculum</h3>
+      </div>
+      <div class="sidebar-progress">
+        <p class="progress-label">0 / 42 lessons complete</p>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:0%"></div></div>
+      </div>
+
+      <!-- Library filter -->
+      <div class="lib-filter">
+        <button class="lib-btn active" data-lib="all">All</button>
+        <button class="lib-btn" data-lib="matplotlib">MPL</button>
+        <button class="lib-btn" data-lib="seaborn">SNS</button>
+        <button class="lib-btn" data-lib="plotly">PLY</button>
+        <button class="lib-btn" data-lib="pandas">PD</button>
+      </div>
+
+      <!-- MATPLOTLIB -->
+      <div class="lesson-group" data-lib="matplotlib">
+        <div class="lesson-group-title">Matplotlib</div>
+        <div class="lesson-item" data-id="mpl-01" data-lesson="mpl-01">01 · What is Matplotlib?</div>
+        <div class="lesson-item" data-id="mpl-02" data-lesson="mpl-02">02 · Figure &amp; Axes Anatomy</div>
+        <div class="lesson-item" data-id="mpl-03" data-lesson="mpl-03">03 · Your First Line Chart</div>
+        <div class="lesson-item" data-id="mpl-04" data-lesson="mpl-04">04 · Bar Charts</div>
+        <div class="lesson-item" data-id="mpl-05" data-lesson="mpl-05">05 · Scatter Plots</div>
+        <div class="lesson-item" data-id="mpl-06" data-lesson="mpl-06">06 · Histograms</div>
+        <div class="lesson-item" data-id="mpl-07" data-lesson="mpl-07">07 · Pie Charts</div>
+        <div class="lesson-item" data-id="mpl-08" data-lesson="mpl-08">08 · Subplots &amp; Layouts</div>
+        <div class="lesson-item" data-id="mpl-09" data-lesson="mpl-09">09 · Colormaps</div>
+        <div class="lesson-item" data-id="mpl-10" data-lesson="mpl-10">10 · Styling &amp; Themes</div>
+        <div class="lesson-item" data-id="mpl-11" data-lesson="mpl-11">11 · Annotations &amp; Text</div>
+        <div class="lesson-item" data-id="mpl-12" data-lesson="mpl-12">12 · Saving &amp; Exporting</div>
+      </div>
+
+      <!-- SEABORN -->
+      <div class="lesson-group" data-lib="seaborn">
+        <div class="lesson-group-title">Seaborn</div>
+        <div class="lesson-item" data-id="sns-01" data-lesson="sns-01">01 · Seaborn vs Matplotlib</div>
+        <div class="lesson-item" data-id="sns-02" data-lesson="sns-02">02 · Themes &amp; Palettes</div>
+        <div class="lesson-item" data-id="sns-03" data-lesson="sns-03">03 · Scatter &amp; Relational</div>
+        <div class="lesson-item" data-id="sns-04" data-lesson="sns-04">04 · Distribution Plots</div>
+        <div class="lesson-item" data-id="sns-05" data-lesson="sns-05">05 · Box &amp; Violin Plots</div>
+        <div class="lesson-item" data-id="sns-06" data-lesson="sns-06">06 · Bar &amp; Count Plots</div>
+        <div class="lesson-item" data-id="sns-07" data-lesson="sns-07">07 · Heatmaps</div>
+        <div class="lesson-item" data-id="sns-08" data-lesson="sns-08">08 · Pair Plots</div>
+        <div class="lesson-item" data-id="sns-09" data-lesson="sns-09">09 · FacetGrid</div>
+        <div class="lesson-item" data-id="sns-10" data-lesson="sns-10">10 · Line Plots</div>
+        <div class="lesson-item" data-id="sns-11" data-lesson="sns-11">11 · Regression Plots</div>
+        <div class="lesson-item" data-id="sns-12" data-lesson="sns-12">12 · Combining with Matplotlib</div>
+      </div>
+
+      <!-- PLOTLY -->
+      <div class="lesson-group" data-lib="plotly">
+        <div class="lesson-group-title">Plotly</div>
+        <div class="lesson-item" data-id="ply-01" data-lesson="ply-01">01 · Why Plotly?</div>
+        <div class="lesson-item" data-id="ply-02" data-lesson="ply-02">02 · Plotly Express Basics</div>
+        <div class="lesson-item" data-id="ply-03" data-lesson="ply-03">03 · Interactive Scatter</div>
+        <div class="lesson-item" data-id="ply-04" data-lesson="ply-04">04 · Interactive Bar</div>
+        <div class="lesson-item" data-id="ply-05" data-lesson="ply-05">05 · Line Charts</div>
+        <div class="lesson-item" data-id="ply-06" data-lesson="ply-06">06 · Pie &amp; Donut</div>
+        <div class="lesson-item" data-id="ply-07" data-lesson="ply-07">07 · Heatmaps &amp; Maps</div>
+        <div class="lesson-item" data-id="ply-08" data-lesson="ply-08">08 · 3D Charts</div>
+        <div class="lesson-item" data-id="ply-09" data-lesson="ply-09">09 · Animations</div>
+        <div class="lesson-item" data-id="ply-10" data-lesson="ply-10">10 · Layout &amp; Styling</div>
+      </div>
+
+      <!-- PANDAS -->
+      <div class="lesson-group" data-lib="pandas">
+        <div class="lesson-group-title">Pandas Plotting</div>
+        <div class="lesson-item" data-id="pd-01" data-lesson="pd-01">01 · df.plot() Overview</div>
+        <div class="lesson-item" data-id="pd-02" data-lesson="pd-02">02 · Line &amp; Area Charts</div>
+        <div class="lesson-item" data-id="pd-03" data-lesson="pd-03">03 · Bar &amp; Horizontal Bar</div>
+        <div class="lesson-item" data-id="pd-04" data-lesson="pd-04">04 · Histograms</div>
+        <div class="lesson-item" data-id="pd-05" data-lesson="pd-05">05 · Box Plots</div>
+        <div class="lesson-item" data-id="pd-06" data-lesson="pd-06">06 · Scatter &amp; Hex</div>
+        <div class="lesson-item" data-id="pd-07" data-lesson="pd-07">07 · Combining with Seaborn</div>
+        <div class="lesson-item" data-id="pd-08" data-lesson="pd-08">08 · EDA Workflow</div>
+      </div>
+    </aside>
+
+    <!-- MAIN LESSON CONTENT -->
+    <main class="lesson-reader" id="lesson-content">
+      <!-- Default: show lesson mpl-01 -->
+    </main>
+
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/snippets.js"></script>
+  <script>
+  /* ── LESSON CONTENT DATA ──────────────────────────────────── */
+  const LESSONS = {
+
+'mpl-01': {
+  lib: 'matplotlib', level: 'beginner', title: 'What is Matplotlib?',
+  intro: 'Matplotlib is the foundational data visualization library in Python. Before you can read, write, or understand any Python chart code, you need to understand what Matplotlib is, how it is structured, and where it fits in your data science workflow.',
+  body: `
+<div class="lesson-section">
+<h2>🎯 Why Matplotlib Exists</h2>
+<p>When you build a machine learning model, preprocess a dataset, or run statistical analysis, you need to <em>see</em> your data — not just compute it. Matplotlib gives you that visual layer. It is the engine under nearly every Python chart you will ever encounter.</p>
+<div class="callout callout-info">
+  <span class="callout-label">ℹ Info</span>
+  Matplotlib was created by John D. Hunter in 2003 to replicate MATLAB's plotting capabilities in Python. Today it is the standard for static visualization in scientific Python.
+</div>
+</div>
+
+<div class="lesson-section">
+<h2>📦 The Import Convention</h2>
+<p>Every matplotlib script begins with this one-line import. This alias is universal — you will see it in every textbook, Kaggle notebook, and Stack Overflow answer:</p>
+<div class="code-block">
+  <div class="code-block-header">
+    <span class="code-block-title">import.py</span>
+    <div class="code-block-actions"><button class="copy-btn">Copy</button><button class="run-btn-inline" onclick="sendToPlayground(this)">▶ Run</button></div>
+  </div>
+  <pre><span style="color:#ff7b72">import</span> matplotlib.pyplot <span style="color:#ff7b72">as</span> plt
+<span style="color:#ff7b72">import</span> numpy <span style="color:#ff7b72">as</span> np
+
+<span style="color:#6e7681"># plt = the pyplot module = your main drawing tool</span>
+<span style="color:#6e7681"># np  = NumPy = your data generation and math tool</span>
+
+x = np.linspace(0, 10, 100)  <span style="color:#6e7681"># 100 points from 0 to 10</span>
+y = np.sin(x)                  <span style="color:#6e7681"># compute sin for each point</span>
+
+plt.plot(x, y)                 <span style="color:#6e7681"># draw a line chart</span>
+plt.title(<span style="color:#a5d6ff">"My First Chart"</span>)    <span style="color:#6e7681"># add a title</span>
+plt.show()                     <span style="color:#6e7681"># render and display</span></pre>
+</div>
+</div>
+
+<div class="lesson-section">
+<h2>🏗️ Two Interfaces: pyplot vs OOP</h2>
+<p>Matplotlib has two ways of creating charts. You will encounter both in the wild — and you need to understand them both:</p>
+<h3>1. pyplot (state-machine) style — simpler</h3>
+<div class="code-block">
+  <div class="code-block-header"><span class="code-block-title">pyplot_style.py</span><div class="code-block-actions"><button class="copy-btn">Copy</button><button class="run-btn-inline" onclick="sendToPlayground(this)">▶ Run</button></div></div>
+  <pre><span style="color:#ff7b72">import</span> matplotlib.pyplot <span style="color:#ff7b72">as</span> plt
+<span style="color:#ff7b72">import</span> numpy <span style="color:#ff7b72">as</span> np
+
+x = np.array([1,2,3,4,5])
+y = np.array([3,7,2,9,5])
+
+plt.plot(x, y, <span style="color:#a5d6ff">'o-'</span>, color=<span style="color:#a5d6ff">'#00e5a0'</span>)
+plt.title(<span style="color:#a5d6ff">"pyplot style"</span>)
+plt.xlabel(<span style="color:#a5d6ff">"x"</span>)
+plt.ylabel(<span style="color:#a5d6ff">"y"</span>)
+plt.show()</pre>
+</div>
+<h3>2. Object-Oriented (OOP) style — recommended for data science</h3>
+<div class="code-block">
+  <div class="code-block-header"><span class="code-block-title">oop_style.py</span><div class="code-block-actions"><button class="copy-btn">Copy</button><button class="run-btn-inline" onclick="sendToPlayground(this)">▶ Run</button></div></div>
+  <pre><span style="color:#ff7b72">import</span> matplotlib.pyplot <span style="color:#ff7b72">as</span> plt
+<span style="color:#ff7b72">import</span> numpy <span style="color:#ff7b72">as</span> np
+
+x = np.array([1,2,3,4,5])
+y = np.array([3,7,2,9,5])
+
+fig, ax = plt.subplots()         <span style="color:#6e7681"># create Figure + Axes objects</span>
+ax.plot(x, y, <span style="color:#a5d6ff">'o-'</span>, color=<span style="color:#a5d6ff">'#00e5a0'</span>)
+ax.set_title(<span style="color:#a5d6ff">"OOP style"</span>)
+ax.set_xlabel(<span style="color:#a5d6ff">"x"</span>)
+ax.set_ylabel(<span style="color:#a5d6ff">"y"</span>)
+plt.show()</pre>
+</div>
+<div class="callout callout-tip">
+  <span class="callout-label">✅ Best Practice</span>
+  Always use the OOP style (<code>fig, ax = plt.subplots()</code>) in data science work. It is more explicit, easier to extend, and required for subplots. You will see it in professional code everywhere.
+</div>
+</div>
+
+<div class="lesson-section">
+<h2>🔗 Where Matplotlib Fits in Your Workflow</h2>
+<table class="param-table">
+  <tr><th>Stage</th><th>Task</th><th>Tool</th></tr>
+  <tr><td>1. Load Data</td><td>Read CSV, Excel, SQL</td><td>pandas</td></tr>
+  <tr><td>2. Explore</td><td>Quick EDA charts</td><td><strong>Matplotlib / Seaborn</strong></td></tr>
+  <tr><td>3. Clean</td><td>Find outliers, nulls visually</td><td><strong>Matplotlib / Seaborn</strong></td></tr>
+  <tr><td>4. Engineer</td><td>Feature correlation</td><td><strong>Seaborn heatmap</strong></td></tr>
+  <tr><td>5. Model</td><td>Sklearn, XGBoost</td><td>scikit-learn</td></tr>
+  <tr><td>6. Evaluate</td><td>Confusion matrix, ROC curve</td><td><strong>Matplotlib / Seaborn</strong></td></tr>
+  <tr><td>7. Present</td><td>Interactive dashboards</td><td><strong>Plotly / Dash</strong></td></tr>
+</table>
+</div>
+`},
+
+'mpl-02': {
+  lib: 'matplotlib', level: 'beginner', title: 'Figure & Axes Anatomy',
+  intro: 'The most important concept in Matplotlib is understanding the difference between a Figure and an Axes. Confusion between these two objects is the #1 source of matplotlib errors for beginners.',
+  body: `
+<div class="lesson-section">
+<h2>🖼️ The Figure</h2>
+<p>A <strong>Figure</strong> is the entire canvas — the outermost container for everything. Think of it as the blank sheet of paper you are drawing on. You control its overall size with <code>figsize</code> and its DPI (resolution) with <code>dpi</code>.</p>
+<div class="code-block">
+  <div class="code-block-header"><span class="code-block-title">figure.py</span><div class="code-block-actions"><button class="copy-btn">Copy</button><button class="run-btn-inline" onclick="sendToPlayground(this)">▶ Run</button></div></div>
+  <pre><span style="color:#ff7b72">import</span> matplotlib.pyplot <span style="color:#ff7b72">as</span> plt
+
+<span style="color:#6e7681"># figsize = (width, height) in inches</span>
+<span style="color:#6e7681"># dpi     = dots per inch (72 = screen, 150+ = print quality)</span>
+fig = plt.figure(figsize=(10, 5), dpi=100)
+
+print(<span style="color:#a5d6ff">f"Figure size: {fig.get_size_inches()}"</span>)
+print(<span style="color:#a5d6ff">f"Figure DPI:  {fig.get_dpi()}"</span>)
+
+plt.show()</pre>
+</div>
+</div>
+
+<div class="lesson-section">
+<h2>📐 The Axes</h2>
+<p>An <strong>Axes</strong> (note: not "axis") is the actual plot area inside the Figure — the rectangle with x and y axes, ticks, labels, and data. One Figure can contain multiple Axes (subplots).</p>
+<div class="code-block">
+  <div class="code-block-header"><span class="code-block-title">axes_anatomy.py</span><div class="code-block-actions"><button class="copy-btn">Copy</button><button class="run-btn-inline" onclick="sendToPlayground(this)">▶ Run</button></div></div>
+  <pre><span style="color:#ff7b72">import</span> matplotlib.pyplot <span style="color:#ff7b72">as</span> plt
+<span style="color:#ff7b72">import</span> numpy <span style="color:#ff7b72">as</span> np
+
+fig, ax = plt.subplots(figsize=(9, 5))
+
+x = np.linspace(0, 2*np.pi, 100)
+ax.plot(x, np.sin(x), color=<span style="color:#a5d6ff">'#00e5a0'</span>, linewidth=2.5)
+
+<span style="color:#6e7681"># ── Axes labels & title ───────────────────────────</span>
+ax.set_title(<span style="color:#a5d6ff">'Figure & Axes Demo'</span>, fontsize=14, fontweight=<span style="color:#a5d6ff">'bold'</span>, pad=12)
+ax.set_xlabel(<span style="color:#a5d6ff">'x (radians)'</span>, fontsize=11)
+ax.set_ylabel(<span style="color:#a5d6ff">'sin(x)'</span>, fontsize=11)
+
+<span style="color:#6e7681"># ── Axis limits ───────────────────────────────────</span>
+ax.set_xlim(0, 2*np.pi)
+ax.set_ylim(-1.3, 1.3)
+
+<span style="color:#6e7681"># ── Ticks ─────────────────────────────────────────</span>
+ax.set_xticks([0, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi])
+ax.set_xticklabels([<span style="color:#a5d6ff">'0'</span>, <span style="color:#a5d6ff">'π/2'</span>, <span style="color:#a5d6ff">'π'</span>, <span style="color:#a5d6ff">'3π/2'</span>, <span style="color:#a5d6ff">'2π'</span>])
+
+<span style="color:#6e7681"># ── Grid ──────────────────────────────────────────</span>
+ax.grid(True, linestyle=<span style="color:#a5d6ff">'--'</span>, alpha=0.3)
+
+<span style="color:#6e7681"># ── Spines (borders) ──────────────────────────────</span>
+ax.spines[<span style="color:#a5d6ff">'top'</span>].set_visible(False)
+ax.spines[<span style="color:#a5d6ff">'right'</span>].set_visible(False)
+
+fig.tight_layout()
+plt.show()</pre>
+</div>
+</div>
+
+<div class="lesson-section">
+<h2>📊 Key Axes Methods Reference</h2>
+<table class="param-table">
+  <tr><th>Method</th><th>What It Does</th><th>Example</th></tr>
+  <tr><td>ax.set_title()</td><td>Chart title</td><td>ax.set_title('Revenue')</td></tr>
+  <tr><td>ax.set_xlabel()</td><td>X-axis label</td><td>ax.set_xlabel('Month')</td></tr>
+  <tr><td>ax.set_ylabel()</td><td>Y-axis label</td><td>ax.set_ylabel('NGN')</td></tr>
+  <tr><td>ax.set_xlim()</td><td>X-axis range</td><td>ax.set_xlim(0, 100)</td></tr>
+  <tr><td>ax.set_ylim()</td><td>Y-axis range</td><td>ax.set_ylim(0, 500)</td></tr>
+  <tr><td>ax.set_xticks()</td><td>Tick positions</td><td>ax.set_xticks([0,25,50])</td></tr>
+  <tr><td>ax.tick_params()</td><td>Tick styling</td><td>ax.tick_params(labelsize=9)</td></tr>
+  <tr><td>ax.legend()</td><td>Show legend</td><td>ax.legend(loc='upper right')</td></tr>
+  <tr><td>ax.grid()</td><td>Show/hide grid</td><td>ax.grid(True, alpha=0.3)</td></tr>
+  <tr><td>fig.tight_layout()</td><td>Fix overlaps</td><td>fig.tight_layout()</td></tr>
+</table>
+<div class="callout callout-warn">
+  <span class="callout-label">⚠ Common Mistake</span>
+  <code>plt.title()</code> is the pyplot version. <code>ax.set_title()</code> is the OOP version. They do the same thing — but mix-and-matching them on the same chart causes confusion. Pick one style and stick with it.
+</div>
+</div>
+`},
+
+'sns-01': {
+  lib: 'seaborn', level: 'beginner', title: 'Seaborn vs Matplotlib',
+  intro: 'Seaborn is built on top of Matplotlib and provides a higher-level interface for creating statistical charts. Understanding when to use each library — and how they relate — is the foundation for mastering Python visualization.',
+  body: `
+<div class="lesson-section">
+<h2>🔄 The Relationship</h2>
+<p>Seaborn does not replace Matplotlib — it extends it. Every seaborn chart is actually a Matplotlib figure under the hood. This means you can (and often should) use both together: seaborn to create the chart, Matplotlib to fine-tune it.</p>
+<div class="callout callout-info">
+  <span class="callout-label">ℹ Key Concept</span>
+  Think of it this way: Matplotlib gives you full control (like coding HTML from scratch). Seaborn gives you beautiful defaults for statistical charts (like using a CSS framework). For EDA and statistics, seaborn is faster. For custom control, go back to matplotlib.
+</div>
+</div>
+
+<div class="lesson-section">
+<h2>⚡ Same Chart — Two Libraries</h2>
+<p>Here is a scatter plot made with Matplotlib vs the same data with Seaborn. Compare the code length and the output:</p>
+<div class="code-block">
+  <div class="code-block-header"><span class="code-block-title">comparison.py</span><div class="code-block-actions"><button class="copy-btn">Copy</button><button class="run-btn-inline" onclick="sendToPlayground(this)">▶ Run</button></div></div>
+  <pre><span style="color:#ff7b72">import</span> matplotlib.pyplot <span style="color:#ff7b72">as</span> plt
+<span style="color:#ff7b72">import</span> seaborn <span style="color:#ff7b72">as</span> sns
+
+df = sns.load_dataset(<span style="color:#a5d6ff">'iris'</span>)
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+
+<span style="color:#6e7681"># ── LEFT: Matplotlib (manual coloring) ────────────</span>
+colors = {<span style="color:#a5d6ff">'setosa'</span>:<span style="color:#a5d6ff">'#00e5a0'</span>, <span style="color:#a5d6ff">'versicolor'</span>:<span style="color:#a5d6ff">'#00b4d8'</span>, <span style="color:#a5d6ff">'virginica'</span>:<span style="color:#a5d6ff">'#f4a261'</span>}
+for species, group in df.groupby(<span style="color:#a5d6ff">'species'</span>):
+    axes[0].scatter(group[<span style="color:#a5d6ff">'sepal_length'</span>], group[<span style="color:#a5d6ff">'petal_length'</span>],
+                    label=species, color=colors[species], alpha=0.7, s=40)
+axes[0].set_title(<span style="color:#a5d6ff">'Matplotlib — manual loop'</span>, fontsize=11, fontweight=<span style="color:#a5d6ff">'bold'</span>)
+axes[0].set_xlabel(<span style="color:#a5d6ff">'Sepal Length'</span>)
+axes[0].set_ylabel(<span style="color:#a5d6ff">'Petal Length'</span>)
+axes[0].legend()
+
+<span style="color:#6e7681"># ── RIGHT: Seaborn (one line) ─────────────────────</span>
+sns.scatterplot(data=df, x=<span style="color:#a5d6ff">'sepal_length'</span>, y=<span style="color:#a5d6ff">'petal_length'</span>,
+                hue=<span style="color:#a5d6ff">'species'</span>, palette=<span style="color:#a5d6ff">'Set2'</span>, alpha=0.8, s=60, ax=axes[1])
+axes[1].set_title(<span style="color:#a5d6ff">'Seaborn — one line'</span>, fontsize=11, fontweight=<span style="color:#a5d6ff">'bold'</span>)
+axes[1].set_xlabel(<span style="color:#a5d6ff">'Sepal Length'</span>)
+axes[1].set_ylabel(<span style="color:#a5d6ff">'Petal Length'</span>)
+
+plt.suptitle(<span style="color:#a5d6ff">'Matplotlib vs Seaborn — Same Data'</span>, fontsize=13, fontweight=<span style="color:#a5d6ff">'bold'</span>, y=1.02)
+plt.tight_layout()
+plt.show()</pre>
+</div>
+</div>
+
+<div class="lesson-section">
+<h2>📋 Decision Guide</h2>
+<table class="param-table">
+  <tr><th>Use Matplotlib when...</th><th>Use Seaborn when...</th></tr>
+  <tr><td>You need full custom control</td><td>You want beautiful defaults fast</td></tr>
+  <tr><td>You are building subplots with mixed chart types</td><td>You are doing EDA on a DataFrame</td></tr>
+  <tr><td>You need to annotate specific data points</td><td>You need statistical summaries (CI, KDE, regression)</td></tr>
+  <tr><td>You are exporting for a report with precise formatting</td><td>You are exploring distributions and relationships</td></tr>
+</table>
+</div>
+`},
+
+'ply-01': {
+  lib: 'plotly', level: 'beginner', title: 'Why Plotly?',
+  intro: 'Plotly creates interactive charts — charts that users can hover over, zoom, pan, and filter. This is the library you use when your charts need to be exploratory or presentable in a web-based context.',
+  body: `
+<div class="lesson-section">
+<h2>🎯 Static vs Interactive</h2>
+<p>Matplotlib and Seaborn produce static images (PNG/PDF). Plotly produces interactive HTML-based charts powered by JavaScript (D3.js under the hood). This difference matters enormously in data science:</p>
+<table class="param-table">
+  <tr><th>Feature</th><th>Matplotlib/Seaborn</th><th>Plotly</th></tr>
+  <tr><td>Output format</td><td>PNG, PDF, SVG</td><td>Interactive HTML</td></tr>
+  <tr><td>Hover tooltips</td><td>❌</td><td>✅</td></tr>
+  <tr><td>Zoom & pan</td><td>❌</td><td>✅</td></tr>
+  <tr><td>Animations</td><td>Limited</td><td>✅</td></tr>
+  <tr><td>Best for</td><td>Reports, papers, EDA</td><td>Dashboards, presentations</td></tr>
+  <tr><td>File size</td><td>Small (raster)</td><td>Larger (HTML/JSON)</td></tr>
+</table>
+</div>
+<div class="lesson-section">
+<h2>📦 Two APIs: Express vs Graph Objects</h2>
+<p>Plotly has two layers. You will almost always start with <strong>Plotly Express (px)</strong>:</p>
+<div class="code-block">
+  <div class="code-block-header"><span class="code-block-title">plotly_hello.py</span><div class="code-block-actions"><button class="copy-btn">Copy</button><button class="run-btn-inline" onclick="sendToPlayground(this)">▶ Run</button></div></div>
+  <pre><span style="color:#ff7b72">import</span> plotly.express <span style="color:#ff7b72">as</span> px
+
+df = px.data.iris()
+
+<span style="color:#6e7681"># Plotly Express: one function call creates a full interactive chart</span>
+fig = px.scatter(
+    df,
+    x=<span style="color:#a5d6ff">'sepal_width'</span>,
+    y=<span style="color:#a5d6ff">'sepal_length'</span>,
+    color=<span style="color:#a5d6ff">'species'</span>,
+    size=<span style="color:#a5d6ff">'petal_length'</span>,
+    hover_data=[<span style="color:#a5d6ff">'petal_width'</span>],
+    title=<span style="color:#a5d6ff">'Iris Dataset — Hover over points!'</span>,
+    template=<span style="color:#a5d6ff">'plotly_dark'</span>
+)
+
+<span style="color:#6e7681"># fig.show() renders as interactive HTML in Jupyter/browser</span>
+fig.show()</pre>
+</div>
+<div class="callout callout-tip">
+  <span class="callout-label">✅ Tip</span>
+  In Pyodide (this playground), Plotly charts render as static images since JavaScript interactivity requires a full browser DOM. To see full interactivity, run Plotly code in Google Colab or Jupyter Lab.
+</div>
+</div>
+`},
+
+'pd-01': {
+  lib: 'pandas', level: 'beginner', title: 'df.plot() Overview',
+  intro: 'Pandas DataFrames have a built-in .plot() method that wraps Matplotlib. It is the fastest way to go from a DataFrame to a chart — with no extra imports required. Perfect for quick EDA.',
+  body: `
+<div class="lesson-section">
+<h2>⚡ One-Line Charts from DataFrames</h2>
+<p>The <code>df.plot()</code> method lets you plot a DataFrame in a single line. The column names become labels automatically, and the index becomes the x-axis. No manual data extraction required.</p>
+<div class="code-block">
+  <div class="code-block-header"><span class="code-block-title">df_plot_overview.py</span><div class="code-block-actions"><button class="copy-btn">Copy</button><button class="run-btn-inline" onclick="sendToPlayground(this)">▶ Run</button></div></div>
+  <pre><span style="color:#ff7b72">import</span> pandas <span style="color:#ff7b72">as</span> pd
+<span style="color:#ff7b72">import</span> matplotlib.pyplot <span style="color:#ff7b72">as</span> plt
+<span style="color:#ff7b72">import</span> numpy <span style="color:#ff7b72">as</span> np
+
+np.random.seed(42)
+
+<span style="color:#6e7681"># Simulate monthly data</span>
+df = pd.DataFrame({
+    <span style="color:#a5d6ff">'Maths'</span>:    [78, 82, 75, 88, 91, 85],
+    <span style="color:#a5d6ff">'English'</span>:  [85, 79, 83, 87, 82, 89],
+    <span style="color:#a5d6ff">'Physics'</span>:  [72, 68, 77, 80, 74, 79],
+}, index=[<span style="color:#a5d6ff">'Jan'</span>, <span style="color:#a5d6ff">'Feb'</span>, <span style="color:#a5d6ff">'Mar'</span>, <span style="color:#a5d6ff">'Apr'</span>, <span style="color:#a5d6ff">'May'</span>, <span style="color:#a5d6ff">'Jun'</span>])
+
+print(df)
+
+<span style="color:#6e7681"># df.plot() — kind options:</span>
+<span style="color:#6e7681"># 'line', 'bar', 'barh', 'hist', 'box', 'kde',</span>
+<span style="color:#6e7681"># 'area', 'scatter', 'pie', 'hexbin'</span>
+
+fig, axes = plt.subplots(2, 2, figsize=(11, 8))
+fig.suptitle(<span style="color:#a5d6ff">'df.plot() — 4 Chart Types'</span>, fontsize=13, fontweight=<span style="color:#a5d6ff">'bold'</span>)
+
+df.plot(kind=<span style="color:#a5d6ff">'line'</span>,  ax=axes[0,0], marker=<span style="color:#a5d6ff">'o'</span>, title=<span style="color:#a5d6ff">'Line'</span>)
+df.plot(kind=<span style="color:#a5d6ff">'bar'</span>,   ax=axes[0,1], title=<span style="color:#a5d6ff">'Bar'</span>)
+df.plot(kind=<span style="color:#a5d6ff">'area'</span>,  ax=axes[1,0], alpha=0.6, title=<span style="color:#a5d6ff">'Area'</span>)
+df.plot(kind=<span style="color:#a5d6ff">'box'</span>,   ax=axes[1,1], title=<span style="color:#a5d6ff">'Box'</span>)
+
+plt.tight_layout()
+plt.show()</pre>
+</div>
+</div>
+
+<div class="lesson-section">
+<h2>📋 df.plot() Key Parameters</h2>
+<table class="param-table">
+  <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+  <tr><td>kind</td><td>str</td><td>Chart type: 'line', 'bar', 'barh', 'hist', 'box', 'pie', 'scatter', 'area'</td></tr>
+  <tr><td>figsize</td><td>tuple</td><td>Figure size in inches: (width, height)</td></tr>
+  <tr><td>title</td><td>str</td><td>Chart title</td></tr>
+  <tr><td>x, y</td><td>str</td><td>Column names for axes (for scatter/line)</td></tr>
+  <tr><td>color</td><td>list/str</td><td>Colors for each series</td></tr>
+  <tr><td>legend</td><td>bool</td><td>Show/hide legend (default True)</td></tr>
+  <tr><td>grid</td><td>bool</td><td>Show gridlines</td></tr>
+  <tr><td>ax</td><td>Axes</td><td>Pass a matplotlib Axes to draw on</td></tr>
+  <tr><td>stacked</td><td>bool</td><td>Stack bars/areas (for bar/area charts)</td></tr>
+</table>
+</div>
+`}
+  };
+
+  /* ── LESSON RENDERER ──────────────────────────────────────── */
+  function renderLesson(id) {
+    const lesson = LESSONS[id];
+    const content = document.getElementById('lesson-content');
+
+    if (!lesson) {
+      content.innerHTML = `
+        <div style="text-align:center;padding:80px 20px;color:var(--text-dim);">
+          <div style="font-size:3rem;margin-bottom:16px;">🚧</div>
+          <h2 style="font-family:var(--font-head);margin-bottom:8px;">Lesson Coming Soon</h2>
+          <p>This lesson is being authored. Try another one from the sidebar, or use the Playground to experiment.</p>
+          <a href="playground.html" class="btn btn-primary" style="margin-top:20px;">Open Playground →</a>
+        </div>`;
+      return;
+    }
+
+    const libBadge = { matplotlib:'mpl', seaborn:'sns', plotly:'plotly', pandas:'pd' };
+    const lib = lesson.lib || 'matplotlib';
+    const level = lesson.level || 'beginner';
+    const isComplete = window.VizLearnProgress && window.VizLearnProgress.isComplete(id);
+
+    content.innerHTML = `
+      <div class="lesson-meta">
+        <span class="badge badge-${libBadge[lib] || 'mpl'}">${lib}</span>
+        <span class="badge badge-${level}">${level}</span>
+      </div>
+      <h1 class="lesson-title">${lesson.title}</h1>
+      <p class="lesson-intro">${lesson.intro}</p>
+      ${lesson.body}
+      <div class="lesson-nav-bottom">
+        <button class="complete-btn ${isComplete?'done':''}" onclick="markComplete('${id}')">
+          ${isComplete ? '✅ Completed' : '☑ Mark as Complete'}
+        </button>
+        <a href="playground.html" class="btn btn-secondary btn-sm">Open in Playground →</a>
+      </div>`;
+
+    // Update sidebar active state
+    document.querySelectorAll('.lesson-item').forEach(el => el.classList.remove('active'));
+    const activeItem = document.querySelector(`.lesson-item[data-lesson="${id}"]`);
+    if (activeItem) {
+      activeItem.classList.add('active');
+      activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Update URL hash
+    history.pushState(null, null, '#' + id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function markComplete(id) {
+    if (window.VizLearnProgress) {
+      window.VizLearnProgress.set(id, 'complete');
+    }
+    const btn = document.querySelector('.complete-btn');
+    if (btn) { btn.textContent = '✅ Completed'; btn.classList.add('done'); }
+  }
+
+  function sendToPlayground(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    if (pre) {
+      localStorage.setItem('vizlearn_playground_code', pre.innerText);
+      window.location.href = 'playground.html';
+    }
+  }
+
+  // ── SIDEBAR CLICKS ──────────────────────────────────────────
+  document.querySelectorAll('.lesson-item[data-lesson]').forEach(item => {
+    item.addEventListener('click', () => renderLesson(item.getAttribute('data-lesson')));
+  });
+
+  // ── LIBRARY FILTER ──────────────────────────────────────────
+  document.querySelectorAll('.lib-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.lib-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const lib = this.getAttribute('data-lib');
+      document.querySelectorAll('.lesson-group').forEach(group => {
+        group.style.display = (lib === 'all' || group.getAttribute('data-lib') === lib) ? '' : 'none';
+      });
+    });
+  });
+
+  // ── INITIAL LOAD ────────────────────────────────────────────
+  const hash = window.location.hash.replace('#', '') || 'mpl-01';
+  renderLesson(hash);
+  </script>
+</body>
+</html>

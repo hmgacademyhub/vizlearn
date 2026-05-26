@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSV Upload Lab — VizLearn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="../manifest.webmanifest"/>
+  <link rel="stylesheet" href="../assets/css/main.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar"><div class="nav-inner"><a href="../index.html" class="brand"><span class="brand-icon">⬡</span><span class="brand-text">Viz<span class="accent">Learn</span></span></a><ul class="nav-links"><li><a href="../index.html">Home</a></li><li><a href="roadmap.html">Roadmap</a></li><li><a href="curriculum.html">Curriculum</a></li><li><a href="lessons.html">Lessons</a></li><li><a href="playground.html">Playground</a></li><li><a href="datasets.html">Data Lab</a></li><li><a href="upload.html" class="active">CSV Lab</a></li><li><a href="projects.html">Projects</a></li><li><a href="storytelling.html">Story</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="training.html">Training Pack</a></li><li><a href="tools.html">Tools</a></li><li><a href="enterprise.html">Enterprise</a></li><li><a href="instructor.html">Instructor</a></li><li><a href="progress.html">Progress</a></li><li><a href="about.html">About</a></li></ul><button class="hamburger" id="hamburger"><span></span><span></span><span></span></button></div></nav>
+<main style="padding-top:64px;">
+<section class="page-hero"><div class="container"><div class="section-label">LOCAL FILES · NO SERVER · NO DATABASE</div><h1>CSV Upload Lab</h1><p class="text-muted" style="max-width:880px;">Upload a small CSV from your device, inspect its columns, get rule-based chart suggestions, then send generated Python code to the Playground. Your file never leaves your browser.</p><div class="vl-note mt-16"><strong>Privacy:</strong> The CSV is read by JavaScript using the browser FileReader API. It is not uploaded to any server and no AI API is called.</div></div></section>
+<section class="container" style="padding:34px 24px 90px;">
+  <div class="vl-split">
+    <section class="vl-panel">
+      <div class="vl-panel-head"><h2>1. Upload CSV</h2><span class="badge badge-beginner">Browser only</span></div>
+      <input class="vl-input" id="file" type="file" accept=".csv,text/csv" onchange="loadFile(event)">
+      <p class="text-muted mt-16">Recommended size: under 500 KB for smooth mobile performance. For larger datasets, take a sample first.</p>
+      <label class="vl-label">Chart goal</label>
+      <select id="goal" class="vl-input" onchange="renderAll()"><option value="auto">Auto recommend</option><option value="distribution">Distribution</option><option value="comparison">Comparison</option><option value="relationship">Relationship</option><option value="trend">Trend</option></select>
+      <div id="summary" class="mt-16"></div>
+    </section>
+    <section class="vl-panel">
+      <div class="vl-panel-head"><h2>2. Column intelligence</h2><span class="badge badge-sns">Rule based</span></div>
+      <div id="columns"><p class="text-muted">Upload a CSV to see inferred column types.</p></div>
+    </section>
+  </div>
+
+  <section class="vl-panel mt-24">
+    <div class="vl-panel-head"><h2>3. Preview and suggestions</h2><span class="badge badge-plotly">Explainable</span></div>
+    <div id="preview"><p class="text-muted">No data loaded yet.</p></div>
+    <div id="suggestions" class="mt-24"></div>
+  </section>
+
+  <section class="vl-panel mt-24">
+    <div class="vl-panel-head"><h2>4. Generated Python code</h2><span class="badge badge-pd">Pandas + Seaborn</span></div>
+    <p class="text-muted">The code embeds your CSV text with <code>StringIO</code>, so it can run inside the browser Playground without needing disk access.</p>
+    <pre id="code" class="vl-pre mt-16">Upload a CSV to generate code.</pre>
+    <div class="vl-actions"><button class="btn btn-primary" onclick="openPlayground()">▶ Open in Playground</button><button class="btn btn-secondary" onclick="copyCode()">Copy Code</button><button class="btn btn-ghost" onclick="downloadCode()">Download .py</button></div>
+  </section>
+</section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>CSV Upload Lab · Private local analysis using free browser APIs</p></div></div></footer>
+<script src="../assets/js/main.js"></script>
+<script>
+let rawCSV='', rows=[], headers=[], types={};
+function parseCSV(text){
+  const out=[]; let row=[], val='', q=false;
+  for(let i=0;i<text.length;i++){ const c=text[i], n=text[i+1];
+    if(c==='"' && q && n==='"'){ val+='"'; i++; }
+    else if(c==='"'){ q=!q; }
+    else if(c===',' && !q){ row.push(val); val=''; }
+    else if((c==='\n'||c==='\r') && !q){ if(c==='\r'&&n==='\n') i++; row.push(val); if(row.some(x=>x.trim()!=='')) out.push(row); row=[]; val=''; }
+    else val+=c;
+  }
+  row.push(val); if(row.some(x=>x.trim()!=='')) out.push(row);
+  return out;
+}
+function infer(values){ const clean=values.filter(v=>v!==''&&v!=null).map(v=>String(v).trim()); if(!clean.length) return 'empty'; const nums=clean.filter(v=>!isNaN(Number(v.replace(/,/g,'')))); const dates=clean.filter(v=>!isNaN(Date.parse(v)) && /[-\/]/.test(v)); const unique=new Set(clean).size; if(nums.length/clean.length>=.85) return 'numeric'; if(dates.length/clean.length>=.75) return 'date'; if(unique<=Math.max(12, clean.length*.35)) return 'categorical'; return 'text'; }
+function loadFile(e){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ rawCSV=String(r.result).trim(); const parsed=parseCSV(rawCSV); headers=parsed[0].map(h=>h.trim()); rows=parsed.slice(1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,r[i]??'']))); types={}; headers.forEach(h=>types[h]=infer(rows.map(r=>r[h]))); renderAll(); }; r.readAsText(f); }
+function esc(s){return String(s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
+function choose(){ const nums=headers.filter(h=>types[h]==='numeric'), cats=headers.filter(h=>types[h]==='categorical'), dates=headers.filter(h=>types[h]==='date'); const goal=document.getElementById('goal').value; if((goal==='trend'||goal==='auto')&&dates.length&&nums.length) return {kind:'trend', x:dates[0], y:nums[0], why:'A date/time column and numeric column were found, so a line chart can show change over time.'}; if((goal==='relationship'||goal==='auto')&&nums.length>=2) return {kind:'relationship', x:nums[0], y:nums[1], hue:cats[0], why:'Two numeric columns were found, so a scatter plot can reveal association, clusters, or outliers.'}; if((goal==='comparison'||goal==='auto')&&cats.length&&nums.length) return {kind:'comparison', x:cats[0], y:nums[0], why:'A categorical column and numeric column were found, so a bar chart can compare group averages.'}; if(nums.length) return {kind:'distribution', x:nums[0], why:'A numeric column was found, so a histogram can show shape, spread, and unusual values.'}; return {kind:'table', why:'No strong numeric/date pattern was detected. Start with table inspection and data cleaning.'}; }
+function pyString(s){ return s.replace(/\\/g,'\\\\').replace(/"""/g,'\"\"\"'); }
+function makeCode(){ if(!rawCSV) return 'Upload a CSV to generate code.'; const c=choose(); let plot='print(df.head())'; if(c.kind==='trend') plot=`sns.lineplot(data=df, x='${c.x}', y='${c.y}', marker='o', ax=ax)\nax.set_title('${c.y} over ${c.x}')`; if(c.kind==='relationship') plot=`sns.scatterplot(data=df, x='${c.x}', y='${c.y}'${c.hue?`, hue='${c.hue}'`:''}, s=90, ax=ax)\nax.set_title('${c.y} vs ${c.x}')`; if(c.kind==='comparison') plot=`sns.barplot(data=df, x='${c.x}', y='${c.y}', estimator='mean', errorbar=None, ax=ax)\nax.set_title('Average ${c.y} by ${c.x}')\nax.tick_params(axis='x', rotation=35)`; if(c.kind==='distribution') plot=`sns.histplot(data=df, x='${c.x}', bins=10, kde=True, ax=ax)\nax.set_title('Distribution of ${c.x}')`; return `import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nfrom io import StringIO\n\ncsv = """${pyString(rawCSV)}"""\ndf = pd.read_csv(StringIO(csv))\n\nprint('Shape:', df.shape)\nprint(df.head())\nprint(df.describe(include='all'))\n\nsns.set_theme(style='whitegrid')\nfig, ax = plt.subplots(figsize=(9, 4.8))\n${plot}\nplt.tight_layout()\nplt.show()`; }
+function renderAll(){ if(!rawCSV) return; document.getElementById('summary').innerHTML=`<div class="vl-result-card"><strong>${rows.length}</strong> rows · <strong>${headers.length}</strong> columns</div>`; document.getElementById('columns').innerHTML=`<div class="vl-chip-row">${headers.map(h=>`<span class="vl-chip"><strong>${esc(h)}</strong> · ${types[h]}</span>`).join('')}</div>`; const sample=rows.slice(0,8); document.getElementById('preview').innerHTML=`<div style="overflow:auto"><table class="param-table"><thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${sample.map(r=>`<tr>${headers.map(h=>`<td>${esc(r[h])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`; const c=choose(); document.getElementById('suggestions').innerHTML=`<div class="vl-result-card"><h3>Recommended: ${c.kind}</h3><p>${c.why}</p><div class="vl-chip-row">${Object.entries(c).filter(([k])=>!['why','kind'].includes(k)).map(([k,v])=>`<span class="vl-chip">${k}: ${esc(v)}</span>`).join('')}</div><div class="callout callout-tip"><span class="callout-label">Teaching note</span>Always inspect the data first. A recommendation is a starting point, not a final answer.</div></div>`; document.getElementById('code').textContent=makeCode(); }
+function openPlayground(){ if(!rawCSV) return alert('Upload a CSV first.'); localStorage.setItem('vizlearn_playground_code', makeCode()); location.href='playground.html'; }
+function copyCode(){ navigator.clipboard.writeText(makeCode()); VizLearnToast&&VizLearnToast('Generated code copied'); }
+function downloadCode(){ const blob=new Blob([makeCode()],{type:'text/x-python'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='vizlearn_csv_lab.py'; a.click(); URL.revokeObjectURL(a.href); }
+</script>
+</body>
+</html>
